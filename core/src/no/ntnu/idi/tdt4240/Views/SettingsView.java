@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,12 +19,13 @@ public class SettingsView extends AbstractView {
     private Stage stage;
     private RiskyRisk game;
     Texture background;
+    private Label label;
 
     public SettingsView(RiskyRisk game) {
         super(game);
         this.game = game;
         background = new Texture("settings.png");
-        this.controller = new Controller();
+        this.controller = new Controller(this);
     }
 
     @Override
@@ -32,7 +34,6 @@ public class SettingsView extends AbstractView {
         Gdx.input.setInputProcessor(stage);
 
         // Select Box
-        // Options should be in Model?
         String[] options = new String[]{"Option 1", "Option 2", "Option 3"};
         SelectBox select = this.createSelectBox(options);
         select.setPosition(100,400);
@@ -63,9 +64,31 @@ public class SettingsView extends AbstractView {
             }
         });
 
+        // Label Button
+        Button labelButton = this.createButton("Change label with settings");
+        saveButton.setPosition(100,100);
+        saveButton.setSize(100,50);
+
+        labelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.getSetting1().equals("foo")) {
+                    controller.setSetting1("bar");
+                } else {
+                    controller.setSetting1("foo");
+                }
+            }
+        });
+
+        // Label
+        this.label = this.createLabel(controller.getSetting1());
+        label.setPosition(200,100);
+
         stage.addActor(backButton);
         stage.addActor(select);
         stage.addActor(saveButton);
+        stage.addActor(labelButton);
+        stage.addActor(label);
 
 
     }

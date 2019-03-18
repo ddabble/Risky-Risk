@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class SettingsModel {
-
     Preferences prefs;
     private final String FILENAME = "GAME_SETTINGS";
 
@@ -12,23 +11,33 @@ public class SettingsModel {
         this.prefs = Gdx.app.getPreferences(FILENAME);
     }
 
-    public void setPref(String pref, String value) {
-        prefs.putString(pref, value);
+    public void setString(String key, String value) {
+        prefs.putString(key, value);
         prefs.flush();
     }
 
-    public void setPref(String pref, int value) {
-        prefs.putInteger(pref, value);
+    public void setInteger(String key, int value) {
+        prefs.putInteger(key, value);
         prefs.flush();
     }
 
-    public void setPref(String pref, boolean value) {
-        prefs.putBoolean(pref, value);
+    public void setBoolean(String key, boolean value) {
+        prefs.putBoolean(key, value);
         prefs.flush();
     }
 
-    public void getPref(String pref) {
-
+    public String getString(String key, String defaultValue) {
+        return prefs.getString(key, defaultValue);
     }
+
+    public int getInteger(String key, Integer defaultValue) {
+        return prefs.getInteger(key, defaultValue);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return prefs.getBoolean(key, defaultValue);
+    }
+
+
 
 }

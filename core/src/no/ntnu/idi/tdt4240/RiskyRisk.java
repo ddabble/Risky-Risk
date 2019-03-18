@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import no.ntnu.idi.tdt4240.Controllers.Controller;
 import no.ntnu.idi.tdt4240.Views.MainMenuView;
 
 // Switches between App states, loads shared resources
