@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import no.ntnu.idi.tdt4240.Views.MainMenuView;
 
-// Acts as a GSM, loads shared resources
+// Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
 
     //DRY
