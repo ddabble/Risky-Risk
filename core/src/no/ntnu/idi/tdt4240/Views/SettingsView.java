@@ -80,6 +80,8 @@ public class SettingsView extends AbstractView {
             }
         });
 
+        //select.setSelected(controller.getSetting1());
+
         // Label
         this.label = this.createLabel(controller.getSetting1());
         label.setPosition(200,100);
@@ -95,7 +97,8 @@ public class SettingsView extends AbstractView {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
