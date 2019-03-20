@@ -14,19 +14,16 @@ public class RiskyRisk extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
 
-
     @Override
     public void create () {
         batch = new SpriteBatch();
         font = new BitmapFont();
-
         this.setScreen(new MainMenuView(this));
     }
 
     @Override
     public void render () {
         super.render();
-    }
 
     @Override
     public void dispose () {
