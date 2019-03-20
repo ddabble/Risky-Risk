@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
-public class RiskyView implements Screen {
+public class RiskyView implements AbstractView {
     final RiskyRisk game;
     static Engine engine;
     OrthographicCamera camera;
