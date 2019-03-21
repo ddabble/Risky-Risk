@@ -22,6 +22,10 @@ public class GameController {
         return model.getEngine();
     }
 
+    public void setNumberOfPlayers(int num) {
+        model.gameSettings.numberOfPlayers = num;
+    }
+
     /*
     The RenderSystem should maybe just have its own camera? especially if
     the ECS handles its own inputs
