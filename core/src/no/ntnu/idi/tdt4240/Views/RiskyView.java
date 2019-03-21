@@ -13,7 +13,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.Views.AbstractView;
 
 public class RiskyView extends AbstractView implements GameViewer{
-    final RiskyRisk game;
+
     OrthographicCamera camera;
     Texture img;
     private GameController gameController;
@@ -21,7 +21,6 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     public RiskyView(RiskyRisk game) {
         super(game);
-        this.game = game;
         img = new Texture("badlogic.jpg");
 
         camera = new OrthographicCamera();

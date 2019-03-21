@@ -13,15 +13,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class MultiplayerView extends AbstractView {
-
-    private RiskyRisk game;
     OrthographicCamera camera;
     Texture background;
     private Stage stage;
 
     public MultiplayerView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("background.png");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
