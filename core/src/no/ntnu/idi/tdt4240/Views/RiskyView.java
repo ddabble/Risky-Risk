@@ -47,17 +47,14 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
@@ -68,6 +65,5 @@ public class RiskyView extends AbstractView implements GameViewer{
     @Override
     public void dispose() {
         img.dispose();
-
     }
 }
