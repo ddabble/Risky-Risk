@@ -24,9 +24,10 @@ public class RiskyRisk extends Game {
     @Override
     public void render () {
         super.render();
+    }
 
     @Override
-    public void dispose () {
+    public void dispose() {
         batch.dispose();
         font.dispose();
     }

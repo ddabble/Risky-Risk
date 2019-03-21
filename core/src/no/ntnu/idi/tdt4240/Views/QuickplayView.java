@@ -32,6 +32,18 @@ public class QuickplayView extends AbstractView {
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        Button startButton = createButton("Start game!");
+        startButton.setPosition(100, 250);
+        startButton.setSize(100, 50);
+        startButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new RiskyView(game));
+            }
+        });
+        stage.addActor(startButton);
+
         Button backButton = this.createButton("Back to main");
         backButton.setPosition(100, 100);
         backButton.setSize(100,50);

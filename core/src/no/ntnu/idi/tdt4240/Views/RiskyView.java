@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240;
+package no.ntnu.idi.tdt4240.Views;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
@@ -7,13 +7,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
-public class RiskyView implements AbstractView {
+import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.Views.AbstractView;
+
+public class RiskyView extends AbstractView {
     final RiskyRisk game;
     static Engine engine;
     OrthographicCamera camera;
     Texture img;
 
-    public RiskyView(final RiskyRisk game) {
+    public RiskyView(RiskyRisk game) {
+        super(game);
         this.game = game;
         img = new Texture("badlogic.jpg");
         engine = new Engine();
@@ -21,6 +25,7 @@ public class RiskyView implements AbstractView {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
     }
+
     @Override
     public void show() {
 
