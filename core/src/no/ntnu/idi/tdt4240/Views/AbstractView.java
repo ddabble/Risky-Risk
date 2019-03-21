@@ -39,8 +39,8 @@ public abstract class AbstractView implements Screen  {
         return button;
     }
 
-    protected SelectBox<String> createSelectBox(String[] options) {
-        SelectBox<String> selectBox = new SelectBox<String>(selectStyle);
+    protected <T> SelectBox<T> createSelectBox(T[] options) {
+        SelectBox<T> selectBox = new SelectBox<T>(selectStyle);
         selectBox.setItems(options);
         return selectBox;
     }
