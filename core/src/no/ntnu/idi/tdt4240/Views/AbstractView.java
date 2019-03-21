@@ -35,18 +35,18 @@ public abstract class AbstractView implements Screen  {
         selectStyle.font = game.font;
     }
 
-    public Button createButton(String text) {
+    protected Button createButton(String text) {
         Button button = new TextButton(text, this.textButtonStyle);
         return button;
     }
 
-    public SelectBox<String> createSelectBox(String[] options) {
+    protected SelectBox<String> createSelectBox(String[] options) {
         SelectBox<String> selectBox = new SelectBox<String>(selectStyle);
         selectBox.setItems(options);
         return selectBox;
     }
 
-    public Label createLabel(String text) {
+    protected Label createLabel(String text) {
         return new Label(text, this.labelStyle);
     }
 

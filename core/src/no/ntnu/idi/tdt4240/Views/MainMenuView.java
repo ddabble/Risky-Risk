@@ -93,7 +93,7 @@ public class MainMenuView extends AbstractView {
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the MainMenu!!! ", 100, 150);
+        game.font.draw(game.batch, "Welcome to the MainMenu!!!!! ", 100, 150);
         game.batch.end();
 
         stage.act(delta);
