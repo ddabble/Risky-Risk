@@ -50,9 +50,6 @@ public class MultiplayerView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the Multiplayer View!!! ", 100, 150);
-        game.batch.end();
         stage.act(delta);
         stage.draw();
     }

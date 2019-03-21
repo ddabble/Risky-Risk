@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.Controllers.Controller;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class TutorialView extends AbstractView {
@@ -48,9 +47,6 @@ public class TutorialView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the TutorialView!!! ", 100, 150);
-        game.batch.end();
         stage.act(delta);
         stage.draw();
     }

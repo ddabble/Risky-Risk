@@ -7,23 +7,28 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
+import no.ntnu.idi.tdt4240.Controllers.GameController;
+import no.ntnu.idi.tdt4240.Controllers.GameViewer;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.Views.AbstractView;
 
-public class RiskyView extends AbstractView {
+public class RiskyView extends AbstractView implements GameViewer{
     final RiskyRisk game;
-    static Engine engine;
     OrthographicCamera camera;
     Texture img;
+    private GameController gameController;
+    private Engine engine;
 
     public RiskyView(RiskyRisk game) {
         super(game);
         this.game = game;
         img = new Texture("badlogic.jpg");
-        engine = new Engine();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+
+        gameController = new GameController(this, game.getGameModel());
+        engine = gameController.getEngine();
     }
 
     @Override
@@ -33,14 +38,12 @@ public class RiskyView extends AbstractView {
 
     @Override
     public void render(float delta) {
+        engine.update(delta);
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-
-        game.batch.begin();
-        game.batch.draw(img, 0, 0);
-        game.batch.end();
     }
 
     @Override
