@@ -1,23 +1,27 @@
 package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import no.ntnu.idi.tdt4240.Controllers.Controller;
+import no.ntnu.idi.tdt4240.Models.GameModel;
+import no.ntnu.idi.tdt4240.Models.SettingsModel;
 import no.ntnu.idi.tdt4240.Views.MainMenuView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
 
-    //DRY
-    public SpriteBatch batch;
-    public BitmapFont font;
+    private SettingsModel settingsModel;
+    public SettingsModel getSettingsModel() {
+        return settingsModel;
+    }
+    private GameModel gameModel;
+    public GameModel getGameModel() {
+        return gameModel;
+    }
 
     @Override
     public void create () {
-        batch = new SpriteBatch();
-        font = new BitmapFont();
+        settingsModel = new SettingsModel();
+        gameModel = new GameModel();
         this.setScreen(new MainMenuView(this));
     }
 
@@ -28,7 +32,5 @@ public class RiskyRisk extends Game {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        font.dispose();
     }
 }
