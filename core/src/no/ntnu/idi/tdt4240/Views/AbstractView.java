@@ -14,14 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen  {
-    private final RiskyRisk riskyRisk;
+    protected RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
     Skin skin;
     TextButtonStyle textButtonStyle;
 
-    public AbstractView(RiskyRisk controller) {
-        this.riskyRisk = controller;
+    public AbstractView(RiskyRisk game) {
+        this.game = game;
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));

@@ -12,14 +12,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class TutorialView extends AbstractView {
-
     private Stage stage;
-    private RiskyRisk game;
     Texture background;
 
     public TutorialView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("background.png");
     }
 

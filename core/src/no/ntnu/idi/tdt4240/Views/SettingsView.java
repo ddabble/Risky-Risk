@@ -17,13 +17,11 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 public class SettingsView extends AbstractView implements SettingsViewer{
     private final SettingsController controller;
     private Stage stage;
-    private RiskyRisk game;
     Texture background;
     private Label label;
 
     public SettingsView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("settings.png");
         this.controller = new SettingsController(this, game.getSettingsModel());
     }
