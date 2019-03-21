@@ -5,4 +5,5 @@ package no.ntnu.idi.tdt4240.Controllers;
  */
 
 public interface GameViewer {
+    void setNumberOfPlayers(int num);
 }

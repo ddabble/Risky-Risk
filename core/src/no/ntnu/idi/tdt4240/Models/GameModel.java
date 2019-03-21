@@ -25,6 +25,8 @@ public class GameModel {
 
         engine.addSystem(rs);
         engine.addSystem(bs);
+
+        gameSettings = new GameSettings();
     }
 
     public void setup() {
@@ -43,6 +45,16 @@ public class GameModel {
     }
 
     public class GameSettings{
-        public int numberOfPlayers;
+        private int numberOfPlayers;
+        public int getNumberOfPlayers() {return numberOfPlayers;}
+        public void setNumberOfPlayers(int num) {
+            if(num > 6) {
+                numberOfPlayers = 6;
+            } else if(num < 2) {
+                numberOfPlayers = 2;
+            } else {
+                numberOfPlayers = num;
+            }
+        }
     }
 }

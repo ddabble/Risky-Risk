@@ -23,8 +23,11 @@ public class GameController {
     }
 
     public void setNumberOfPlayers(int num) {
-        model.gameSettings.numberOfPlayers = num;
+        model.gameSettings.setNumberOfPlayers(num);
+        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
     }
+
+    public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
 
     /*
     The RenderSystem should maybe just have its own camera? especially if
