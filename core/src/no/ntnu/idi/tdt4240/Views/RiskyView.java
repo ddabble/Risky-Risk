@@ -66,4 +66,9 @@ public class RiskyView extends AbstractView implements GameViewer{
     public void dispose() {
         img.dispose();
     }
+
+    @Override
+    public void setNumberOfPlayers(int num) {
+
+    }
 }

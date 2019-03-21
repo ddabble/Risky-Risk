@@ -39,7 +39,7 @@ public class SettingsView extends AbstractView implements SettingsViewer{
         select.setSelectedIndex(0);
         
         // Back Button 
-        Button backButton = this.createButton("Back to main");
+        Button backButton = createButton("Back to main");
         backButton.setPosition(100, 300);
         backButton.setSize(100,50);
 
@@ -51,7 +51,7 @@ public class SettingsView extends AbstractView implements SettingsViewer{
         });
         
         // Save Button
-        Button saveButton = this.createButton("Save settings");
+        Button saveButton = createButton("Save settings");
         saveButton.setPosition(100,200);
         saveButton.setSize(100,50);
 
@@ -63,7 +63,7 @@ public class SettingsView extends AbstractView implements SettingsViewer{
         });
 
         // Label Button
-        Button labelButton = this.createButton("Change label with settings");
+        Button labelButton = createButton("Change label with settings");
         labelButton.setPosition(100,100);
         labelButton.setSize(100,50);
 
@@ -79,7 +79,7 @@ public class SettingsView extends AbstractView implements SettingsViewer{
         });
 
         // Label
-        this.label = this.createLabel(controller.getSetting1());
+        label = createLabel(controller.getSetting1());
         label.setPosition(200,100);
 
         stage.addActor(backButton);

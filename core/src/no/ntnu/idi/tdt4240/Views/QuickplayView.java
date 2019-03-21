@@ -4,12 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.util.stream.IntStream;
 
 import no.ntnu.idi.tdt4240.Controllers.GameController;
 import no.ntnu.idi.tdt4240.Controllers.GameViewer;
@@ -20,6 +27,7 @@ public class QuickplayView extends AbstractView implements GameViewer{
     Texture background;
     private Stage stage;
     private GameController gameController;
+    private Label numberOfPlayersLabel;
 
     public QuickplayView(RiskyRisk game) {
         super(game);
@@ -35,8 +43,22 @@ public class QuickplayView extends AbstractView implements GameViewer{
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        //int[] options = new int[] {2, 3, 4, 5, 6};
-        //SelectBox select = createSelectBox()
+        numberOfPlayersLabel = createLabel("2 player game");
+        numberOfPlayersLabel.setPosition(100, 300);
+        stage.addActor(numberOfPlayersLabel);
+
+        Integer[] options = new Integer[] {2, 3, 4, 5, 6};
+        final SelectBox select = createSelectBox(options);
+        select.setPosition(100, 350);
+        select.setWidth(100);
+        select.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameController.setNumberOfPlayers((Integer)select.getSelected());
+            }
+        });
+        select.setSelected(gameController.getNumberOfPlayers());
+        stage.addActor(select);
 
         Button startButton = createButton("Start game!");
         startButton.setPosition(100, 250);
@@ -63,8 +85,13 @@ public class QuickplayView extends AbstractView implements GameViewer{
     }
 
     @Override
+    public void setNumberOfPlayers(int num) {
+        numberOfPlayersLabel.setText(num + " player game");
+    }
+
+    @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
