@@ -21,7 +21,7 @@ public class RenderSystem extends EntitySystem {
     }
 
     @Override
-    public void update(){
+    public void update(float deltaTime){
         this.batch = new SpriteBatch();
         this.batch.begin();
         SpriteComponent spriteComp;
