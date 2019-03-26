@@ -3,7 +3,10 @@ package no.ntnu.idi.tdt4240.Models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import no.ntnu.idi.tdt4240.Controllers.SettingsViewer;
+
 public class SettingsModel {
+
     Preferences prefs;
     private final String FILENAME = "GAME_SETTINGS";
 
