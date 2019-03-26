@@ -11,11 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 
-
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen  {
-    private final RiskyRisk game;
+    protected RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
     Skin skin;
@@ -30,23 +29,23 @@ public abstract class AbstractView implements Screen  {
 
         textButtonStyle.up = skin.getDrawable("default-round");
         textButtonStyle.down = skin.getDrawable("default-round-down");
-        textButtonStyle.font = game.font;
+        textButtonStyle.font = skin.getFont("default-font");
 
-        selectStyle.font = game.font;
+        selectStyle.font = skin.getFont("default-font");
     }
 
-    public Button createButton(String text) {
+    protected Button createButton(String text) {
         Button button = new TextButton(text, this.textButtonStyle);
         return button;
     }
 
-    public SelectBox<String> createSelectBox(String[] options) {
-        SelectBox<String> selectBox = new SelectBox<String>(selectStyle);
+    protected <T> SelectBox<T> createSelectBox(T[] options) {
+        SelectBox<T> selectBox = new SelectBox<T>(selectStyle);
         selectBox.setItems(options);
         return selectBox;
     }
 
-    public Label createLabel(String text) {
+    protected Label createLabel(String text) {
         return new Label(text, this.labelStyle);
     }
 

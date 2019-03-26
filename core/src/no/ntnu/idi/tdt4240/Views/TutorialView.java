@@ -9,18 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.Controllers.Controller;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class TutorialView extends AbstractView {
-
     private Stage stage;
-    private RiskyRisk game;
     Texture background;
 
     public TutorialView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("background.png");
     }
 
@@ -48,35 +44,27 @@ public class TutorialView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the TutorialView!!! ", 100, 150);
-        game.batch.end();
         stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int i, int i1) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
     }
 }

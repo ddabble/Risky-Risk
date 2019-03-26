@@ -14,14 +14,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class MainMenuView extends AbstractView {
-    final RiskyRisk game;
     OrthographicCamera camera;
     Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("background.png");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
@@ -92,10 +90,6 @@ public class MainMenuView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the MainMenu!!! ", 100, 150);
-        game.batch.end();
-
         stage.act(delta);
         stage.draw();
     }
