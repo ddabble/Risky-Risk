@@ -25,6 +25,7 @@ public class RenderSystem extends EntitySystem {
         this.batch.begin();
         for (Entity e : this.entities){
             SpriteComponent spriteComp = sm.get(e);
+            System.out.println("drawing entity: " + e);
             this.batch.draw(spriteComp.sprite,  spriteComp.sprite.getX(), spriteComp.sprite.getY());
         }
         this.batch.end();
