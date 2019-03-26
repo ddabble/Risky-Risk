@@ -20,12 +20,13 @@ public class RenderSystem extends EntitySystem {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class).get());
     }
 
+    @Override
     public void update(){
         this.batch = new SpriteBatch();
         this.batch.begin();
+        SpriteComponent spriteComp;
         for (Entity e : this.entities){
-            SpriteComponent spriteComp = sm.get(e);
-            System.out.println("drawing entity: " + e);
+            spriteComp = sm.get(e);
             this.batch.draw(spriteComp.sprite,  spriteComp.sprite.getX(), spriteComp.sprite.getY());
         }
         this.batch.end();
