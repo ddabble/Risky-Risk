@@ -1,7 +1,6 @@
 package no.ntnu.idi.tdt4240.Views;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,21 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.Controllers.Controller;
+import no.ntnu.idi.tdt4240.Controllers.SettingsController;
+import no.ntnu.idi.tdt4240.Controllers.SettingsViewer;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
-public class SettingsView extends AbstractView {
-    private final Controller controller;
+public class SettingsView extends AbstractView implements SettingsViewer{
+    private final SettingsController controller;
     private Stage stage;
-    private RiskyRisk game;
     Texture background;
     private Label label;
 
     public SettingsView(RiskyRisk game) {
         super(game);
-        this.game = game;
         background = new Texture("settings.png");
-        this.controller = new Controller(this);
+        this.controller = new SettingsController(this, game.getSettingsModel());
     }
 
     @Override
@@ -41,7 +39,7 @@ public class SettingsView extends AbstractView {
         select.setSelectedIndex(0);
         
         // Back Button 
-        Button backButton = this.createButton("Back to main");
+        Button backButton = createButton("Back to main");
         backButton.setPosition(100, 300);
         backButton.setSize(100,50);
 
@@ -53,11 +51,11 @@ public class SettingsView extends AbstractView {
         });
         
         // Save Button
-        Button saveButton = this.createButton("Save settings");
+        Button saveButton = createButton("Save settings");
         saveButton.setPosition(100,200);
         saveButton.setSize(100,50);
 
-        backButton.addListener(new ClickListener() {
+        saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuView(game));
@@ -65,9 +63,9 @@ public class SettingsView extends AbstractView {
         });
 
         // Label Button
-        Button labelButton = this.createButton("Change label with settings");
-        saveButton.setPosition(100,100);
-        saveButton.setSize(100,50);
+        Button labelButton = createButton("Change label with settings");
+        labelButton.setPosition(100,100);
+        labelButton.setSize(100,50);
 
         labelButton.addListener(new ClickListener() {
             @Override
@@ -80,10 +78,8 @@ public class SettingsView extends AbstractView {
             }
         });
 
-        //select.setSelected(controller.getSetting1());
-
         // Label
-        this.label = this.createLabel(controller.getSetting1());
+        label = createLabel(controller.getSetting1());
         label.setPosition(200,100);
 
         stage.addActor(backButton);
@@ -91,8 +87,11 @@ public class SettingsView extends AbstractView {
         stage.addActor(saveButton);
         stage.addActor(labelButton);
         stage.addActor(label);
+    }
 
-
+    @Override
+    public void setSetting1(String setting1) {
+        label.setText(setting1);
     }
 
     @Override
@@ -102,9 +101,6 @@ public class SettingsView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        game.batch.begin();
-        game.font.draw(game.batch, "Welcome to the SettingsView!!! ", 100, 150);
-        game.batch.end();
         stage.act(delta);
         stage.draw();
 
@@ -117,12 +113,10 @@ public class SettingsView extends AbstractView {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
