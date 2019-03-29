@@ -1,6 +1,5 @@
 package no.ntnu.idi.tdt4240.Views;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,7 +16,6 @@ public class RiskyView extends AbstractView implements GameViewer{
     OrthographicCamera camera;
     Texture img;
     private GameController gameController;
-    private Engine engine;
 
     public RiskyView(RiskyRisk game) {
         super(game);
@@ -27,7 +25,6 @@ public class RiskyView extends AbstractView implements GameViewer{
         camera.setToOrtho(false, 800, 480);
 
         gameController = new GameController(this, game.getGameModel());
-        engine = gameController.getEngine();
     }
 
     @Override
@@ -37,7 +34,6 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     @Override
     public void render(float delta) {
-        engine.update(delta);
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
