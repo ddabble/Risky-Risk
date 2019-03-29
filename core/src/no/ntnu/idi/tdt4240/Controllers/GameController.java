@@ -1,7 +1,5 @@
 package no.ntnu.idi.tdt4240.Controllers;
 
-import com.badlogic.ashley.core.Engine;
-
 import no.ntnu.idi.tdt4240.Models.GameModel;
 
 /**
@@ -16,10 +14,6 @@ public class GameController {
     public GameController(GameViewer viewer, GameModel model) {
         this.viewer = viewer;
         this.model = model;
-    }
-
-    public Engine getEngine() {
-        return model.getEngine();
     }
 
     public void setNumberOfPlayers(int num) {

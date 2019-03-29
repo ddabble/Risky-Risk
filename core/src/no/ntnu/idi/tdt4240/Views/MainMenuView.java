@@ -44,28 +44,6 @@ public class MainMenuView extends AbstractView {
             }
         });
 
-        Button quickplayButton = this.createButton("Quickplay");
-        quickplayButton.setPosition(100,100);
-        quickplayButton.setSize(100,50);
-
-        quickplayButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new QuickplayView(game));
-            }
-        });
-
-        // Save Button
-        Button settingsButton = this.createButton("Settings");
-        settingsButton.setPosition(100,300);
-        settingsButton.setSize(100,50);
-
-        settingsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SettingsView(game));
-            }
-        });
 
         Button tutorialButton = this.createButton("Tutorial");
         tutorialButton.setPosition(100,400);
@@ -79,8 +57,6 @@ public class MainMenuView extends AbstractView {
         });
 
         stage.addActor(multiplayerButton);
-        stage.addActor(quickplayButton);
-        stage.addActor(settingsButton);
         stage.addActor(tutorialButton);
     }
 
