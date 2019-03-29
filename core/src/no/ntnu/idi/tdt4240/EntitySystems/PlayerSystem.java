@@ -5,15 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import no.ntnu.idi.tdt4240.Components.PlayerComponent;
-
+import no.ntnu.idi.tdt4240.Components.TeamComponent;
+import no.ntnu.idi.tdt4240.TagComponents.Player;
 
 public class PlayerSystem {
     ImmutableArray<Entity> entities;
-    public PlayerSystem(){
-        super();
-    }
     public void addedToEngine(Engine engine){ //called when this system is added to the engine
-        entities = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(Player.class).get());
     }
+
+
+
 }

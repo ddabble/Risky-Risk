@@ -3,8 +3,12 @@ package no.ntnu.idi.tdt4240.Models;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 
+import no.ntnu.idi.tdt4240.Components.TeamComponent;
 import no.ntnu.idi.tdt4240.EntitySystems.BoardSystem;
+import no.ntnu.idi.tdt4240.EntitySystems.PlayerSystem;
 import no.ntnu.idi.tdt4240.EntitySystems.RenderSystem;
+import no.ntnu.idi.tdt4240.EntitySystems.TeamSystem;
+import no.ntnu.idi.tdt4240.TagComponents.Player;
 
 /**
  * Created by Oivind on 3/21/2019.
@@ -32,11 +36,13 @@ public class GameModel {
     public void setup() {
         reset();
 
+        // Setup players
+        engine.addSystem(new TeamSystem());
         for(int i = 0; i < gameSettings.numberOfPlayers; i++) {
-            /*
-            Entity player = w/e
-            engine.addEntity(player);
-            */
+            Entity team = new Entity();
+            team.add(new TeamComponent());
+            team.add(new Player());
+            engine.addEntity(team);
         }
     }
 
