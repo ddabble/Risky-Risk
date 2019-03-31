@@ -6,18 +6,27 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import no.ntnu.idi.tdt4240.util.GLSLshaders;
+
+import static com.badlogic.gdx.graphics.GL20.*;
 
 
 public class BoardSystem extends ApplicationAdapterEntitySystem {
@@ -84,7 +93,10 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
-    private Sprite testMap;
+    private Sprite mapSprite;
+
+    private ShaderProgram mapShader;
+    private Mesh mapMesh;
 
     public BoardSystem(OrthographicCamera camera) {
         super();
@@ -95,9 +107,10 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         batch = new SpriteBatch();
 
         mapTexture = new Texture("risk_game_map.png");
-        testMap = new Sprite(mapTexture);
-//        testMap.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
+        mapSprite = new Sprite(mapTexture);
+//        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
         prepareMapPixmap();
+        initShader();
 
         setUpInputProcessor();
     }
@@ -106,11 +119,28 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         if (mapPixmap != null)
             return;
 
-        TextureData textureData = testMap.getTexture().getTextureData();
+        TextureData textureData = mapSprite.getTexture().getTextureData();
         if (!textureData.isPrepared())
             textureData.prepare();
 
         mapPixmap = textureData.consumePixmap();
+    }
+
+    private void initShader() {
+        Map<Integer, String> parsedShaders = GLSLshaders.parseShadersInFile("shaders/map.glsl");
+        String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
+        String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
+        mapShader = new ShaderProgram(vertexShader, fragmentShader);
+
+        mapMesh = new Mesh(true, 4, 6, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(), VertexAttribute.TexCoords(0));
+        // TODO: fix vertex coords
+        mapMesh.setVertices(new float[] {
+                // Position:   , Color:    , UV:
+                -0.9f, -0.9f, 0, 1, 1, 1, 1, 0, 1,
+                0.9f, -0.9f, 0, 1, 1, 1, 1, 1, 1,
+                0.9f, 0.9f, 0, 1, 1, 1, 1, 1, 0,
+                -0.9f, 0.9f, 0, 1, 1, 1, 1, 0, 0});
+        mapMesh.setIndices(new short[] {0, 1, 2, 2, 3, 0});
     }
 
     // Move into appropriate place once needed
@@ -122,7 +152,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
 
                 Vector3 _touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
                 Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
-                if (testMap.getBoundingRectangle().contains(touchWorldPos)) {
+                if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
                     Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
                     System.out.println(getTile(mapPos));
                 }
@@ -133,9 +163,9 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     }
 
     private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
-        Vector2 mapPos = new Vector2(worldPos).sub(testMap.getX(), testMap.getY());
+        Vector2 mapPos = new Vector2(worldPos).sub(mapSprite.getX(), mapSprite.getY());
         // Invert y coord, because the texture's origin is in the upper left corner
-        mapPos.y = testMap.getHeight() - mapPos.y;
+        mapPos.y = mapSprite.getHeight() - mapPos.y;
         // Round the coords, because it's needed for getting texture pixels
         mapPos.x = MathUtils.roundPositive(mapPos.x);
         mapPos.y = MathUtils.roundPositive(mapPos.y);
@@ -149,12 +179,21 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     }
 
     public void render(SpriteBatch batch) {
-        testMap.draw(batch);
+        mapSprite.getTexture().bind();
+        mapShader.begin();
+        // Enable alpha blending, because the map texture contains an alpha channel
+        Gdx.gl.glEnable(GL_BLEND);
+        Gdx.gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        mapShader.setUniformMatrix("u_projTrans", new Matrix4()); // TODO: provide the camera's projection matrix instead
+        mapShader.setUniformi("u_texture", 0);
+        mapMesh.render(mapShader, GL20.GL_TRIANGLES);
+        mapShader.end();
     }
 
     @Override
     public void dispose() {
-        if (testMap.getTexture().getTextureData().disposePixmap())
+        mapShader.dispose();
+        if (mapSprite.getTexture().getTextureData().disposePixmap())
             mapPixmap.dispose();
         mapTexture.dispose();
         batch.dispose();
