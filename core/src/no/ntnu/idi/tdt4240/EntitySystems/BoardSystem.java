@@ -7,17 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -25,8 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.util.GLSLshaders;
-
-import static com.badlogic.gdx.graphics.GL20.*;
 
 
 public class BoardSystem extends ApplicationAdapterEntitySystem {
@@ -96,7 +91,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     private Sprite mapSprite;
 
     private ShaderProgram mapShader;
-    private Mesh mapMesh;
 
     public BoardSystem(OrthographicCamera camera) {
         super();
@@ -104,15 +98,22 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     }
 
     public void addedToEngine(Engine engine) {
-        batch = new SpriteBatch();
+        initShader();
+        batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
         mapTexture = new Texture("risk_game_map.png");
         mapSprite = new Sprite(mapTexture);
 //        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
         prepareMapPixmap();
-        initShader();
 
         setUpInputProcessor();
+    }
+
+    private void initShader() {
+        Map<Integer, String> parsedShaders = GLSLshaders.parseShadersInFile("shaders/map.glsl");
+        String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
+        String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
+        mapShader = new ShaderProgram(vertexShader, fragmentShader);
     }
 
     private void prepareMapPixmap() {
@@ -124,23 +125,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
             textureData.prepare();
 
         mapPixmap = textureData.consumePixmap();
-    }
-
-    private void initShader() {
-        Map<Integer, String> parsedShaders = GLSLshaders.parseShadersInFile("shaders/map.glsl");
-        String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
-        String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
-        mapShader = new ShaderProgram(vertexShader, fragmentShader);
-
-        mapMesh = new Mesh(true, 4, 6, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(), VertexAttribute.TexCoords(0));
-        // TODO: fix vertex coords
-        mapMesh.setVertices(new float[] {
-                // Position:   , Color:    , UV:
-                -0.9f, -0.9f, 0, 1, 1, 1, 1, 0, 1,
-                0.9f, -0.9f, 0, 1, 1, 1, 1, 1, 1,
-                0.9f, 0.9f, 0, 1, 1, 1, 1, 1, 0,
-                -0.9f, 0.9f, 0, 1, 1, 1, 1, 0, 0});
-        mapMesh.setIndices(new short[] {0, 1, 2, 2, 3, 0});
     }
 
     // Move into appropriate place once needed
@@ -178,24 +162,20 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         return MAP_COLORS_TILES.get(color);
     }
 
-    public void render(SpriteBatch batch) {
-        mapSprite.getTexture().bind();
-        mapShader.begin();
-        // Enable alpha blending, because the map texture contains an alpha channel
-        Gdx.gl.glEnable(GL_BLEND);
-        Gdx.gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        mapShader.setUniformMatrix("u_projTrans", new Matrix4()); // TODO: provide the camera's projection matrix instead
-        mapShader.setUniformi("u_texture", 0);
-        mapMesh.render(mapShader, GL20.GL_TRIANGLES);
-        mapShader.end();
+    public void render(OrthographicCamera camera) {
+        batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+        mapSprite.draw(batch);
+        batch.end();
     }
 
     @Override
     public void dispose() {
-        mapShader.dispose();
         if (mapSprite.getTexture().getTextureData().disposePixmap())
             mapPixmap.dispose();
         mapTexture.dispose();
         batch.dispose();
+        mapShader.dispose();
     }
 }

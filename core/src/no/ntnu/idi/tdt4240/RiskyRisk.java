@@ -39,11 +39,12 @@ public class RiskyRisk extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
 
-        batch.begin();
-        boardSystem.render(batch);
-        batch.end();
+        boardSystem.render(camera);
+
+//        batch.setProjectionMatrix(camera.combined);
+//        batch.begin();
+//        batch.end();
     }
 
     @Override
