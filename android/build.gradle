@@ -29,7 +29,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+repositories {
+        jcenter()
+        google()
 }
+}
+
 
 
 // called every time gradle gets executed, takes the native dependencies of
