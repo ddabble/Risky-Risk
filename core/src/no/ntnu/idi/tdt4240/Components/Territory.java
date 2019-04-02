@@ -1,12 +1,16 @@
 package no.ntnu.idi.tdt4240.Components;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Territory {
     public int Owner;
     public int Troops;
+    public Vector2 troopCircleVector;
     private int ID;
 
-    public Territory(int ID){
+    public Territory(int ID, Vector2 troopCircleVector){
         this.ID = ID;
+        this.troopCircleVector = troopCircleVector;
     }
 
     public int getID() {

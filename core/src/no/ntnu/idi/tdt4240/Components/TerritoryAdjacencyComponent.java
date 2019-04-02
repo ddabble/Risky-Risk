@@ -1,5 +1,12 @@
 package no.ntnu.idi.tdt4240.Components;
 
+import com.badlogic.gdx.math.Vector2;
+
+import org.omg.CORBA.SystemException;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,10 +93,40 @@ public class TerritoryAdjacencyComponent {
         Continent.put(6, new Integer[]{0x8000FF, 0xFF00FF, 0x800040, 0x400040});
 
     }
+    private Vector2[] readCoords(){
+        try{
+            FileReader fileReader = new FileReader("Coords.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String[] listString = new String[42];
+            String line;
+            int counter = 0;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                listString[counter] = (line.substring(line.lastIndexOf("Coords: ") + 8));
+                counter += 1;
+            }
+            fileReader.close();
+            Vector2[] vectors = new Vector2[listString.length];
+            for (int i = 0; i < listString.length; i++){
+                vectors[i] = new Vector2();
+                vectors[i].x = Float.parseFloat(listString[i].substring(1, listString[i].indexOf(",")));
+                vectors[i].y = Float.parseFloat(listString[i].substring(listString[i].indexOf(",") + 1, listString[i].length() - 2));
+            }
+            return vectors;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
     public void InitializeTerritoryObjects(){
+        Vector2[] troopCircleVectors = readCoords();
+        int counter = 0;
         for (Map.Entry<Integer, Integer[]> entry : Borders.entrySet()) {
-            TerritoryObjects.put(entry.getKey(), new Territory(entry.getKey()));
+            TerritoryObjects.put(entry.getKey(), new Territory(entry.getKey(), troopCircleVectors[counter]));
+            counter += 1;
         }
     }
 

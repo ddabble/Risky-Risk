@@ -18,9 +18,17 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+import no.ntnu.idi.tdt4240.Components.BattleModel;
+import no.ntnu.idi.tdt4240.Components.TerritoryAdjacencyComponent;
 import no.ntnu.idi.tdt4240.util.GLSLshaders;
 
 
@@ -129,6 +137,9 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
 
     // Move into appropriate place once needed
     private void setUpInputProcessor() {
+        final BattleModel battMod = new BattleModel();
+        final Random random = new Random();
+
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (button != Input.Buttons.LEFT) // Only useful for desktop
@@ -138,7 +149,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
                 Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
                 if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
                     Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
-                    System.out.println(getTile(mapPos));
                 }
 
                 return true;
@@ -162,6 +172,12 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         return MAP_COLORS_TILES.get(color);
     }
 
+    private String getTileID(Vector2 mapPos){
+        int color = mapPixmap.getPixel((int)mapPos.x, (int)mapPos.y) >>> 8;
+        String hex = Integer.toHexString(color);
+        return hex;
+    }
+
     public void render(OrthographicCamera camera) {
         batch.setProjectionMatrix(camera.combined);
 
@@ -169,7 +185,16 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapSprite.draw(batch);
         batch.end();
     }
-
+    public void Writer(String lineToWrite){
+        try{
+            FileWriter writer = new FileWriter("Coords.txt", true);
+            writer.write(lineToWrite);
+            writer.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public void dispose() {
         if (mapSprite.getTexture().getTextureData().disposePixmap())
