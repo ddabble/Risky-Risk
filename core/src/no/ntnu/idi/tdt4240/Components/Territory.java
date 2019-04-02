@@ -8,6 +8,13 @@ public class Territory {
     public Vector2 troopCircleVector;
     public final int ID;
 
+    // TODO: remove; temporary constructor just to make the code in BoardSystem work
+    public String name;
+    public Territory(String name) {
+        this(0, new Vector2());
+        this.name = name;
+    }
+
     public Territory(int ID, Vector2 troopCircleVector) {
         this.ID = ID;
         this.troopCircleVector = troopCircleVector;
