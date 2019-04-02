@@ -6,7 +6,7 @@ public class Continent {
     public Integer[] Territories;
     private int ID;
 
-    public Continent(int ID, Integer[] Territories){
+    public Continent(int ID, Integer[] Territories) {
         this.ID = ID;
         this.Territories = Territories;
     }

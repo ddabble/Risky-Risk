@@ -18,17 +18,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import no.ntnu.idi.tdt4240.Components.BattleModel;
-import no.ntnu.idi.tdt4240.Components.TerritoryAdjacencyComponent;
 import no.ntnu.idi.tdt4240.util.GLSLshaders;
 
 
@@ -172,7 +167,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         return MAP_COLORS_TILES.get(color);
     }
 
-    private String getTileID(Vector2 mapPos){
+    private String getTileID(Vector2 mapPos) {
         int color = mapPixmap.getPixel((int)mapPos.x, (int)mapPos.y) >>> 8;
         String hex = Integer.toHexString(color);
         return hex;
@@ -185,16 +180,17 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapSprite.draw(batch);
         batch.end();
     }
-    public void Writer(String lineToWrite){
-        try{
+
+    public void Writer(String lineToWrite) {
+        try {
             FileWriter writer = new FileWriter("Coords.txt", true);
             writer.write(lineToWrite);
             writer.close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void dispose() {
         if (mapSprite.getTexture().getTextureData().disposePixmap())

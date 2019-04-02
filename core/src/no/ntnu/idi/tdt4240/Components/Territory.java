@@ -6,15 +6,11 @@ public class Territory {
     public int Owner;
     public int Troops;
     public Vector2 troopCircleVector;
-    private int ID;
+    public final int ID;
 
-    public Territory(int ID, Vector2 troopCircleVector){
+    public Territory(int ID, Vector2 troopCircleVector) {
         this.ID = ID;
         this.troopCircleVector = troopCircleVector;
-    }
-
-    public int getID() {
-        return ID;
     }
 
     public void setTroops(int troops) {
