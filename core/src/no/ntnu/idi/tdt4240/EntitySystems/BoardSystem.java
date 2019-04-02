@@ -26,6 +26,7 @@ import java.util.Random;
 
 import no.ntnu.idi.tdt4240.Components.BattleModel;
 import no.ntnu.idi.tdt4240.Components.Territory;
+import no.ntnu.idi.tdt4240.util.ColorArray;
 import no.ntnu.idi.tdt4240.util.GLSLshaders;
 
 
@@ -86,6 +87,8 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         put(0x400040, new Territory("Australia 4"));
     }};
 
+    private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
+
     private ImmutableArray<Entity> entities;
 
     private OrthographicCamera camera;
@@ -112,6 +115,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapTexture = createColorLookupTexture();
         mapSprite = new Sprite(mapTexture);
 //        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
+        initColorLookupArray();
 
         setUpInputProcessor();
     }
@@ -164,6 +168,16 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         return (index << 2 * 8) | (index << 8) | (index);
     }
 
+    // TODO: currently assigns each territory a random player color
+    private void initColorLookupArray() {
+        int[] playerColors = new int[] {0xFF0000, 0x0000FF};
+        Random rand = new Random();
+        for (Territory territory : COLOR_TERRITORY_MAP.values()) {
+            int randomPlayer = rand.nextInt(playerColors.length);
+            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColors[randomPlayer] << 8);
+        }
+    }
+
     // Move into appropriate place once needed
     private void setUpInputProcessor() {
         final BattleModel battMod = new BattleModel();
@@ -213,6 +227,8 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        float[] playerColorLookup = PLAYER_COLOR_LOOKUP.getFloatArray();
+        mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
     }
