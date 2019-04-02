@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -106,9 +107,11 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
         mapTexture = new Texture("risk_game_map.png");
+        prepareMapPixmap(mapTexture);
+        mapTexture.dispose();
+        mapTexture = createColorLookupTexture();
         mapSprite = new Sprite(mapTexture);
 //        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
-        prepareMapPixmap();
 
         setUpInputProcessor();
     }
@@ -120,15 +123,45 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapShader = new ShaderProgram(vertexShader, fragmentShader);
     }
 
-    private void prepareMapPixmap() {
+    private void prepareMapPixmap(Texture mapTexture) {
         if (mapPixmap != null)
             return;
 
-        TextureData textureData = mapSprite.getTexture().getTextureData();
+        TextureData textureData = mapTexture.getTextureData();
         if (!textureData.isPrepared())
             textureData.prepare();
 
         mapPixmap = textureData.consumePixmap();
+    }
+
+    // Has a max limit of 255 different territories
+    private Texture createColorLookupTexture() {
+        for (int x = 0; x < mapPixmap.getWidth(); x++) {
+            for (int y = 0; y < mapPixmap.getHeight(); y++) {
+                int pixelColor = mapPixmap.getPixel(x, y);
+                int pixelColor_alpha = pixelColor & 0x000000FF;
+                // (Unsigned) bit shift one byte to the right to discard the alpha value
+                Territory territory = COLOR_TERRITORY_MAP.get(pixelColor >>> 8);
+                if (territory == null)
+                    continue;
+                int newPixelColor = (generateColor(territory.colorIndex) << 8) | pixelColor_alpha;
+                mapPixmap.drawPixel(x, y, newPixelColor);
+            }
+        }
+        updateColorTerritoryMap();
+
+        return new Texture(mapPixmap);
+    }
+
+    private void updateColorTerritoryMap() {
+        for (int color : new ArrayList<>(COLOR_TERRITORY_MAP.keySet())) {
+            Territory territory = COLOR_TERRITORY_MAP.remove(color);
+            COLOR_TERRITORY_MAP.put(generateColor(territory.colorIndex), territory);
+        }
+    }
+
+    private static int generateColor(byte index) {
+        return (index << 2 * 8) | (index << 8) | (index);
     }
 
     // Move into appropriate place once needed
@@ -196,7 +229,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
 
     @Override
     public void dispose() {
-        if (mapSprite.getTexture().getTextureData().disposePixmap())
+        if (mapTexture.getTextureData().disposePixmap())
             mapPixmap.dispose();
         mapTexture.dispose();
         batch.dispose();
