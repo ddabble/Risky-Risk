@@ -27,6 +27,13 @@ allprojects {
         roboVMVersion = '2.3.5'
         box2DLightsVersion = '1.4'
         aiVersion = '1.8.0'
+        // GPGS
+        android_compile_version = 26
+        // Google Play Services minimum requirements is 14
+        android_min_sdk_version = 14
+        appcompat_library_version = '27.0.2'
+        support_library_version = '27.0.2'
+        gms_library_version = '12.0.1'
     }
 
     repositories {
@@ -35,6 +42,8 @@ allprojects {
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        // GPGS
+        jcenter()
     }
 }
 
@@ -57,13 +66,19 @@ project(":android") {
 
     dependencies {
         compile project(":core")
-        compile 'com.google.android.gms:play-services:12.0.1'
+        //compile 'com.google.android.gms:play-services:12.0.1'
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+        //GPGS
+        implementation "com.android.support:appcompat-v7:${appcompat_library_version}"
+        implementation "com.android.support:support-v4:${support_library_version}"
+        implementation "com.google.android.gms:play-services-games:${gms_library_version}"
+        implementation "com.google.android.gms:play-services-auth:${gms_library_version}"
     }
 }
 
