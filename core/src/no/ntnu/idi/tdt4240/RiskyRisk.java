@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 
 import no.ntnu.idi.tdt4240.Models.GameModel;
 import no.ntnu.idi.tdt4240.Models.SettingsModel;
-import no.ntnu.idi.tdt4240.Views.MultiplayerView;
+import no.ntnu.idi.tdt4240.Views.LoginView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
@@ -25,7 +25,7 @@ public class RiskyRisk extends Game {
         settingsModel = new SettingsModel();
         gameModel = new GameModel();
 
-        this.setScreen(new MultiplayerView(this));
+        this.setScreen(new LoginView(this));
     }
 
     @Override
