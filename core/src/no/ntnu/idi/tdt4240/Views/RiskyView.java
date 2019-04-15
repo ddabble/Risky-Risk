@@ -1,44 +1,164 @@
 package no.ntnu.idi.tdt4240.Views;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.Controllers.GameController;
 import no.ntnu.idi.tdt4240.Controllers.GameViewer;
+import no.ntnu.idi.tdt4240.Controllers.IGPGSClient;
+import no.ntnu.idi.tdt4240.Controllers.IRiskyTurn;
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.Views.AbstractView;
 
 public class RiskyView extends AbstractView implements GameViewer{
 
-    OrthographicCamera camera;
-    Texture img;
+
+    private final Button doneButton;
+    private final Label turnCounter;
+    private Stage stage;
+    private Table table;
     private GameController gameController;
+    private IGPGSClient gpgsClient;
+    private final TextField dataToSend;
+    private Label dataReceived;
 
     public RiskyView(RiskyRisk game) {
         super(game);
-        img = new Texture("badlogic.jpg");
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+        table = new Table();
+        table.setDebug(true);
+        table.setFillParent(true);
+        stage.addActor(table);
 
+        gpgsClient = game.gpgsClient;
         gameController = new GameController(this, game.getGameModel());
+
+        // Gameplay Layout
+        turnCounter = this.createLabel("");
+        dataReceived = this.createLabel("");
+        dataToSend = this.createTextField("");
+
+        table.add(turnCounter);
+        table.add(dataReceived);
+        table.add(dataToSend);
+        table.row();
+
+        doneButton = this.createButton("Done with turn");
+        Button cancelButton = this.createButton("Cancel game");
+        Button leaveButton = this.createButton("Leave game");
+        Button finishButton = this.createButton("Finish game (debug)");
+
+        doneButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    String data = dataToSend.getText();
+                    gpgsClient.onDoneClicked(data);
+                }
+            }
+        });
+
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.onCancelClicked();
+
+                }
+            }
+        });
+
+        leaveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.onLeaveClicked();
+
+                }
+            }
+        });
+
+        finishButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.onFinishClicked();
+
+                }
+            }
+        });
+
+
+
+        table.add(doneButton);
+        table.row();
+        table.add(cancelButton);
+        table.add(leaveButton);
+        table.add(finishButton);
+
+        table.row();
+
+
     }
 
     @Override
     public void show() {
+        Button backButton = this.createButton("Back to main");
 
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gpgsClient.pauseGame();
+                game.setScreen(new MainMenuView(game));
+
+            }
+        });
+
+        table.add(backButton);
     }
 
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (!gpgsClient.matchActive()){
+            game.setScreen(new MainMenuView(game));
+        }
 
-        camera.update();
+        if (gpgsClient.isDoingTurn()) {
+            doneButton.setVisible(true);
+            dataToSend.setVisible(true);
+        } else {
+            doneButton.setVisible(false);
+            dataToSend.setVisible(false);
+
+        }
+
+        // Check if we need to update view
+        IRiskyTurn turn = gpgsClient.getmRiskyTurn();
+        if (turn != null) {
+
+            int counter = turn.getTurnCounter();
+            String receivedData = turn.getTurnData();
+
+            turnCounter.setText(counter);
+            dataReceived.setText(receivedData);
+        }
+
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.getBatch().begin();
+        //stage.getBatch().draw(background, 0, 0);
+        stage.getBatch().end();
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
@@ -60,7 +180,7 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     @Override
     public void dispose() {
-        img.dispose();
+        //img.dispose();
     }
 
     @Override
