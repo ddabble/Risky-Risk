@@ -24,6 +24,7 @@ android {
         targetSdkVersion  android_compile_version//27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
