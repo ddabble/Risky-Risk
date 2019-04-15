@@ -24,12 +24,14 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import no.ntnu.idi.tdt4240.Controllers.IRiskyTurn;
+
 /**
  * Basic turn data. It's just a blank data string and a turn number counter.
  *
  * @author wolff
  */
-public class RiskyTurn {
+public class RiskyTurn implements IRiskyTurn {
 
     public static final String TAG = "EBTurn";
 
@@ -93,5 +95,13 @@ public class RiskyTurn {
         }
 
         return retVal;
+    }
+
+    public String getTurnData() {
+        return data;
+    }
+
+    public int getTurnCounter() {
+        return turnCounter;
     }
 }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,6 +20,7 @@ import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.GamesClientStatusCodes;
 import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.Player;
+import com.google.android.gms.games.PlayersClient;
 import com.google.android.gms.games.TurnBasedMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
@@ -35,6 +35,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+
+import no.ntnu.idi.tdt4240.Controllers.IGPGSClient;
+import no.ntnu.idi.tdt4240.Controllers.IRiskyTurn;
 
 
 public class GPGSClient implements IGPGSClient {
@@ -57,6 +60,7 @@ public class GPGSClient implements IGPGSClient {
     final static int RC_SELECT_PLAYERS = 10000;
     final static int RC_LOOK_AT_MATCHES = 10001;
 
+
     // Should I be showing the turn API?
     public boolean isDoingTurn = false;
 
@@ -67,7 +71,8 @@ public class GPGSClient implements IGPGSClient {
     // This is the current match data after being unpersisted.
     // Do not retain references to match data once you have
     // taken an action on the match, such as takeTurn()
-    public RiskyTurn mTurnData;
+    private RiskyTurn mTurnData;
+    private boolean matchActive = false;
 
     public GPGSClient(Activity activity) {
         // Create the Google API Client with access to Games
@@ -103,7 +108,8 @@ public class GPGSClient implements IGPGSClient {
 
 
     public void onConnected(GoogleSignInAccount googleSignInAccount) {
-        Log.d(TAG, "onConnected(): connected to Google APIs");
+        String name = googleSignInAccount.getId();
+        Log.d(TAG, "onConnected(): " + name + " connected to Google APIs");
 
         mTurnBasedMultiplayerClient = Games.getTurnBasedMultiplayerClient(mActivity, googleSignInAccount);
         mInvitationsClient = Games.getInvitationsClient(mActivity, googleSignInAccount);
@@ -183,7 +189,7 @@ public class GPGSClient implements IGPGSClient {
 
     // Displays your inbox. You will get back onActivityResult where
     // you will need to figure out what you clicked on.
-    public void onCheckGamesClicked(View view) {
+    public void onCheckGamesClicked() {
         mTurnBasedMultiplayerClient.getInboxIntent()
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {
                     @Override
@@ -197,7 +203,7 @@ public class GPGSClient implements IGPGSClient {
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked() {//View view) {
-        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(0, 7, true)
+        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 7, true)
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {
                     @Override
                     public void onSuccess(Intent intent) {
@@ -209,7 +215,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // Create a one-on-one automatch game.
-    public void onQuickMatchClicked() {//View view) {
+    /*public void onQuickMatchClicked() {//View view) {
 
         Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
 
@@ -227,13 +233,13 @@ public class GPGSClient implements IGPGSClient {
                     }
                 })
                 .addOnFailureListener(createFailureListener("There was a problem creating a match!"));
-    }
+    }*/
 
     // In-game controls
 
     // Cancel the game. Should possibly wait until the game is canceled before
     // giving up on the view.
-    public void onCancelClicked(View view) {
+    public void onCancelClicked() {
         showSpinner();
 
         mTurnBasedMultiplayerClient.cancelMatch(mMatch.getMatchId())
@@ -246,12 +252,13 @@ public class GPGSClient implements IGPGSClient {
                 .addOnFailureListener(createFailureListener("There was a problem cancelling the match!"));
 
         isDoingTurn = false;
-        setViewVisibility();
+        matchActive = false;
+        //setViewVisibility();
     }
 
     // Leave the game during your turn. Note that there is a separate
     // mTurnBasedMultiplayerClient.leaveMatch() if you want to leave NOT on your turn.
-    public void onLeaveClicked(View view) {
+    public void onLeaveClicked() {
         showSpinner();
         String nextParticipantId = getNextParticipantId();
 
@@ -264,11 +271,13 @@ public class GPGSClient implements IGPGSClient {
                 })
                 .addOnFailureListener(createFailureListener("There was a problem leaving the match!"));
 
-        setViewVisibility();
+        isDoingTurn = false;
+        matchActive = false;
+        //setViewVisibility();
     }
 
     // Finish the game. Sometimes, this is your only choice.
-    public void onFinishClicked(View view) {
+    public void onFinishClicked() {
         showSpinner();
         mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
@@ -280,7 +289,8 @@ public class GPGSClient implements IGPGSClient {
                 .addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
 
         isDoingTurn = false;
-        setViewVisibility();
+        matchActive = false;
+        //setViewVisibility();
     }
 
 
@@ -406,12 +416,27 @@ public class GPGSClient implements IGPGSClient {
         alertDialogBuilder.show();
     }
 
+    // Check if already signed in (synh)
+
+    public boolean isSignedIn() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
+        boolean hasPermissions = GoogleSignIn.hasPermissions(account);
+
+        boolean isSignedIn = account!=null && hasPermissions;
+
+        if (isSignedIn) {
+            Log.d(TAG, "isSignedin(): already signed in");
+            signInSilently();
+            //onConnected(account);
+        }
+        return isSignedIn;
+    }
+
     /**
      * Start a sign in activity.  To properly handle the result, call tryHandleSignInResult from
      * your Activity's onActivityResult function
      */
     public void startSignInIntent() {
-
         mActivity.startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
     }
 
@@ -581,6 +606,7 @@ public class GPGSClient implements IGPGSClient {
                     .setAutoMatchCriteria(autoMatchCriteria).build();
 
             // Start the match
+
             mTurnBasedMultiplayerClient.createMatch(tbmc)
                     .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
                         @Override
@@ -603,7 +629,6 @@ public class GPGSClient implements IGPGSClient {
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = "First turn";
-
         mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
@@ -675,6 +700,8 @@ public class GPGSClient implements IGPGSClient {
     // This is the main function that gets called when players choose a match
     // from the inbox, or else create a match and want to start it.
     public void updateMatch(TurnBasedMatch match) {
+        matchActive = true;
+
         mMatch = match;
 
         int status = match.getStatus();
@@ -682,16 +709,20 @@ public class GPGSClient implements IGPGSClient {
 
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:
+                matchActive = false;
                 showWarning("Canceled!", "This game was canceled!");
                 return;
             case TurnBasedMatch.MATCH_STATUS_EXPIRED:
+                matchActive = false;
                 showWarning("Expired!", "This game is expired.  So sad!");
                 return;
             case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
+                matchActive = false;
                 showWarning("Waiting for auto-match...",
                         "We're still waiting for an automatch partner.");
                 return;
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
+                matchActive = false;
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
                     showWarning("Complete!",
                             "This game is over; someone finished it, and so did you!  " +
@@ -730,6 +761,8 @@ public class GPGSClient implements IGPGSClient {
 
         isDoingTurn = false;
 
+        matchActive = false;
+
         showWarning("Match", "This match (" + matchId + ") was canceled.  " +
                 "All other players will have their game ended.");
     }
@@ -748,6 +781,8 @@ public class GPGSClient implements IGPGSClient {
 
     private void onLeaveMatch() {
         dismissSpinner();
+
+        matchActive = false;
 
         isDoingTurn = false;
         showWarning("Left", "You've left this match.");
@@ -849,21 +884,20 @@ public class GPGSClient implements IGPGSClient {
         return false;
     }
 
-    public String getPlayerDisplayName() {
-        return mDisplayName;
+    public boolean matchActive() {
+        return matchActive;
     }
 
-    /*public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                mMatch = null;
-                findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-                startSignInIntent();
-                break;
-            case R.id.sign_out_button:
-                signOut();
-                setViewVisibility();
-                break;
-        }
-    }*/
+    public void pauseGame() {
+        matchActive = false;
+    }
+
+    public boolean isDoingTurn() {
+        return isDoingTurn;
+    }
+
+    public IRiskyTurn getmRiskyTurn() {
+        return mTurnData;
+    }
+
 }
