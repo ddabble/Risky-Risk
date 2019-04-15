@@ -9,11 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen  {
+    private final TextField.TextFieldStyle textFieldStyle;
     protected RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
@@ -22,10 +24,13 @@ public abstract class AbstractView implements Screen  {
 
     public AbstractView(RiskyRisk game) {
         this.game = game;
+
+        // Skins
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
         labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        textFieldStyle = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
 
         textButtonStyle.up = skin.getDrawable("default-round");
         textButtonStyle.down = skin.getDrawable("default-round-down");
@@ -43,6 +48,10 @@ public abstract class AbstractView implements Screen  {
         SelectBox<T> selectBox = new SelectBox<T>(selectStyle);
         selectBox.setItems(options);
         return selectBox;
+    }
+
+    protected TextField createTextField(String text) {
+        return new TextField(text,textFieldStyle);
     }
 
     protected Label createLabel(String text) {
