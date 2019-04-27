@@ -18,7 +18,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -49,7 +48,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         super();
         this.camera = camera;
 
-        territoryMap = TerritoryMap.parseJsonMapStructure(new File("risk_map_structure.json"));
+        territoryMap = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("risk_map_structure.json"));
     }
 
     public void addedToEngine(Engine engine) {
@@ -72,6 +71,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
         String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
         mapShader = new ShaderProgram(vertexShader, fragmentShader);
+        ShaderProgram.pedantic = false;
     }
 
     private void prepareMapPixmap(Texture mapTexture) {

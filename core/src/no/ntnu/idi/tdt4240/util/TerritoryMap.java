@@ -1,8 +1,8 @@
 package no.ntnu.idi.tdt4240.util;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +51,11 @@ public class TerritoryMap {
         this.color_IDmap = new HashMap<>(color_IDmap);
     }
 
-    public static TerritoryMap parseJsonMapStructure(File jsonFile) {
+    public static TerritoryMap parseJsonMapStructure(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
         Map readJson;
         try {
-            readJson = mapper.readValue(jsonFile, Map.class);
+            readJson = mapper.readValue(jsonFile.readString(), Map.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
