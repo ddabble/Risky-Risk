@@ -1,9 +1,11 @@
-package no.ntnu.idi.tdt4240.util;
+package no.ntnu.idi.tdt4240.util.gl;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import no.ntnu.idi.tdt4240.util.Utils;
 
 import static com.badlogic.gdx.graphics.GL20.*;
 
@@ -23,7 +25,7 @@ public class GLSLshaders {
 
         String source;
         try {
-            source = Util.readFile(shaderFile);
+            source = Utils.readFile(shaderFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -31,19 +33,19 @@ public class GLSLshaders {
         int shaderTypeIndex = source.indexOf("/***");
         if (shaderTypeIndex == -1)
             throw new GLSLshaderParseException("Could not find any shader type declarations."
-                    + "\n\tat " + Util.getLinkToCharInFile(shaderFile, source, 0));
+                    + "\n\tat " + Utils.getLinkToCharInFile(shaderFile, source, 0));
         do {
             int endIndex = source.indexOf("*/", shaderTypeIndex + "/***".length());
             if (endIndex == -1)
                 throw new GLSLshaderParseException("Missing comment end token */ for the shader type declaration."
-                        + "\n\tat " + Util.getLinkToCharInFile(shaderFile, source, shaderTypeIndex));
+                        + "\n\tat " + Utils.getLinkToCharInFile(shaderFile, source, shaderTypeIndex));
 
             String shaderTypeDeclaration = source.substring(shaderTypeIndex + "/***".length(), endIndex);
 
             Shader shader = parseShaderTypeDeclaration(shaderTypeDeclaration);
             if (shader == null)
                 throw new GLSLshaderParseException("Could not find a valid shader type in the shader type declaration."
-                        + "\n\tat " + Util.getLinkToCharInFile(shaderFile, source, shaderTypeIndex));
+                        + "\n\tat " + Utils.getLinkToCharInFile(shaderFile, source, shaderTypeIndex));
 
             int nextShaderTypeIndex = source.indexOf("/***", shaderTypeIndex + "/***".length());
             if (nextShaderTypeIndex != -1)
@@ -65,7 +67,7 @@ public class GLSLshaders {
                 missingShaderType = "vertex shader";
 
             throw new GLSLshaderParseException("Could not find any " + missingShaderType + "."
-                    + "\n\tat " + Util.getLinkToCharInFile(shaderFile, source, source.length()));
+                    + "\n\tat " + Utils.getLinkToCharInFile(shaderFile, source, source.length()));
         }
 
         return shaders;

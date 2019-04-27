@@ -18,13 +18,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import no.ntnu.idi.tdt4240.Components.BattleModel;
 import no.ntnu.idi.tdt4240.Components.Territory;
 import no.ntnu.idi.tdt4240.util.ColorArray;
 import no.ntnu.idi.tdt4240.util.GLSLshaders;
@@ -138,18 +136,21 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapPixmap = textureData.consumePixmap();
     }
 
-    // Has a max limit of 255 different territories
+    /**
+     * Has a max limit of 255 different territories, because {@link #generateColor(byte)} works bytewise.
+     */
     private Texture createColorLookupTexture() {
-        for (int x = 0; x < mapPixmap.getWidth(); x++) {
-            for (int y = 0; y < mapPixmap.getHeight(); y++) {
-                int pixelColor = mapPixmap.getPixel(x, y);
-                int pixelColor_alpha = pixelColor & 0x000000FF;
+        for (int y = 0; y < mapPixmap.getHeight(); y++) {
+            for (int x = 0; x < mapPixmap.getWidth(); x++) {
+                int pixel = mapPixmap.getPixel(x, y);
+                int pixelAlpha = pixel & 0x000000FF;
                 // (Unsigned) bit shift one byte to the right to discard the alpha value
-                Territory territory = COLOR_TERRITORY_MAP.get(pixelColor >>> 8);
+                int pixelColor = pixel >>> 8;
+                Territory territory = COLOR_TERRITORY_MAP.get(pixelColor);
                 if (territory == null)
                     continue;
-                int newPixelColor = (generateColor(territory.colorIndex) << 8) | pixelColor_alpha;
-                mapPixmap.drawPixel(x, y, newPixelColor);
+                int newPixel = (generateColor(territory.colorIndex) << 8) | pixelAlpha;
+                mapPixmap.drawPixel(x, y, newPixel);
             }
         }
         updateColorTerritoryMap();
@@ -180,9 +181,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
 
     // Move into appropriate place once needed
     private void setUpInputProcessor() {
-        final BattleModel battMod = new BattleModel();
-        final Random random = new Random();
-
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (button != Input.Buttons.LEFT) // Only useful for desktop
@@ -217,12 +215,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         return COLOR_TERRITORY_MAP.get(color);
     }
 
-    private String getTileID(Vector2 mapPos) {
-        int color = mapPixmap.getPixel((int)mapPos.x, (int)mapPos.y) >>> 8;
-        String hex = Integer.toHexString(color);
-        return hex;
-    }
-
     public void render(OrthographicCamera camera) {
         batch.setProjectionMatrix(camera.combined);
 
@@ -231,16 +223,6 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
-    }
-
-    public void Writer(String lineToWrite) {
-        try {
-            FileWriter writer = new FileWriter("Coords.txt", true);
-            writer.write(lineToWrite);
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

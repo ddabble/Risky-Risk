@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.util;
+package no.ntnu.idi.tdt4240.util.gl;
 
 import com.badlogic.gdx.graphics.Color;
 

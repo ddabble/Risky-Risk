@@ -6,11 +6,13 @@ public class Territory {
     // Can't start at 0, because the map's borders are black
     private static byte nextColorIndex = 1;
 
-    public int Owner;
-    public int Troops;
-    public Vector2 troopCircleVector;
     public final int ID;
+    private final Vector2 troopCircleVector;
+
     public final byte colorIndex;
+
+    private int ownerID;
+    private int numTroops;
 
     // TODO: remove; temporary constructor just to make the code in BoardSystem work
     public String name;
@@ -25,19 +27,23 @@ public class Territory {
         colorIndex = nextColorIndex++;
     }
 
-    public void setTroops(int troops) {
-        Troops = troops;
+    public Vector2 getTroopCircleVector() {
+        return new Vector2(troopCircleVector);
     }
 
-    public int getTroops() {
-        return Troops;
+    public int getNumTroops() {
+        return numTroops;
     }
 
-    public void setOwner(int owner) {
-        Owner = owner;
+    public void setNumTroops(int numTroops) {
+        this.numTroops = numTroops;
     }
 
-    public int getOwner() {
-        return Owner;
+    public int getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
     }
 }
