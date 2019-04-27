@@ -89,6 +89,9 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
      * Has a max limit of 255 different territories, because {@link #generateColor(byte)} works bytewise.
      */
     private Texture createColorLookupTexture() {
+        // Makes `Pixmap.drawPixel()` directly set the pixel, instead of drawing the new color on top of the old one
+        mapPixmap.setBlending(Pixmap.Blending.None);
+
         for (int y = 0; y < mapPixmap.getHeight(); y++) {
             for (int x = 0; x < mapPixmap.getWidth(); x++) {
                 int pixel = mapPixmap.getPixel(x, y);
@@ -104,9 +107,9 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
                     pixelAlpha = 0;
 
                 Territory territory = territoryMap.getTerritory(pixelColor);
-                if (territory == null)
-                    continue;
-                int newPixel = (generateColor(territory.colorIndex) << 8) | pixelAlpha;
+                if (territory != null)
+                    pixelColor = generateColor(territory.colorIndex);
+                int newPixel = (pixelColor << 8) | pixelAlpha;
                 mapPixmap.drawPixel(x, y, newPixel);
             }
         }

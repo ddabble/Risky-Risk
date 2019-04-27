@@ -31,7 +31,7 @@ public class RiskyRisk extends ApplicationAdapter {
         boardSystem = new BoardSystem(camera);
         engine.addSystem(boardSystem);
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
     @Override
