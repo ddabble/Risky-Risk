@@ -1,19 +1,18 @@
 package no.ntnu.idi.tdt4240.Components;
 
+import java.util.List;
+
 public class Continent {
-    public Integer[] Territories;
-    private int ID;
 
-    public Continent(int ID, Integer[] Territories) {
-        this.ID = ID;
-        this.Territories = Territories;
+    public final String name;
+    private final List<Territory> territories;
+
+    public Continent(String name, List<Territory> territories) {
+        this.name = name;
+        this.territories = territories;
     }
 
-    public Integer[] getTerritories() {
-        return Territories;
-    }
-
-    public int getID() {
-        return ID;
+    public List<Territory> getTerritories() {
+        return territories;
     }
 }

@@ -2,33 +2,44 @@ package no.ntnu.idi.tdt4240.Components;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Territory {
     // Can't start at 0, because the map's borders are black
     private static byte nextColorIndex = 1;
 
-    public final int ID;
+    public final String name; // not really needed; only for debugging
     private final Vector2 troopCircleVector;
 
     public final byte colorIndex;
+
+    private List<Territory> neighbors;
 
     private int ownerID;
     private int numTroops;
 
     // TODO: remove; temporary constructor just to make the code in BoardSystem work
-    public String name;
     public Territory(String name) {
-        this(0, new Vector2());
-        this.name = name;
+        this(name, new Vector2());
     }
 
-    public Territory(int ID, Vector2 troopCircleVector) {
-        this.ID = ID;
+    public Territory(String name, Vector2 troopCircleVector) {
+        this.name = name;
         this.troopCircleVector = troopCircleVector;
         colorIndex = nextColorIndex++;
     }
 
     public Vector2 getTroopCircleVector() {
         return new Vector2(troopCircleVector);
+    }
+
+    public List<Territory> getNeighbors() {
+        return new ArrayList<>(neighbors);
+    }
+
+    public void setNeighbors(List<Territory> neighbors) {
+        this.neighbors = new ArrayList<>(neighbors);
     }
 
     public int getNumTroops() {

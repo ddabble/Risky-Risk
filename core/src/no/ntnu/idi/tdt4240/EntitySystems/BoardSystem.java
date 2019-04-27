@@ -18,72 +18,19 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import no.ntnu.idi.tdt4240.Components.Territory;
-import no.ntnu.idi.tdt4240.util.ColorArray;
-import no.ntnu.idi.tdt4240.util.GLSLshaders;
+import no.ntnu.idi.tdt4240.util.TerritoryMap;
+import no.ntnu.idi.tdt4240.util.gl.ColorArray;
+import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 
 public class BoardSystem extends ApplicationAdapterEntitySystem {
-    private final Map<Integer, Territory> COLOR_TERRITORY_MAP = new HashMap<Integer, Territory>() {{
-        // North America
-        put(0x6A8600, new Territory("North America 1"));
-        put(0x3F5437, new Territory("North America 2"));
-        put(0xFFFF00, new Territory("North America 3"));
-        put(0x949449, new Territory("North America 4"));
-        put(0xD1FF80, new Territory("North America 5"));
-        put(0x505027, new Territory("North America 6"));
-        put(0x808000, new Territory("North America 7"));
-        put(0xFFFF80, new Territory("North America 8"));
-        put(0xA27300, new Territory("North America 9"));
-
-        // South America
-        put(0xFF8080, new Territory("South America 1"));
-        put(0x800000, new Territory("South America 2"));
-        put(0x804040, new Territory("South America 3"));
-        put(0xFF0000, new Territory("South America 4"));
-
-        // Europe
-        put(0x0000FF, new Territory("Europe 1"));
-        put(0x0080FF, new Territory("Europe 2"));
-        put(0x004080, new Territory("Europe 3"));
-        put(0x000080, new Territory("Europe 4"));
-        put(0x000041, new Territory("Europe 5"));
-        put(0xF380FF, new Territory("Europe 6"));
-        put(0x43378F, new Territory("Europe 7"));
-
-        // Africa
-        put(0xFF915B, new Territory("Africa 1"));
-        put(0x972900, new Territory("Africa 2"));
-        put(0xAE5700, new Territory("Africa 3"));
-        put(0xFF8000, new Territory("Africa 4"));
-        put(0x804000, new Territory("Africa 5"));
-        put(0x6F4B00, new Territory("Africa 6"));
-
-        // Asia
-        put(0x562913, new Territory("Asia 1"));
-        put(0x006765, new Territory("Asia 2"));
-        put(0x00956D, new Territory("Asia 3"));
-        put(0x008040, new Territory("Asia 4"));
-        put(0x80A480, new Territory("Asia 5"));
-        put(0xB3AA00, new Territory("Asia 6"));
-        put(0x004000, new Territory("Asia 7"));
-        put(0x627451, new Territory("Asia 8"));
-        put(0x80FF00, new Territory("Asia 9"));
-        put(0x008000, new Territory("Asia 10"));
-        put(0x008080, new Territory("Asia 11"));
-        put(0x80FF80, new Territory("Asia 12"));
-
-        // Australia
-        put(0x8000FF, new Territory("Australia 1"));
-        put(0xFF00FF, new Territory("Australia 2"));
-        put(0x800040, new Territory("Australia 3"));
-        put(0x400040, new Territory("Australia 4"));
-    }};
+    private TerritoryMap territoryMap;
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
@@ -101,6 +48,8 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     public BoardSystem(OrthographicCamera camera) {
         super();
         this.camera = camera;
+
+        territoryMap = TerritoryMap.parseJsonMapStructure(new File("risk_map_structure.json"));
     }
 
     public void addedToEngine(Engine engine) {
@@ -146,7 +95,15 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
                 int pixelAlpha = pixel & 0x000000FF;
                 // (Unsigned) bit shift one byte to the right to discard the alpha value
                 int pixelColor = pixel >>> 8;
-                Territory territory = COLOR_TERRITORY_MAP.get(pixelColor);
+
+                if (pixelAlpha > 0 && pixelAlpha < 0x80)
+                    // If almost transparent, set to opaque
+                    pixelAlpha = 0xFF;
+                else if (pixelAlpha >= 0x80 && pixelAlpha < 0xFF)
+                    // Else - if almost opaque, set to transparent
+                    pixelAlpha = 0;
+
+                Territory territory = territoryMap.getTerritory(pixelColor);
                 if (territory == null)
                     continue;
                 int newPixel = (generateColor(territory.colorIndex) << 8) | pixelAlpha;
@@ -159,10 +116,12 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     }
 
     private void updateColorTerritoryMap() {
-        for (int color : new ArrayList<>(COLOR_TERRITORY_MAP.keySet())) {
-            Territory territory = COLOR_TERRITORY_MAP.remove(color);
-            COLOR_TERRITORY_MAP.put(generateColor(territory.colorIndex), territory);
+        Map<Integer, String> color_IDmap = territoryMap.getColor_IDmap();
+        for (int color : new ArrayList<>(color_IDmap.keySet())) {
+            String ID = color_IDmap.remove(color);
+            color_IDmap.put(generateColor(territoryMap.getTerritory(ID).colorIndex), ID);
         }
+        territoryMap.setColor_IDmap(color_IDmap);
     }
 
     private static int generateColor(byte index) {
@@ -173,7 +132,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     private void initColorLookupArray() {
         int[] playerColors = new int[] {0xFF0000, 0x0000FF};
         Random rand = new Random();
-        for (Territory territory : COLOR_TERRITORY_MAP.values()) {
+        for (Territory territory : territoryMap.getIDmap().values()) {
             int randomPlayer = rand.nextInt(playerColors.length);
             PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColors[randomPlayer] << 8);
         }
@@ -212,7 +171,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
     private Territory getTerritory(Vector2 mapPos) {
         // (Unsigned) bit shift one byte to the right to discard the alpha value
         int color = mapPixmap.getPixel((int)mapPos.x, (int)mapPos.y) >>> 8;
-        return COLOR_TERRITORY_MAP.get(color);
+        return territoryMap.getTerritory(color);
     }
 
     public void render(OrthographicCamera camera) {

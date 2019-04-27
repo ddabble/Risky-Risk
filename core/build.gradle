@@ -6,5 +6,7 @@ sourceSets.main.java.srcDirs = ["src/"]
 eclipse.project {
     name = appName + "-core"
 }
+
 dependencies {
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
 }
