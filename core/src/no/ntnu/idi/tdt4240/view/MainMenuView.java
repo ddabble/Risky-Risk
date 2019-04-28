@@ -40,7 +40,9 @@ public class MainMenuView extends AbstractView {
         multiplayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MultiplayerView(game));
+                // TODO: Should be MultiplayerView, GameView is only temporary to easier see the board being rendered
+//                game.setScreen(new MultiplayerView(game));
+                game.setScreen(new GameView(game));
             }
         });
 
