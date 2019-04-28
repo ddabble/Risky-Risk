@@ -66,6 +66,7 @@ public class TerritoryMap {
         List<Continent> continents = new ArrayList<>();
         Map<String, Territory> IDmap = new HashMap<>();
         Map<Integer, String> color_IDmap = new HashMap<>();
+        Map<String, List<String>> neighborMap = new HashMap<>();
         for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentMap.entrySet()) {
 
             List<Territory> continentTerritories = new ArrayList<>();
@@ -76,6 +77,8 @@ public class TerritoryMap {
                 String territoryColor = (String)territoryFields.get("color");
                 @SuppressWarnings("unchecked")
                 List<Integer> territoryCenterCoords = (List<Integer>)territoryFields.get("coords");
+                @SuppressWarnings("unchecked")
+                List<String> neighborIDs = (List<String>)territoryFields.get("neighbors");
 
                 Vector2 territoryCenterVector = new Vector2(territoryCenterCoords.get(0), territoryCenterCoords.get(1));
 
@@ -86,25 +89,18 @@ public class TerritoryMap {
                 continentTerritories.add(territory);
                 IDmap.put(territoryID, territory);
                 color_IDmap.put(Integer.decode(territoryColor), territoryID);
+                neighborMap.put(territoryID, neighborIDs);
             }
             continents.add(new Continent(continentEntry.getKey(), continentTerritories));
         }
         // Parse and set territories' neighbors
-        for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentMap.entrySet()) {
-            for (Map.Entry<String, Map<String, Object>> territoryEntry : continentEntry.getValue().entrySet()) {
+        for (Map.Entry<String, List<String>> neighborEntry : neighborMap.entrySet()) {
+            List<Territory> neighbors = new ArrayList<>();
+            for (String neighborID : neighborEntry.getValue())
+                neighbors.add(IDmap.get(neighborID.toLowerCase()));
 
-                Map<String, Object> territoryFields = territoryEntry.getValue();
-                @SuppressWarnings("unchecked")
-                List<String> neighborIDs = (List<String>)territoryFields.get("neighbors");
-
-                List<Territory> neighbors = new ArrayList<>();
-                for (String neighborID : neighborIDs) {
-                    neighbors.add(IDmap.get(neighborID));
-                }
-
-                Territory territory = IDmap.get(territoryEntry.getKey().toLowerCase());
-                territory.setNeighbors(neighbors);
-            }
+            Territory territory = IDmap.get(neighborEntry.getKey().toLowerCase());
+            territory.setNeighbors(neighbors);
         }
 
         TerritoryMap territoryMap = new TerritoryMap(IDmap, color_IDmap);
