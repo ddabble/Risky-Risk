@@ -1,8 +1,6 @@
 package no.ntnu.idi.tdt4240.EntitySystems;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -28,12 +26,10 @@ import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 
-public class BoardSystem extends ApplicationAdapterEntitySystem {
+public class BoardSystem extends ApplicationAdapter {
     private TerritoryMap territoryMap;
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
-
-    private ImmutableArray<Entity> entities;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -51,7 +47,7 @@ public class BoardSystem extends ApplicationAdapterEntitySystem {
         territoryMap = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("risk_map_structure.json"));
     }
 
-    public void addedToEngine(Engine engine) {
+    public void init() {
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
