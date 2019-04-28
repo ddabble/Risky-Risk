@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import no.ntnu.idi.tdt4240.EntitySystems.BoardSystem;
-import no.ntnu.idi.tdt4240.Models.GameModel;
-import no.ntnu.idi.tdt4240.Models.SettingsModel;
-import no.ntnu.idi.tdt4240.Views.MainMenuView;
+import no.ntnu.idi.tdt4240.model.GameModel;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
+import no.ntnu.idi.tdt4240.view.MainMenuView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {

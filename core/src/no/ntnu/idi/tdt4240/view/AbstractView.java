@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Views;
+package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

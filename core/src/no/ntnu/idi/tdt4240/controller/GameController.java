@@ -1,6 +1,6 @@
-package no.ntnu.idi.tdt4240.Controllers;
+package no.ntnu.idi.tdt4240.controller;
 
-import no.ntnu.idi.tdt4240.Models.GameModel;
+import no.ntnu.idi.tdt4240.model.GameModel;
 
 /**
  * Created by Oivind on 3/21/2019.

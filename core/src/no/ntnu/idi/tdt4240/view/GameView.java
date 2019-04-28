@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Views;
+package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,18 +6,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
-import no.ntnu.idi.tdt4240.Controllers.GameController;
-import no.ntnu.idi.tdt4240.Controllers.GameViewer;
+import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.GameViewer;
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.Views.AbstractView;
+import no.ntnu.idi.tdt4240.view.AbstractView;
 
-public class RiskyView extends AbstractView implements GameViewer{
-
+public class GameView extends AbstractView implements GameViewer{
     OrthographicCamera camera;
     Texture img;
     private GameController gameController;
 
-    public RiskyView(RiskyRisk game) {
+    public GameView(RiskyRisk game) {
         super(game);
         img = new Texture("badlogic.jpg");
 

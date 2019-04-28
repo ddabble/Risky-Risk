@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Controllers;
+package no.ntnu.idi.tdt4240.controller;
 
 /**
  * Created by Oivind on 3/21/2019.
