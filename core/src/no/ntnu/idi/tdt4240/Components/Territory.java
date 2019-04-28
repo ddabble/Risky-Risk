@@ -19,11 +19,6 @@ public class Territory {
     private int ownerID;
     private int numTroops;
 
-    // TODO: remove; temporary constructor just to make the code in BoardSystem work
-    public Territory(String name) {
-        this(name, new Vector2());
-    }
-
     public Territory(String name, Vector2 troopCircleVector) {
         this.name = name;
         this.troopCircleVector = troopCircleVector;

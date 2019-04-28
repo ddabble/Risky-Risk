@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.util;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -70,15 +71,20 @@ public class TerritoryMap {
             List<Territory> continentTerritories = new ArrayList<>();
             for (Map.Entry<String, Map<String, Object>> territoryEntry : continentEntry.getValue().entrySet()) {
 
+
+                Map<String, Object> territoryFields = territoryEntry.getValue();
+                String territoryColor = (String)territoryFields.get("color");
+                @SuppressWarnings("unchecked")
+                List<Integer> territoryCenterCoords = (List<Integer>)territoryFields.get("coords");
+
+                Vector2 territoryCenterVector = new Vector2(territoryCenterCoords.get(0), territoryCenterCoords.get(1));
+
                 String territoryID = territoryEntry.getKey();
-                Territory territory = new Territory(territoryID);
+                Territory territory = new Territory(territoryID, territoryCenterVector);
                 territoryID = territoryID.toLowerCase();
 
                 continentTerritories.add(territory);
                 IDmap.put(territoryID, territory);
-
-                Map<String, Object> territoryFields = territoryEntry.getValue();
-                String territoryColor = (String)territoryFields.get("color");
                 color_IDmap.put(Integer.decode(territoryColor), territoryID);
             }
             continents.add(new Continent(continentEntry.getKey(), continentTerritories));

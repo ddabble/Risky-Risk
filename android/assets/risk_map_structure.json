@@ -2,38 +2,47 @@
     "North America": {
         "NA1": {
             "color": "0x00E6E6",
+            "coords": [84, 62],
             "neighbors": ["NA2", "NA3", "As4"]
         },
         "NA2": {
             "color": "0x00CCCC",
+            "coords": [187, 68],
             "neighbors": ["NA1", "NA3", "NA4", "NA9"]
         },
         "NA3": {
             "color": "0x00B3B3",
+            "coords": [154, 109],
             "neighbors": ["NA1", "NA2", "NA4", "NA6"]
         },
         "NA4": {
             "color": "0x009999",
+            "coords": [235, 114],
             "neighbors": ["NA2", "NA3", "NA5", "NA6", "NA7", "NA9"]
         },
         "NA5": {
             "color": "0x008080",
+            "coords": [318, 112],
             "neighbors": ["NA4", "NA7", "NA9"]
         },
         "NA6": {
             "color": "0x006767",
+            "coords": [135, 165],
             "neighbors": ["NA3", "NA4", "NA7", "NA8"]
         },
         "NA7": {
             "color": "0x004D4D",
+            "coords": [219, 187],
             "neighbors": ["NA4", "NA5", "NA6", "NA8"]
         },
         "NA8": {
             "color": "0x003434",
+            "coords": [141, 255],
             "neighbors": ["NA6", "NA7", "SA1"]
         },
         "NA9": {
             "color": "0x001A1A",
+            "coords": [446, 27],
             "neighbors": ["NA2", "NA4", "NA5", "Eu1"]
         }
     },
@@ -41,18 +50,22 @@
     "South America": {
         "SA1": {
             "color": "0xFF0000",
+            "coords": [264, 325],
             "neighbors": ["SA2", "SA3", "NA8"]
         },
         "SA2": {
             "color": "0xE60000",
+            "coords": [271, 419],
             "neighbors": ["SA1", "SA3", "SA4"]
         },
         "SA3": {
             "color": "0xCC0000",
+            "coords": [344, 397],
             "neighbors": ["SA1", "SA2", "SA4", "Af1"]
         },
         "SA4": {
             "color": "0xB30000",
+            "coords": [298, 503],
             "neighbors": ["SA2", "SA3"]
         }
     },
@@ -60,30 +73,37 @@
     "Europe": {
         "Eu1": {
             "color": "0x0000FF",
+            "coords": [506, 68],
             "neighbors": ["Eu2", "Eu3", "NA9"]
         },
         "Eu2": {
             "color": "0x0000E6",
+            "coords": [555, 116],
             "neighbors": ["Eu1", "Eu3", "Eu5", "Eu6"]
         },
         "Eu3": {
             "color": "0x0000CC",
+            "coords": [604, 75],
             "neighbors": ["Eu1", "Eu2", "Eu4", "Eu6"]
         },
         "Eu4": {
             "color": "0x0000B3",
+            "coords": [696, 101],
             "neighbors": ["Eu3", "Eu6", "Eu7", "As1", "As5", "As9"]
         },
         "Eu5": {
             "color": "0x000099",
+            "coords": [565, 149],
             "neighbors": ["Eu2", "Eu6", "Eu7", "Af1"]
         },
         "Eu6": {
             "color": "0x000080",
+            "coords": [611, 123],
             "neighbors": ["Eu2", "Eu3", "Eu5", "Eu7"]
         },
         "Eu7": {
             "color": "0x000067",
+            "coords": [637, 156],
             "neighbors": ["Eu4", "Eu5", "Eu6", "Af1", "Af2", "As9"]
         }
     },
@@ -91,26 +111,32 @@
     "Africa": {
         "Af1": {
             "color": "0xE6E600",
+            "coords": [557, 267],
             "neighbors": ["Af2", "Af3", "Af4", "Eu5", "Eu7", "SA3"]
         },
         "Af2": {
             "color": "0xCCCC00",
+            "coords": [654, 231],
             "neighbors": ["Af1", "Af4", "Eu7", "As9"]
         },
         "Af3": {
             "color": "0xB3B300",
+            "coords": [643, 357],
             "neighbors": ["Af1", "Af4", "Af5"]
         },
         "Af4": {
             "color": "0x999900",
+            "coords": [703, 311],
             "neighbors": ["Af1", "Af2", "Af3", "Af5", "Af6"]
         },
         "Af5": {
             "color": "0x7F8000",
+            "coords": [647, 452],
             "neighbors": ["Af3", "Af4", "Af6"]
         },
         "Af6": {
             "color": "0x666700",
+            "coords": [746, 444],
             "neighbors": ["Af4", "Af5"]
         }
     },
@@ -118,50 +144,62 @@
     "Asia": {
         "As1": {
             "color": "0x00FF00",
+            "coords": [805, 81],
             "neighbors": ["As2", "As5", "As8", "Eu4"]
         },
         "As2": {
             "color": "0x00EB00",
+            "coords": [871, 56],
             "neighbors": ["As1", "As3", "As6", "As7", "As8"]
         },
         "As3": {
             "color": "0x00D700",
+            "coords": [965, 64],
             "neighbors": ["As2", "As4", "As6"]
         },
         "As4": {
             "color": "0x00C200",
+            "coords": [1079, 67],
             "neighbors": ["As3", "As6", "As7", "As12", "NA1"]
         },
         "As5": {
             "color": "0x00AE00",
+            "coords": [809, 151],
             "neighbors": ["As1", "As8", "As9", "As10", "Eu4"]
         },
         "As6": {
             "color": "0x009900",
+            "coords": [952, 107],
             "neighbors": ["As2", "As3", "As4", "As7"]
         },
         "As7": {
             "color": "0x008500",
+            "coords": [969, 151],
             "neighbors": ["As2", "As4", "As6", "As8", "As12"]
         },
         "As8": {
             "color": "0x007000",
+            "coords": [932, 199],
             "neighbors": ["As1", "As2", "As5", "As7", "As10", "As11"]
         },
         "As9": {
             "color": "0x005C00",
+            "coords": [730, 207],
             "neighbors": ["As5", "As10", "NA4", "NA7", "Af2", "Af4"]
         },
         "As10": {
             "color": "0x004700",
+            "coords": [871, 232],
             "neighbors": ["As5", "As8", "As9", "As11"]
         },
         "As11": {
             "color": "0x003400",
+            "coords": [976, 277],
             "neighbors": ["As8", "As10", "Au1"]
         },
         "As12": {
             "color": "0x001F00",
+            "coords": [1101, 187],
             "neighbors": ["As4", "As7"]
         }
     },
@@ -169,18 +207,22 @@
     "Australia": {
         "Au1": {
             "color": "0xFF00FF",
+            "coords": [1030, 352],
             "neighbors": ["Au2", "Au3", "As11"]
         },
         "Au2": {
             "color": "0xBF00BF",
+            "coords": [1147, 377],
             "neighbors": ["Au1", "Au3", "Au4"]
         },
         "Au3": {
             "color": "0x7F0080",
+            "coords": [1046, 474],
             "neighbors": ["Au1", "Au2", "Au4"]
         },
         "Au4": {
             "color": "0x400040",
+            "coords": [1139, 463],
             "neighbors": ["Au2", "Au3"]
         }
     }
