@@ -1,9 +1,8 @@
-package no.ntnu.idi.tdt4240.Components;
+package no.ntnu.idi.tdt4240.model;
 
 import java.util.List;
 
 public class Continent {
-
     public final String name;
     private final List<Territory> territories;
 

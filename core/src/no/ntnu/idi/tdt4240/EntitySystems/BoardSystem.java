@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-import no.ntnu.idi.tdt4240.Components.Territory;
+import no.ntnu.idi.tdt4240.model.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;

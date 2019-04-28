@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Components;
+package no.ntnu.idi.tdt4240.model;
 
 import java.util.Arrays;
 import java.util.Random;

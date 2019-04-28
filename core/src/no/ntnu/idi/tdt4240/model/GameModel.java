@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Models;
+package no.ntnu.idi.tdt4240.model;
 
 public class GameModel {
 
