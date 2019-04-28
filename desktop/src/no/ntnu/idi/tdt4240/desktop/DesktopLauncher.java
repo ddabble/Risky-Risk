@@ -8,7 +8,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1227; // temporary
+        config.width = 1227; // TODO: temporary window size
         config.height = 601;
         new LwjglApplication(new RiskyRisk(), config);
     }
