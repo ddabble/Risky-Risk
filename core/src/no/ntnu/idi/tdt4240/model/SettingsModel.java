@@ -3,10 +3,7 @@ package no.ntnu.idi.tdt4240.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import no.ntnu.idi.tdt4240.Controllers.SettingsViewer;
-
 public class SettingsModel {
-
     Preferences prefs;
     private final String FILENAME = "GAME_SETTINGS";
 
@@ -40,7 +37,4 @@ public class SettingsModel {
     public boolean getBoolean(String key, boolean defaultValue) {
         return prefs.getBoolean(key, defaultValue);
     }
-
-
-
 }

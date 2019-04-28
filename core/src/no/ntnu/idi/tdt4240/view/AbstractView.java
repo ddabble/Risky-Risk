@@ -10,10 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
-public abstract class AbstractView implements Screen  {
+public abstract class AbstractView implements Screen {
     protected RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
@@ -48,5 +47,4 @@ public abstract class AbstractView implements Screen  {
     protected Label createLabel(String text) {
         return new Label(text, this.labelStyle);
     }
-
 }
