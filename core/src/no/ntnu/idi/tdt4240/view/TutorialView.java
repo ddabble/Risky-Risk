@@ -26,7 +26,7 @@ public class TutorialView extends AbstractView {
         Gdx.input.setInputProcessor(stage);
         Button backButton = this.createButton("Back to main");
         backButton.setPosition(100, 100);
-        backButton.setSize(100,50);
+        backButton.setSize(100, 50);
 
         backButton.addListener(new ClickListener() {
             @Override

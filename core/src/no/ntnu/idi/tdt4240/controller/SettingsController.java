@@ -19,6 +19,5 @@ public class SettingsController {
     public String getSetting1() {
         return model.getString("setting1", "null");
     }
-
 }
 

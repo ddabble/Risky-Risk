@@ -22,15 +22,15 @@ public class MultiplayerView extends AbstractView {
         background = new Texture("background.png");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
     }
+
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         Button backButton = this.createButton("Back to main");
         backButton.setPosition(100, 100);
-        backButton.setSize(100,50);
+        backButton.setSize(100, 50);
 
         backButton.addListener(new ClickListener() {
             @Override

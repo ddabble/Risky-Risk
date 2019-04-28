@@ -1,7 +1,6 @@
 package no.ntnu.idi.tdt4240.model;
 
 public class GameModel {
-
     public GameSettings gameSettings;
 
     private BoardModel boardModel;
@@ -24,7 +23,7 @@ public class GameModel {
 
         boardModel.init();
 
-        for(int i = 0; i < gameSettings.numberOfPlayers; i++) {
+        for (int i = 0; i < gameSettings.numberOfPlayers; i++) {
 
         }
 
@@ -35,13 +34,15 @@ public class GameModel {
         boardModel.reset();
     }
 
-    public class GameSettings{
+    public class GameSettings {
         private int numberOfPlayers;
+
         public int getNumberOfPlayers() {return numberOfPlayers;}
+
         public void setNumberOfPlayers(int num) {
-            if(num > 6) {
+            if (num > 6) {
                 numberOfPlayers = 6;
-            } else if(num < 2) {
+            } else if (num < 2) {
                 numberOfPlayers = 2;
             } else {
                 numberOfPlayers = num;

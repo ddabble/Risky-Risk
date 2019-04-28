@@ -2,12 +2,7 @@ package no.ntnu.idi.tdt4240.controller;
 
 import no.ntnu.idi.tdt4240.model.GameModel;
 
-/**
- * Created by Oivind on 3/21/2019.
- */
-
 public class GameController {
-
     private GameViewer viewer;
     private GameModel model;
 
