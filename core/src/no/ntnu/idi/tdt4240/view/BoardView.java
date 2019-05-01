@@ -16,6 +16,7 @@ import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.BoardController;
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.Territory;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
@@ -29,21 +30,28 @@ public class BoardView extends ApplicationAdapter {
 
     private ShaderProgram mapShader;
 
-    public BoardView(RiskyRisk game) {
-        controller = new BoardController(game.getGameModel().getBoardModel(), this);
+    private TroopView troopView;
+
+    public BoardView(OrthographicCamera camera, RiskyRisk game) {
+        this.camera = camera;
+        BoardModel model = game.getGameModel().getBoardModel();
+        controller = new BoardController(model, this);
+
+        troopView = new TroopView(model.TERRITORY_MAP);
     }
 
     /**
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
-    public void create(OrthographicCamera camera) {
-        this.camera = camera;
-
+    @Override
+    public void create() {
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
         mapSprite = new Sprite(controller.getMapTexture());
 //        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
+
+        troopView.create();
 
         setUpInputProcessor();
     }
@@ -84,10 +92,13 @@ public class BoardView extends ApplicationAdapter {
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
+
+        troopView.render();
     }
 
     @Override
     public void dispose() {
+        troopView.dispose();
         batch.dispose();
         mapShader.dispose();
     }
