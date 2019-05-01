@@ -23,7 +23,7 @@ public class BoardModel {
     private Pixmap mapPixmap;
 
     public BoardModel() {
-        TERRITORY_MAP = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("risk_map_structure.json"));
+        TERRITORY_MAP = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("map/risk_map_structure.json"));
     }
 
     public ColorArray getPlayerColorLookup() {
@@ -35,7 +35,7 @@ public class BoardModel {
     }
 
     public void init() {
-        mapTexture = new Texture("risk_game_map.png");
+        mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
