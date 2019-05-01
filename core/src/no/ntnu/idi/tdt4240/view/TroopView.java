@@ -30,8 +30,25 @@ public class TroopView extends ApplicationAdapter {
     private Map<Territory, TextField> circleTextMap;
     private Stage stage;
 
+    private Texture circleSelectTexture;
+    private Sprite circleSelectSprite;
+    private Territory selectedTerritory;
+
     public TroopView(TerritoryMap territoryMap) {
         this.territoryMap = territoryMap;
+    }
+
+    // TODO: maybe change this to take no parameters and just loop over all territories?
+    public void onTerritoryChangeNumTroops(Territory territory) {
+        circleTextMap.get(territory).setText(String.valueOf(territory.getNumTroops()));
+    }
+
+    public void onSelectTerritory(Territory territory) {
+        if (territory != null) {
+            Vector2 circlePos = territory.getTroopCircleVector();
+            circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
+        }
+        selectedTerritory = territory;
     }
 
     @Override
@@ -53,6 +70,9 @@ public class TroopView extends ApplicationAdapter {
             sprite.setOriginBasedPosition(circlePos.x, circlePos.y);
             circleSpriteMap.put(territory, sprite);
         }
+
+        circleSelectTexture = new Texture("map/troop_circle_select.png");
+        circleSelectSprite = new Sprite(circleSelectTexture);
     }
 
     private void createCircleText(Collection<Territory> territories) {
@@ -78,6 +98,9 @@ public class TroopView extends ApplicationAdapter {
         batch.begin();
         for (Sprite sprite : circleSpriteMap.values())
             sprite.draw(batch);
+
+        if (selectedTerritory != null)
+            circleSelectSprite.draw(batch);
         batch.end();
 
         stage.draw();
@@ -86,6 +109,7 @@ public class TroopView extends ApplicationAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+        circleSelectTexture.dispose();
         circleTexture.dispose();
         batch.dispose();
     }
