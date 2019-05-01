@@ -16,7 +16,7 @@ import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 
 public class BoardModel {
-    private final TerritoryMap TERRITORY_MAP;
+    public final TerritoryMap TERRITORY_MAP;
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
     private Texture mapTexture;
