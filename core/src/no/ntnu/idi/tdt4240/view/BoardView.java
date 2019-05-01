@@ -75,7 +75,17 @@ public class BoardView extends ApplicationAdapter {
                 if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
                     Vector2 mapPos = controller.worldPosToMapTexturePos(touchWorldPos, mapSprite);
                     Territory territory = controller.getTerritory(mapPos);
-                    System.out.println((territory != null) ? territory.name : "None");
+
+                    // TODO: Remove; the following is debugging code:
+                    if (territory != null) {
+                        System.out.println(territory.name);
+                        territory.setNumTroops(territory.getNumTroops() + 1);
+                        troopView.onTerritoryChangeNumTroops(territory);
+                        troopView.onSelectTerritory(territory);
+                    } else {
+                        System.out.println("None");
+                        troopView.onSelectTerritory(null);
+                    }
                 }
 
                 return true;
