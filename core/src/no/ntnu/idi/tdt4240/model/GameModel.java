@@ -1,7 +1,5 @@
 package no.ntnu.idi.tdt4240.model;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
-
 public class GameModel {
     public GameSettings gameSettings;
     private BoardModel boardModel;
