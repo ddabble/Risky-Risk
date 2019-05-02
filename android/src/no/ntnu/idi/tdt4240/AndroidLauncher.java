@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -17,9 +18,15 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
 		RiskyRisk game = new RiskyRisk();
-		gpgsClient = new GPGSClient(this);
+
+		//For popups
+		View view = findViewById(android.R.id.content);
+
+		gpgsClient = new GPGSClient(this, view);
 		game.gpgsClient = gpgsClient;
 		initialize(game, config);
+
+
 	}
 
     @Override

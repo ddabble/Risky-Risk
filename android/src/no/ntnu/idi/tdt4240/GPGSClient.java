@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -44,6 +46,9 @@ public class GPGSClient implements IGPGSClient {
 
     public static final String TAG = "GPGS";
 
+    //For popups
+    private View mView;
+
     // Client used to sign in with Google APIs
     private GoogleSignInClient mGoogleSignInClient = null;
 
@@ -74,10 +79,11 @@ public class GPGSClient implements IGPGSClient {
     private RiskyTurn mTurnData;
     private boolean matchActive = false;
 
-    public GPGSClient(Activity activity) {
+    public GPGSClient(Activity activity, View view) {
         // Create the Google API Client with access to Games
         // Create the client used to sign in.
         mActivity = activity;
+        mView = view;
         mGoogleSignInClient = GoogleSignIn.getClient(mActivity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
     }
 
@@ -133,6 +139,11 @@ public class GPGSClient implements IGPGSClient {
 
         // Retrieve the TurnBasedMatch from the connectionHint
         GamesClient gamesClient = Games.getGamesClient(mActivity, googleSignInAccount);
+
+        //Popups
+        gamesClient.setGravityForPopups(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        gamesClient.setViewForPopups(mView);
+
         gamesClient.getActivationHint()
                 .addOnSuccessListener(new OnSuccessListener<Bundle>() {
                     @Override
