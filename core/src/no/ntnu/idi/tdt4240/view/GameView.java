@@ -1,30 +1,34 @@
-package no.ntnu.idi.tdt4240.Views;
+package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 
-import no.ntnu.idi.tdt4240.Controllers.GameController;
-import no.ntnu.idi.tdt4240.Controllers.GameViewer;
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.Views.AbstractView;
+import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.GameViewer;
 
-public class RiskyView extends AbstractView implements GameViewer{
+public class GameView extends AbstractView implements GameViewer {
+    public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
+    public static final float VIEWPORT_HEIGHT = 601;
 
-    OrthographicCamera camera;
-    Texture img;
+    private OrthographicCamera camera;
     private GameController gameController;
 
-    public RiskyView(RiskyRisk game) {
+    private BoardView boardView;
+
+    public GameView(RiskyRisk game) {
         super(game);
-        img = new Texture("badlogic.jpg");
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
         gameController = new GameController(this, game.getGameModel());
+
+        boardView = new BoardView(game);
+        boardView.create(camera);
+
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
     @Override
@@ -34,11 +38,11 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     @Override
     public void render(float delta) {
-
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         camera.update();
+
+        boardView.render();
     }
 
     @Override
@@ -60,7 +64,7 @@ public class RiskyView extends AbstractView implements GameViewer{
 
     @Override
     public void dispose() {
-        img.dispose();
+        boardView.dispose();
     }
 
     @Override

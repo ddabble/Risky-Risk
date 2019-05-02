@@ -1,14 +1,10 @@
-package no.ntnu.idi.tdt4240.Controllers;
-
+package no.ntnu.idi.tdt4240.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.ntnu.idi.tdt4240.Models.GameClasses.TeamModel;
-import no.ntnu.idi.tdt4240.Models.GameModel;
+import no.ntnu.idi.tdt4240.model.TeamModel;
+import no.ntnu.idi.tdt4240.model.GameModel;
 
-/**
- * Created by Oivind on 3/21/2019.
- */
 
 public class GameController {
     public static GameController instance;
@@ -23,17 +19,13 @@ public class GameController {
         instance = this;
         //-----------------
         // GAME START
-        model.setState(GameModel.State.START); // no need??? // make the board instantiate stuff..
         this.viewer = viewer;
         this.model = model;
         // Create teams
 
 
-
-
         //-----------------
         // GAME SETUP
-        model.setState(GameModel.State.SETUP); // draws cards, place soldiers
         // TODO: roll dice to detemine who starts the game
         for (TeamModel team : teams) {
             // TODO: draw cards
@@ -45,33 +37,23 @@ public class GameController {
         while (!gameEnded){
             //-----------------
             // ATTACK PHASE
-            model.setState(GameModel.State.ATTACK);
-
+            // set state to attack
             for (TeamModel team : teams) {
                 if (!team.hasLost()){
-
+                    //do something
                 }
             }
 
             //-----------------
             // FORTIFY PHASE
-            model.setState(GameModel.State.FORTIFY);
+            // set state to fortify
             for (TeamModel team : teams) {
                 if (!team.hasLost()){
                     setWhoseTurn(team.ID);
                 }
 
             }
-
-
-
-            //-----------------
-            // REWARD PHASE
-            model.setState(GameModel.State.REWARD);
-
-            //-----------------
-            // PLACING PHASE
-            model.setState(GameModel.State.PLACING);
+            break;
         }
 
         //-----------------
@@ -104,7 +86,7 @@ public class GameController {
         }
     }
     public void nextPhase(){
-
+        // increment the phase
     }
 
     /*

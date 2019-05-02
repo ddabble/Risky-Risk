@@ -1,6 +1,7 @@
-package no.ntnu.idi.tdt4240.Models.GameClasses;
+package no.ntnu.idi.tdt4240.model;
 
 import java.util.List;
+
 
 public class TeamModel {
     private static int teamCount = 0;
