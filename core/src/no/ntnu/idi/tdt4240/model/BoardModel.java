@@ -110,25 +110,56 @@ public class BoardModel {
     // TODO: currently assigns each territory a random player color
     private void initColorLookupArray() {
         HashMap<Integer, Integer> playerPriority = playModel.randomizePlayerPriority();
-        List<Integer> priorities = new ArrayList<Integer>();
-        for (int i = 0; i < playModel.getPlayers().size(); i++){
-            priorities.add(playerPriority.get(i));
-        }
+        HashMap<Territory, Integer> territoryPriority = randomizeTerritoryAllocation(TERRITORY_MAP);
+        List<Integer> priorities = new ArrayList<>(playerPriority.values());
+        List<Integer> territoryPriorities = new ArrayList<>(territoryPriority.values());
         Collections.sort(priorities);
+        Collections.sort(territoryPriorities);
 
         int counter = 0;
-        for (Territory territory : TERRITORY_MAP.getIDmap().values()) {
+        for (int prio : territoryPriorities) {
+
             int nextPlayer = playModel.getKeyFromValue(playerPriority, priorities.get(counter));
+            Territory nextTerritory = getKeyFromValue(territoryPriority, prio);
             counter++;
             if (counter >= playModel.getPlayers().size()){
                 counter = 0;
             }
-            System.out.println(counter);
-            System.out.println(nextPlayer);
-            System.out.println(playModel.getPlayers().get(nextPlayer));
-            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playModel.getPlayers().get(nextPlayer) << 8);
+
+            PLAYER_COLOR_LOOKUP.setColor(nextTerritory.colorIndex, playModel.getPlayers().get(nextPlayer) << 8);
+            nextTerritory.setOwnerID(nextPlayer);
         }
     }
+
+    private static Territory getKeyFromValue(Map hm, int value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                Territory i =  (Territory)o;
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private HashMap<Territory, Integer> randomizeTerritoryAllocation(TerritoryMap TERRITORY_MAP){
+        Random ran = new Random();
+        HashMap<Territory, Integer> randomizedTERRITORY_MAP = new HashMap<>();
+        int roll;
+        boolean keepRolling;
+        int counter = 0;
+        for (String territory : TERRITORY_MAP.getIDmap().keySet()){
+            keepRolling = true;
+            while (keepRolling) {
+                roll = ran.nextInt(TERRITORY_MAP.getIDmap().values().size() + 150);
+                if (!randomizedTERRITORY_MAP.containsValue(roll)){
+                    randomizedTERRITORY_MAP.put(TERRITORY_MAP.getIDmap().get(territory), roll);
+                    keepRolling = false;
+                }
+            }
+        }
+        return randomizedTERRITORY_MAP;
+    }
+
 
     private static int generateColor(byte index) {
         return (index << 2 * 8) | (index << 8) | (index);
