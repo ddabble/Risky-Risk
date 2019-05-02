@@ -1,11 +1,12 @@
-apply plugin: "java"
-
-sourceCompatibility = 1.6
+targetCompatibility = '1.8'
+apply plugin: "java-library"
+sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-sourceSets.main.java.srcDirs = [ "src/" ]
-
-
+sourceSets.main.java.srcDirs = ["src/"]
 eclipse.project {
     name = appName + "-core"
+}
+
+dependencies {
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
 }

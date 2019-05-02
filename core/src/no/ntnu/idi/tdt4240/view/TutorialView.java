@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Views;
+package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,7 +26,7 @@ public class TutorialView extends AbstractView {
         Gdx.input.setInputProcessor(stage);
         Button backButton = this.createButton("Back to main");
         backButton.setPosition(100, 100);
-        backButton.setSize(100,50);
+        backButton.setSize(100, 50);
 
         backButton.addListener(new ClickListener() {
             @Override
