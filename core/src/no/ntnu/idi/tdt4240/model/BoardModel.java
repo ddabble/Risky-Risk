@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -17,13 +20,20 @@ import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 
 public class BoardModel {
     public final TerritoryMap TERRITORY_MAP;
-    private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
-
+    private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
+    private PlayerModel playModel;
     public BoardModel() {
         TERRITORY_MAP = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("map/risk_map_structure.json"));
+        playModel = new PlayerModel(8);
+        initColorLookupArray();
+
+    }
+
+    public TerritoryMap getTERRITORY_MAP() {
+        return TERRITORY_MAP;
     }
 
     public ColorArray getPlayerColorLookup() {
@@ -40,7 +50,7 @@ public class BoardModel {
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
 
-        initColorLookupArray();
+
     }
 
     private void prepareMapPixmap(Texture mapTexture) {
@@ -96,18 +106,63 @@ public class BoardModel {
         TERRITORY_MAP.setColor_IDmap(color_IDmap);
     }
 
-    private static int generateColor(byte index) {
-        return (index << 2 * 8) | (index << 8) | (index);
-    }
 
     // TODO: currently assigns each territory a random player color
     private void initColorLookupArray() {
-        int[] playerColors = new int[] {0xFF0000, 0x0000FF};
-        Random rand = new Random();
-        for (Territory territory : TERRITORY_MAP.getIDmap().values()) {
-            int randomPlayer = rand.nextInt(playerColors.length);
-            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColors[randomPlayer] << 8);
+        HashMap<Integer, Integer> playerPriority = playModel.randomizePlayerPriority();
+        HashMap<Territory, Integer> territoryPriority = randomizeTerritoryAllocation(TERRITORY_MAP);
+        List<Integer> priorities = new ArrayList<>(playerPriority.values());
+        List<Integer> territoryPriorities = new ArrayList<>(territoryPriority.values());
+        Collections.sort(priorities);
+        Collections.sort(territoryPriorities);
+
+        int counter = 0;
+        for (int prio : territoryPriorities) {
+
+            int nextPlayer = playModel.getKeyFromValue(playerPriority, priorities.get(counter));
+            Territory nextTerritory = getKeyFromValue(territoryPriority, prio);
+            counter++;
+            if (counter >= playModel.getPlayers().size()){
+                counter = 0;
+            }
+
+            PLAYER_COLOR_LOOKUP.setColor(nextTerritory.colorIndex, playModel.getPlayers().get(nextPlayer) << 8);
+            nextTerritory.setOwnerID(nextPlayer);
         }
+    }
+
+    private static Territory getKeyFromValue(Map hm, int value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                Territory i =  (Territory)o;
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private HashMap<Territory, Integer> randomizeTerritoryAllocation(TerritoryMap TERRITORY_MAP){
+        Random ran = new Random();
+        HashMap<Territory, Integer> randomizedTERRITORY_MAP = new HashMap<>();
+        int roll;
+        boolean keepRolling;
+        int counter = 0;
+        for (String territory : TERRITORY_MAP.getIDmap().keySet()){
+            keepRolling = true;
+            while (keepRolling) {
+                roll = ran.nextInt(TERRITORY_MAP.getIDmap().values().size() + 150);
+                if (!randomizedTERRITORY_MAP.containsValue(roll)){
+                    randomizedTERRITORY_MAP.put(TERRITORY_MAP.getIDmap().get(territory), roll);
+                    keepRolling = false;
+                }
+            }
+        }
+        return randomizedTERRITORY_MAP;
+    }
+
+
+    private static int generateColor(byte index) {
+        return (index << 2 * 8) | (index << 8) | (index);
     }
 
     public Vector2 worldPosToMapTexturePos(Vector2 worldPos, Sprite mapSprite) {
