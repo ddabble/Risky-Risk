@@ -124,3 +124,7 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
 *.apk
+
+## Keystores
+*.keystore
+*.jks
