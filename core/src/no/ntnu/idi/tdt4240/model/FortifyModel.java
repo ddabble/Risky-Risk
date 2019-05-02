@@ -5,6 +5,7 @@ public class FortifyModel {
 
     /**
      * Move a specific number of troops from a territory to another.
+     * @param team  The team the player belongs to. This will be used to validate the move
      * @param from
      * @param to
      * @param n     Number of troops to move
