@@ -1,6 +1,6 @@
-package no.ntnu.idi.tdt4240.Controllers;
+package no.ntnu.idi.tdt4240.controller;
 
-import no.ntnu.idi.tdt4240.Models.SettingsModel;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class SettingsController {
     private final SettingsModel model;
@@ -19,6 +19,5 @@ public class SettingsController {
     public String getSetting1() {
         return model.getString("setting1", "null");
     }
-
 }
 
