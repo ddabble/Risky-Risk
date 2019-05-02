@@ -68,6 +68,8 @@ public class BoardView extends ApplicationAdapter {
                     Vector2 mapPos = controller.worldPosToMapTexturePos(touchWorldPos, mapSprite);
                     Territory territory = controller.getTerritory(mapPos);
                     System.out.println((territory != null) ? territory.name : "None");
+                    System.out.println("OwnerID: " + territory.getOwnerID());
+                    System.out.println("Number of Troops: " + territory.getNumTroops());
                 }
 
                 return true;

@@ -55,7 +55,7 @@ public class PlayerModel {
                     playersWithPriority.put(i, roll);
                     keepRolling = false;
                 }
-                System.out.println(roll);
+
             }
 
         }
