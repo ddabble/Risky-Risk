@@ -79,6 +79,8 @@ public class BoardView extends ApplicationAdapter {
                     // TODO: Remove; the following is debugging code:
                     if (territory != null) {
                         System.out.println(territory.name);
+                        System.out.println("OwnerID: " + territory.getOwnerID());
+                        System.out.println("Number of Troops: " + territory.getNumTroops());
                         territory.setNumTroops(territory.getNumTroops() + 1);
                         troopView.onTerritoryChangeNumTroops(territory);
                         troopView.onSelectTerritory(territory);
