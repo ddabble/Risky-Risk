@@ -13,11 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen {
-    protected RiskyRisk game;
+    protected final RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
-    Skin skin;
-    TextButtonStyle textButtonStyle;
+    private Skin skin;
+    private TextButtonStyle textButtonStyle;
 
     public AbstractView(RiskyRisk game) {
         this.game = game;

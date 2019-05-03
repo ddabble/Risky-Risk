@@ -13,7 +13,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class TutorialView extends AbstractView {
     private Stage stage;
-    Texture background;
+    private Texture background;
 
     public TutorialView(RiskyRisk game) {
         super(game);
