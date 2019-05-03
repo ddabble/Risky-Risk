@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('/Users/synnovehalle/progark/debug.keystore')
+            storePassword 'android'
+        }
+    }
     buildToolsVersion "28.0.3"
     compileSdkVersion android_compile_version //compileSdkVersion 27
     sourceSets {

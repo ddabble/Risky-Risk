@@ -38,8 +38,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
-import no.ntnu.idi.tdt4240.Controllers.IGPGSClient;
-import no.ntnu.idi.tdt4240.Controllers.IRiskyTurn;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 
 
 public class GPGSClient implements IGPGSClient {

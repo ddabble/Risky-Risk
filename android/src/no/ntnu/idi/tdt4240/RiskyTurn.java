@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-import no.ntnu.idi.tdt4240.Controllers.IRiskyTurn;
+import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 
 /**
  * Basic turn data. It's just a blank data string and a turn number counter.
