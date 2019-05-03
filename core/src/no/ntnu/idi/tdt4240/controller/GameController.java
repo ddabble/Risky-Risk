@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.GameModel;
@@ -18,6 +20,10 @@ public class GameController {
         this.viewer = viewer;
         this.model = model;
         this.boardModel = model.getBoardModel();
+
+        List<Territory> territories = boardModel.TERRITORY_MAP.getAllTerritories();
+        if (territories != null) {viewer.initializeBoard(territories);}
+
     }
 
     public void setNumberOfPlayers(int num) {
@@ -39,10 +45,6 @@ public class GameController {
         return boardModel.worldPosToMapTexturePos(worldPos, mapSprite);
     }
 
-    public Territory getTerritory(Vector2 mapPos) {
-        return boardModel.getTerritory(mapPos);
-    }
-
     // The role of the controller is to translate inputs into changes and relay this back
     // Below is the translation of clicks to model changes
     public void boardClicked(Vector2 touchWorldPos) {
@@ -51,20 +53,19 @@ public class GameController {
             Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos, mapSprite);
 
             // TODO: this should be in the model since we do some checks...
-            Territory territory = getTerritory(mapPos);
+            Territory territory = boardModel.getTerritory(mapPos);
             if (territory != null) {
                 System.out.println(territory.name);
                 System.out.println("\tOwnerID: " + territory.getOwnerID());
                 System.out.println("\tNumber of Troops: " + territory.getNumTroops());
                 territory.setNumTroops(territory.getNumTroops() + 1);
                 //TODO:... until here
-                //the troopview needs to tell ... troopView.onTerritoryChangeNumTroops(territory);
 
-                viewer.territorySelected(territory);//.onSelectTerritory(territory);
+                viewer.territorySelected(territory);
                 viewer.updateTerritoryTroops(territory);
             } else {
                 System.out.println("None");
-                //troopView.onSelectTerritory(null);
+                viewer.territorySelected(null);
             }
         }
 
