@@ -1,10 +1,10 @@
 package no.ntnu.idi.tdt4240.model;
 
 public class GameModel {
-    public GameSettings gameSettings;
+    public final GameSettings gameSettings;
 
-    private PlayerModel playerModel;
-    private BoardModel boardModel;
+    private final PlayerModel playerModel;
+    private final BoardModel boardModel;
 
     private boolean hasInit = false;
 

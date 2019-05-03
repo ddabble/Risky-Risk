@@ -13,9 +13,9 @@ public class GameView extends AbstractView implements GameViewer {
     public static final float VIEWPORT_HEIGHT = 601;
 
     private OrthographicCamera camera;
-    private GameController gameController;
+    private final GameController gameController;
 
-    private BoardView boardView;
+    private final BoardView boardView;
 
     public GameView(RiskyRisk game) {
         super(game);
