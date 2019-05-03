@@ -33,8 +33,8 @@ public abstract class AbstractView implements Screen {
         selectStyle.font = skin.getFont("default-font");
     }
 
-    protected Button createButton(String text) {
-        Button button = new TextButton(text, this.textButtonStyle);
+    protected TextButton createButton(String text) {
+        TextButton button = new TextButton(text, this.textButtonStyle);
         return button;
     }
 
