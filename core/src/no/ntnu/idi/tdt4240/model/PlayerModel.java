@@ -39,7 +39,7 @@ public class PlayerModel {
     }
 
     private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
-        List<Territory> territories = new ArrayList<>(territoryMap.getIDmap().values());
+        List<Territory> territories = territoryMap.getAllTerritories();
         final int numTerritories = territories.size();
 
         // Fill the list with an approximately equal amount of each player ID, then shuffle the list

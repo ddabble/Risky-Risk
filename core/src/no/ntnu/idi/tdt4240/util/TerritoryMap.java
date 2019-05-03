@@ -36,6 +36,10 @@ public class TerritoryMap {
         return IDmap.get(getID(color));
     }
 
+    public List<Territory> getAllTerritories() {
+        return new ArrayList<>(IDmap.values());
+    }
+
     public String getID(int color) {
         return color_IDmap.get(color);
     }
