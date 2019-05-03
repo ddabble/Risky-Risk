@@ -103,7 +103,7 @@ public class BoardModel {
     }
 
     private void initColorLookupArray() {
-        for (Territory territory : TERRITORY_MAP.getIDmap().values()) {
+        for (Territory territory : TERRITORY_MAP.getAllTerritories()) {
             int playerColor = playerModel.getPlayerColor(territory.getOwnerID());
             PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
         }

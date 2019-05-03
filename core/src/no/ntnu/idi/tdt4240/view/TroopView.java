@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.data.Territory;
@@ -55,12 +55,12 @@ public class TroopView extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
 
-        Collection<Territory> territories = territoryMap.getIDmap().values();
+        List<Territory> territories = territoryMap.getAllTerritories();
         createCircleSprites(territories);
         createCircleText(territories);
     }
 
-    private void createCircleSprites(Collection<Territory> territories) {
+    private void createCircleSprites(List<Territory> territories) {
         circleTexture = new Texture("map/troop_circle.png");
 
         circleSpriteMap = new HashMap<>();
@@ -75,7 +75,7 @@ public class TroopView extends ApplicationAdapter {
         circleSelectSprite = new Sprite(circleSelectTexture);
     }
 
-    private void createCircleText(Collection<Territory> territories) {
+    private void createCircleText(List<Territory> territories) {
         TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
         textStyle.font = new BitmapFont();
         textStyle.fontColor = TEXT_COLOR;
