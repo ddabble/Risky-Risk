@@ -10,7 +10,8 @@ public class GameModel {
     public GameModel() {
         gameSettings = new GameSettings();
 
-        this.boardModel = new BoardModel();
+        TerritoryModel.init();
+        boardModel = new BoardModel(TerritoryModel.getInstance());
     }
 
     public BoardModel getBoardModel() {

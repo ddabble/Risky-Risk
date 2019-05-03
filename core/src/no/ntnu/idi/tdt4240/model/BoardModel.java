@@ -25,8 +25,9 @@ public class BoardModel {
     private Pixmap mapPixmap;
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
     private PlayerModel playModel;
-    public BoardModel() {
-        TERRITORY_MAP = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("map/risk_map_structure.json"));
+
+    public BoardModel(TerritoryModel territoryModel) {
+        TERRITORY_MAP = territoryModel.TERRITORY_MAP;
         playModel = new PlayerModel(8);
         initColorLookupArray();
 
