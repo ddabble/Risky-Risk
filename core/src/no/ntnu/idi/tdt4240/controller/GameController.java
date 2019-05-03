@@ -1,15 +1,10 @@
-package no.ntnu.idi.tdt4240.Controllers;
+package no.ntnu.idi.tdt4240.controller;
 
-import no.ntnu.idi.tdt4240.Models.GameModel;
-
-/**
- * Created by Oivind on 3/21/2019.
- */
+import no.ntnu.idi.tdt4240.model.GameModel;
 
 public class GameController {
-
-    private GameViewer viewer;
-    private GameModel model;
+    private final GameViewer viewer;
+    private final GameModel model;
 
     public GameController(GameViewer viewer, GameModel model) {
         this.viewer = viewer;

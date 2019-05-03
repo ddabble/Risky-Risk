@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.Views;
+package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
-
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen  {
@@ -19,8 +18,8 @@ public abstract class AbstractView implements Screen  {
     protected RiskyRisk game;
     private final SelectBoxStyle selectStyle;
     private final Label.LabelStyle labelStyle;
-    Skin skin;
-    TextButtonStyle textButtonStyle;
+    private Skin skin;
+    private TextButtonStyle textButtonStyle;
 
     public AbstractView(RiskyRisk game) {
         this.game = game;
@@ -57,5 +56,4 @@ public abstract class AbstractView implements Screen  {
     protected Label createLabel(String text) {
         return new Label(text, this.labelStyle);
     }
-
 }
