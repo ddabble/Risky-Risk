@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.model.Territory;
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class TroopView extends ApplicationAdapter {

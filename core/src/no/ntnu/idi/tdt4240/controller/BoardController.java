@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.model.Territory;
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.view.BoardView;
 

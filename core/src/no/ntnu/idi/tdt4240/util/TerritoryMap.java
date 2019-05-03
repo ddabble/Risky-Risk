@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.model.Continent;
-import no.ntnu.idi.tdt4240.model.Territory;
+import no.ntnu.idi.tdt4240.data.Continent;
+import no.ntnu.idi.tdt4240.data.Territory;
 
 public class TerritoryMap {
     private Map<String, Territory> IDmap;

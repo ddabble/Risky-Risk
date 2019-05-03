@@ -17,7 +17,7 @@ import java.util.Map;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.model.Territory;
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter {
