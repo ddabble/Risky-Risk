@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240.model;
 public class GameModel {
     public GameSettings gameSettings;
 
+    private PlayerModel playerModel;
     private BoardModel boardModel;
 
     private boolean hasInit = false;
@@ -11,7 +12,8 @@ public class GameModel {
         gameSettings = new GameSettings();
 
         TerritoryModel.init();
-        boardModel = new BoardModel(TerritoryModel.getInstance());
+        playerModel = new PlayerModel(TerritoryModel.getInstance(), 8);
+        boardModel = new BoardModel(TerritoryModel.getInstance(), playerModel);
     }
 
     public BoardModel getBoardModel() {
