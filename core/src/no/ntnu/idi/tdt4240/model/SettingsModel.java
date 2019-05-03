@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class SettingsModel {
-    Preferences prefs;
+    private Preferences prefs;
     private final String FILENAME = "GAME_SETTINGS";
 
     public SettingsModel() {

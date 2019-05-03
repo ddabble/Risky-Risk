@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.model.Territory;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.view.BoardView;
 
@@ -13,8 +13,8 @@ public class BoardController {
 
     // TODO: make this controller actually do something
 
-    private BoardModel model;
-    private BoardView view;
+    private final BoardModel model;
+    private final BoardView view;
 
     public BoardController(BoardModel model, BoardView view) {
         this.model = model;
