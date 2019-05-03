@@ -21,23 +21,23 @@ import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter {
-    private final BoardController controller;
+    public final BoardController controller;
 
     private OrthographicCamera camera;
 
     private SpriteBatch batch;
-    private Sprite mapSprite;
-
+    public Sprite mapSprite;
+    public BoardModel model;
     private ShaderProgram mapShader;
 
-    private final TroopView troopView;
+
 
     public BoardView(OrthographicCamera camera, RiskyRisk game) {
         this.camera = camera;
-        BoardModel model = game.getGameModel().getBoardModel();
+        model = game.getGameModel().getBoardModel();
         controller = new BoardController(model, this);
 
-        troopView = new TroopView(model.TERRITORY_MAP);
+
     }
 
     /**
@@ -51,9 +51,9 @@ public class BoardView extends ApplicationAdapter {
         mapSprite = new Sprite(controller.getMapTexture());
 //        mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
 
-        troopView.create();
 
-        setUpInputProcessor();
+
+
     }
 
     private void initShader() {
@@ -64,36 +64,7 @@ public class BoardView extends ApplicationAdapter {
         ShaderProgram.pedantic = false;
     }
 
-    private void setUpInputProcessor() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (button != Input.Buttons.LEFT) // Only useful for desktop
-                    return false;
 
-                Vector3 _touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
-                Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
-                if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
-                    Vector2 mapPos = controller.worldPosToMapTexturePos(touchWorldPos, mapSprite);
-                    Territory territory = controller.getTerritory(mapPos);
-
-                    // TODO: Remove; the following is debugging code:
-                    if (territory != null) {
-                        System.out.println(territory.name);
-                        System.out.println("\tOwnerID: " + territory.getOwnerID());
-                        System.out.println("\tNumber of Troops: " + territory.getNumTroops());
-                        territory.setNumTroops(territory.getNumTroops() + 1);
-                        troopView.onTerritoryChangeNumTroops(territory);
-                        troopView.onSelectTerritory(territory);
-                    } else {
-                        System.out.println("None");
-                        troopView.onSelectTerritory(null);
-                    }
-                }
-
-                return true;
-            }
-        });
-    }
 
     @Override
     public void render() {
@@ -105,12 +76,11 @@ public class BoardView extends ApplicationAdapter {
         mapSprite.draw(batch);
         batch.end();
 
-        troopView.render();
+
     }
 
     @Override
     public void dispose() {
-        troopView.dispose();
         batch.dispose();
         mapShader.dispose();
     }
