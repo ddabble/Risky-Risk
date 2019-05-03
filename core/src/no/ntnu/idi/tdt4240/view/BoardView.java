@@ -15,13 +15,14 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.BoardController;
+import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter {
-    public final BoardController controller;
+    private final GameController controller;
+    //public final BoardController controller;
 
     private OrthographicCamera camera;
 
@@ -30,14 +31,10 @@ public class BoardView extends ApplicationAdapter {
     public BoardModel model;
     private ShaderProgram mapShader;
 
-
-
-    public BoardView(OrthographicCamera camera, RiskyRisk game) {
+    public BoardView(OrthographicCamera camera, RiskyRisk game, GameController controller) {
         this.camera = camera;
         model = game.getGameModel().getBoardModel();
-        controller = new BoardController(model, this);
-
-
+        this.controller = controller;
     }
 
     /**
