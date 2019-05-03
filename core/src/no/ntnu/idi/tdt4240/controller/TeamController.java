@@ -1,7 +1,7 @@
 package no.ntnu.idi.tdt4240.controller;
 
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.TeamModel;
-import no.ntnu.idi.tdt4240.model.Territory;
 
 /**
  * Since this is mulitplayer game, we need this class to handle user inputs

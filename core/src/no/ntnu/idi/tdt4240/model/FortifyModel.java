@@ -1,6 +1,8 @@
 package no.ntnu.idi.tdt4240.model;
 
 
+import no.ntnu.idi.tdt4240.data.Territory;
+
 public class FortifyModel {
 
     /**

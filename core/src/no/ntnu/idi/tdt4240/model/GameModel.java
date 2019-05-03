@@ -1,14 +1,16 @@
 package no.ntnu.idi.tdt4240.model;
 
 public class GameModel {
-    public GameSettings gameSettings;
-    private BoardModel boardModel;
-
+    public final GameSettings gameSettings;
+    private final PlayerModel playerModel;
+    private final BoardModel boardModel;
     private boolean hasInit = false;
 
     public GameModel() {
         gameSettings = new GameSettings();
-        this.boardModel = new BoardModel();
+        TerritoryModel.init();
+        playerModel = new PlayerModel(TerritoryModel.getInstance(), 8);
+        boardModel = new BoardModel(TerritoryModel.getInstance(), playerModel);
     }
 
     public BoardModel getBoardModel() {

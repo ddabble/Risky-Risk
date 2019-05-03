@@ -2,6 +2,8 @@ package no.ntnu.idi.tdt4240.model;
 
 import java.util.List;
 
+import no.ntnu.idi.tdt4240.data.Territory;
+
 
 public class TeamModel {
     private static int teamCount = 0;
