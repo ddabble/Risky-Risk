@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class MainMenuView extends AbstractView {
-    OrthographicCamera camera;
-    Texture background;
+    private OrthographicCamera camera;
+    private Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {

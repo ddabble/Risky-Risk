@@ -16,12 +16,12 @@ import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.BoardController;
-import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter {
-    private BoardController controller;
+    private final BoardController controller;
 
     private OrthographicCamera camera;
 
@@ -30,7 +30,7 @@ public class BoardView extends ApplicationAdapter {
 
     private ShaderProgram mapShader;
 
-    private TroopView troopView;
+    private final TroopView troopView;
 
     public BoardView(OrthographicCamera camera, RiskyRisk game) {
         this.camera = camera;
@@ -79,8 +79,8 @@ public class BoardView extends ApplicationAdapter {
                     // TODO: Remove; the following is debugging code:
                     if (territory != null) {
                         System.out.println(territory.name);
-                        System.out.println("OwnerID: " + territory.getOwnerID());
-                        System.out.println("Number of Troops: " + territory.getNumTroops());
+                        System.out.println("\tOwnerID: " + territory.getOwnerID());
+                        System.out.println("\tNumber of Troops: " + territory.getNumTroops());
                         territory.setNumTroops(territory.getNumTroops() + 1);
                         troopView.onTerritoryChangeNumTroops(territory);
                         troopView.onSelectTerritory(territory);

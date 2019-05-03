@@ -29,7 +29,7 @@ public class BattleModel {
                         " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - 1]);
 
                 if (attdies[attdies.length - 1] > defdies[defdies.length - 1]) {
-                    defenderTroops -= 1;
+                    defenderTroops--;
                     if (defenderTroops == 0) {
                         winner[0] = attackerID;
                         winner[1] = attackerTroops;
@@ -37,7 +37,7 @@ public class BattleModel {
                     }
                 }
                 else if (attdies[attdies.length - 1] <= defdies[defdies.length - 1]) {
-                    attackerTroops -= 1;
+                    attackerTroops--;
                     if (attackerTroops == 0) {
                         winner[0] = defenderID;
                         winner[1] = defenderTroops;
@@ -50,7 +50,7 @@ public class BattleModel {
                         " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - roll]);
 
                 if (attdies[attdies.length - roll] > defdies[defdies.length - roll]) {
-                    defenderTroops -= 1;
+                    defenderTroops--;
                     if (defenderTroops == 0) {
                         winner[0] = attackerID;
                         winner[1] = attackerTroops;
@@ -58,7 +58,7 @@ public class BattleModel {
                     }
                 }
                 else if (attdies[attdies.length - roll] <= defdies[defdies.length - roll]) {
-                    attackerTroops -= 1;
+                    attackerTroops--;
                     if (attackerTroops == 0) {
                         winner[0] = defenderID;
                         winner[1] = defenderTroops;
