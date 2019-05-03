@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class BoardModel {
 
     private final PlayerModel playerModel;
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
+    private Sprite mapSprite;
 
     public BoardModel(TerritoryModel territoryModel, PlayerModel playerModel) {
         TERRITORY_MAP = territoryModel.TERRITORY_MAP;
@@ -41,10 +43,14 @@ public class BoardModel {
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
+        mapSprite = new Sprite(mapTexture);
 
         initColorLookupArray();
     }
 
+    public Sprite getMapSprite() {
+        return mapSprite;
+    }
     private void prepareMapPixmap(Texture mapTexture) {
         if (mapPixmap != null)
             return;
@@ -130,4 +136,5 @@ public class BoardModel {
             mapPixmap.dispose();
         mapTexture.dispose();
     }
+
 }
