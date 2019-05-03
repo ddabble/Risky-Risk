@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.util.List;
+
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.GameViewer;
@@ -37,13 +39,13 @@ public class GameView extends AbstractView implements GameViewer {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-        gameController = new GameController(this, game.getGameModel());
-
         //Pseudoviews -- they all are a part of the GameView
         phaseView = new PhaseView(game);
+        troopView = new TroopView();
+        gameController = new GameController(this, game.getGameModel());
         boardView = new BoardView(camera, game, gameController);
-        // TODO: a view should not be aware of the model!!! the controller should fill this
-        troopView = new TroopView(boardView.model.TERRITORY_MAP);
+
+
 
         setUpInputProcessors();
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -99,6 +101,10 @@ public class GameView extends AbstractView implements GameViewer {
     @Override
     public void setNumberOfPlayers(int num) {
 
+    }
+
+    public void initializeBoard(List<Territory> territories) {
+        troopView.createCircles(territories);
     }
 
     // Update functions for controller

@@ -20,9 +20,6 @@ import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class TroopView extends ApplicationAdapter {
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
-
-    private final TerritoryMap territoryMap;
-
     private SpriteBatch batch;
     private Texture circleTexture;
     private Map<Territory, Sprite> circleSpriteMap;
@@ -33,10 +30,6 @@ public class TroopView extends ApplicationAdapter {
     private Texture circleSelectTexture;
     private Sprite circleSelectSprite;
     private Territory selectedTerritory;
-
-    public TroopView(TerritoryMap territoryMap) {
-        this.territoryMap = territoryMap;
-    }
 
     // TODO: maybe change this to take no parameters and just loop over all territories?
     public void onTerritoryChangeNumTroops(Territory territory) {
@@ -54,10 +47,6 @@ public class TroopView extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
-
-        List<Territory> territories = territoryMap.getAllTerritories();
-        createCircleSprites(territories);
-        createCircleText(territories);
     }
 
     private void createCircleSprites(List<Territory> territories) {
@@ -112,5 +101,11 @@ public class TroopView extends ApplicationAdapter {
         circleSelectTexture.dispose();
         circleTexture.dispose();
         batch.dispose();
+    }
+
+    public void createCircles(List<Territory> territories) {
+        //List<Territory> territories = territoryMap.getAllTerritories();
+        createCircleSprites(territories);
+        createCircleText(territories);
     }
 }
