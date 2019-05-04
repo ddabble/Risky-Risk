@@ -10,6 +10,7 @@ public interface IGPGSClient {
     IRiskyTurn getmRiskyTurn();
 
     void startSignInIntent();
+    void setSignInAttemptHandler(SignInAttemptHandler handler);
     boolean isSignedIn();
     void signOut();
 
@@ -21,4 +22,10 @@ public interface IGPGSClient {
     void onCancelClicked();
     void onLeaveClicked();
     void onFinishClicked();
+
+    interface SignInAttemptHandler {
+        void onSuccess();
+        void onFailure();
+    }
 }
+

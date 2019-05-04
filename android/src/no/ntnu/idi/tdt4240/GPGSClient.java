@@ -51,6 +51,8 @@ public class GPGSClient implements IGPGSClient {
 
     // Client used to sign in with Google APIs
     private GoogleSignInClient mGoogleSignInClient = null;
+    //function for handling a signin attempt
+    private SignInAttemptHandler signInAttemptHandler;
 
     // Client used to interact with the TurnBasedMultiplayer system.
     private TurnBasedMultiplayerClient mTurnBasedMultiplayerClient = null;
@@ -443,6 +445,11 @@ public class GPGSClient implements IGPGSClient {
         return isSignedIn;
     }
 
+
+    public void setSignInAttemptHandler(SignInAttemptHandler signInAttemptHandler) {
+        this.signInAttemptHandler = signInAttemptHandler;
+    }
+
     /**
      * Start a sign in activity.  To properly handle the result, call tryHandleSignInResult from
      * your Activity's onActivityResult function
@@ -554,6 +561,9 @@ public class GPGSClient implements IGPGSClient {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 onConnected(account);
+                if(signInAttemptHandler != null) {
+                    signInAttemptHandler.onSuccess();
+                }
             } catch (ApiException apiException) {
                 String message = apiException.getMessage();
                 if (message == null || message.isEmpty()) {
@@ -561,6 +571,9 @@ public class GPGSClient implements IGPGSClient {
                 }
 
                 onDisconnected();
+                if(signInAttemptHandler != null) {
+                    signInAttemptHandler.onFailure();
+                }
 
                 new AlertDialog.Builder(mActivity)
                         .setMessage(message)
