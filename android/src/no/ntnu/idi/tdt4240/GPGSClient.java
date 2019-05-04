@@ -430,7 +430,6 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // Check if already signed in (synh)
-
     public boolean isSignedIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
         boolean hasPermissions = GoogleSignIn.hasPermissions(account);
@@ -440,7 +439,6 @@ public class GPGSClient implements IGPGSClient {
         if (isSignedIn) {
             Log.d(TAG, "isSignedin(): already signed in");
             signInSilently();
-            //onConnected(account);
         }
         return isSignedIn;
     }
@@ -575,10 +573,10 @@ public class GPGSClient implements IGPGSClient {
                     signInAttemptHandler.onFailure();
                 }
 
-                new AlertDialog.Builder(mActivity)
+                /*new AlertDialog.Builder(mActivity)
                         .setMessage(message)
                         .setNeutralButton(android.R.string.ok, null)
-                        .show();
+                        .show();*/
             }
 
         } else if (requestCode == RC_LOOK_AT_MATCHES) {
