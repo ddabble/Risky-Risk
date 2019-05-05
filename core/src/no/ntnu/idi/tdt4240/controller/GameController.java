@@ -12,15 +12,12 @@ public class GameController {
     private final GameViewer viewer;
     private final GameModel model;
     private final BoardModel boardModel;
-    private final PhaseModel phaseModel;
 
     public GameController(GameViewer viewer, GameModel model) {
         this.viewer = viewer;
         this.model = model;
 
         this.boardModel = model.getBoardModel();
-        this.phaseModel = model.getPhaseModel();
-
         this.initializeBoard();
     }
 
