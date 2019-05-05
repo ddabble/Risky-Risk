@@ -1,7 +1,7 @@
 package no.ntnu.idi.tdt4240.model;
 
 /* The GameModel class is the first entry point when clicking on the GameView.
-    Since a click is affected by Phase and the Board, the GameModel manages both
+    Since a click is affected by Phase and the Board, the GameModel has a reference to both
  */
 
 import com.badlogic.gdx.math.Vector2;
