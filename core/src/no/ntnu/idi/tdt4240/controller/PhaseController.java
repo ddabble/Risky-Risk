@@ -14,10 +14,6 @@ public class PhaseController {
         this.updatePhase();
     }
 
-    public void territoryClicked(int id) {
-        model.territoryClicked(id);
-    }
-
     public void nextPhaseButtonClicked() {
         model.nextPhase();
         this.updatePhase();

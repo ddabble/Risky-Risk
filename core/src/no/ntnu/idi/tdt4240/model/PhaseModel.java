@@ -1,8 +1,11 @@
 package no.ntnu.idi.tdt4240.model;
 
+import no.ntnu.idi.tdt4240.data.Territory;
+
 public class PhaseModel {
 
     private PhaseState phase;
+    private Territory selected;
 
     public PhaseModel() {
         //Initial phase state
@@ -17,15 +20,11 @@ public class PhaseModel {
         this.phase = this.phase.next();
     }
 
-    // Temporary method
-    public void territoryClicked(int id){
-        return;
-    }
-
     // Phases
     public interface PhaseState {
         String getName();
         PhaseState next();
+        void territoryClicked(Territory territory);
     }
 
     private class SetupPhase implements PhaseState {
@@ -37,6 +36,11 @@ public class PhaseModel {
         @Override
         public PhaseState next() {
             return new PlacePhase();
+        }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }
 
@@ -50,6 +54,11 @@ public class PhaseModel {
         public PhaseState next() {
             return new AttackPhase();
         }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
+        }
     }
 
     private class AttackPhase implements PhaseState {
@@ -61,6 +70,11 @@ public class PhaseModel {
         @Override
         public PhaseState next() {
             return new FortifyPhase();
+        }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }
 
@@ -74,5 +88,12 @@ public class PhaseModel {
         public PhaseState next() {
             return new PlacePhase();
         }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
+        }
     }
+
+
 }

@@ -17,7 +17,6 @@ import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 
 public class BoardModel {
     public final TerritoryMap TERRITORY_MAP;
-    private PhaseModel phaseModel;
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
@@ -29,7 +28,6 @@ public class BoardModel {
     public BoardModel(TerritoryModel territoryModel, PlayerModel playerModel) {
         TERRITORY_MAP = territoryModel.TERRITORY_MAP;
         this.playerModel = playerModel;
-        this.phaseModel = new PhaseModel();
     }
 
     public ColorArray getPlayerColorLookup() {
