@@ -6,16 +6,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.view.PhaseView;
 
 public class UIInputProcessor implements InputProcessor {
 
+    private GameController gameController;
     private PhaseView phaseView;
     private OrthographicCamera camera;
-    public UIInputProcessor(PhaseView phaseView, OrthographicCamera camera){
+    public UIInputProcessor(PhaseView phaseView, OrthographicCamera camera, GameController gameController){
         this.phaseView = phaseView;
         this.camera = camera;
+        this.gameController = gameController;
     }
 
     public boolean keyDown (int keycode) {
@@ -52,7 +55,7 @@ public class UIInputProcessor implements InputProcessor {
         Vector3 _touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
         Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
         if (screenX > 0 && screenX < 100 && screenY > 0 && screenX < 200){
-            phaseView.phaseController.nextPhaseButtonClicked();
+            gameController.nextPhaseButtonClicked();
             return true;
         }
         return false;

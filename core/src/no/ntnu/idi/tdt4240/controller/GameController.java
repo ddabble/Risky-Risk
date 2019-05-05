@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.controller;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+
 import java.util.List;
 
 import no.ntnu.idi.tdt4240.data.Territory;
@@ -12,12 +13,13 @@ public class GameController {
     private final GameViewer viewer;
     private final GameModel model;
     private final BoardModel boardModel;
+    private final PhaseModel phaseModel;
 
     public GameController(GameViewer viewer, GameModel model) {
         this.viewer = viewer;
         this.model = model;
-
         this.boardModel = model.getBoardModel();
+        this.phaseModel = model.getPhaseModel();
         this.initializeBoard();
     }
 
@@ -33,17 +35,21 @@ public class GameController {
         if (territories != null) {
             viewer.initializeBoard(territories);
         }
+
+        this.updatePhase();
     }
 
-    public void setNumberOfPlayers(int num) {
-        model.gameSettings.setNumberOfPlayers(num);
-        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
+    public void nextPhaseButtonClicked() {
+        phaseModel.nextPhase();
+        this.updatePhase();
     }
 
-    public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
+    public void updatePhase() {
+        String curPhase = this.phaseModel.getPhase().getName();
+        String nextPhase = this.phaseModel.getPhase().next().getName();
+        viewer.updatePhase(curPhase, nextPhase);
+    }
 
-    // The role of the controller is to translate inputs into changes and relay this back
-    // Below is the translation of clicks to model changes
     public void boardClicked(Vector2 touchWorldPos) {
         Sprite mapSprite = boardModel.getMapSprite();
         //If this is a valid touch
@@ -58,4 +64,16 @@ public class GameController {
             }
         }
     }
+
+    /*
+    public void setNumberOfPlayers(int num) {
+        model.gameSettings.setNumberOfPlayers(num);
+        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
+    }
+
+    public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
+
+    // The role of the controller is to translate inputs into changes and relay this back
+    // Below is the translation of clicks to model changes
+    */
 }

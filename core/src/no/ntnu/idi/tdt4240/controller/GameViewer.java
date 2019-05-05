@@ -13,4 +13,5 @@ public interface GameViewer {
     void initializeBoard(List<Territory> territories);
     void setPlayerColorLookup(float[] playerColorLookup);
     void setMapSprite(Sprite mapSprite);
+    void updatePhase(String curPhase, String nextPhase);
 }
