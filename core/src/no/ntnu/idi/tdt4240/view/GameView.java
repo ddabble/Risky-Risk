@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -42,10 +43,11 @@ public class GameView extends AbstractView implements GameViewer {
         //Pseudoviews -- they all are a part of the GameView
         phaseView = new PhaseView(game);
         troopView = new TroopView();
+        boardView = new BoardView(camera, game);
+
+        // TODO: Problem. The view uses the controller to relay UI clicks,
+        // but the controller needs to initialize the view with data...
         gameController = new GameController(this, game.getGameModel());
-        boardView = new BoardView(camera, game, gameController);
-
-
 
         setUpInputProcessors();
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -105,6 +107,13 @@ public class GameView extends AbstractView implements GameViewer {
 
     public void initializeBoard(List<Territory> territories) {
         troopView.createCircles(territories);
+    }
+
+    public void setPlayerColorLookup(float[] playerColorLookup){
+        boardView.playerColorLookup = playerColorLookup;
+    }
+    public void setMapSprite(Sprite mapSprite) {
+        boardView.mapSprite = mapSprite;
     }
 
     // Update functions for controller
