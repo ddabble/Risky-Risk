@@ -1,17 +1,10 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import java.util.List;
 
@@ -72,7 +65,7 @@ public class GameView extends AbstractView implements GameViewer {
 
     private void setUpInputProcessors() {
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new UIInputProcessor(phaseView, camera));
+        multiplexer.addProcessor(new UIInputProcessor(phaseView, camera, gameController));
         multiplexer.addProcessor(new BoardInputProcessor(camera, gameController));
         Gdx.input.setInputProcessor(multiplexer);
 
@@ -123,4 +116,9 @@ public class GameView extends AbstractView implements GameViewer {
     public void updateTerritoryTroops(Territory t) {
         this.troopView.onTerritoryChangeNumTroops(t);
     }
+    public void updatePhase(String curPhase, String nextPhase) {
+        this.phaseView.updatePhase(curPhase, nextPhase);
+    }
+
+
 }

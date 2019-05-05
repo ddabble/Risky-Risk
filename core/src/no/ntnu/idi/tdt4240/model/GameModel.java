@@ -30,7 +30,6 @@ public class GameModel {
     public BoardModel getBoardModel() {
         return boardModel;
     }
-
     public PhaseModel getPhaseModel() {
         return phaseModel;
     }
