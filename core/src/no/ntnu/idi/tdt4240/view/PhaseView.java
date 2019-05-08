@@ -16,6 +16,11 @@ public class PhaseView extends AbstractView {
         super(game);
     }
 
+    public void updatePhase(String curPhase, String nextPhase) {
+        phaseLabel.setText("Current Phase: " + curPhase);
+        phaseButton.setText(nextPhase);
+    }
+
     @Override
     public void show() {
         super.show();
@@ -65,10 +70,5 @@ public class PhaseView extends AbstractView {
     @Override
     public void dispose() {
 
-    }
-
-    public void updatePhase(String curPhase, String nextPhase) {
-        phaseLabel.setText("Current Phase: " + curPhase);
-        phaseButton.setText(nextPhase);
     }
 }
