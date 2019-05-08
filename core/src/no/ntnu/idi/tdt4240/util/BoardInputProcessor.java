@@ -19,33 +19,35 @@ public class BoardInputProcessor implements InputProcessor {
         this.view = view;
         this.camera = camera;
     }
-    public boolean keyDown (int keycode) {
+
+    public boolean keyDown(int keycode) {
         return false;
     }
 
-    public boolean keyUp (int keycode) {
+    public boolean keyUp(int keycode) {
         return false;
     }
 
-    public boolean keyTyped (char character) {
+    public boolean keyTyped(char character) {
         return false;
     }
 
-    public boolean touchUp (int x, int y, int pointer, int button) {
+    public boolean touchUp(int x, int y, int pointer, int button) {
         return false;
     }
 
-    public boolean touchDragged (int x, int y, int pointer) {
+    public boolean touchDragged(int x, int y, int pointer) {
         return false;
     }
 
-    public boolean mouseMoved (int x, int y) {
+    public boolean mouseMoved(int x, int y) {
         return false;
     }
 
-    public boolean scrolled (int amount) {
+    public boolean scrolled(int amount) {
         return false;
     }
+
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button != Input.Buttons.LEFT) // Only useful for desktop
             return false;

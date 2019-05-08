@@ -85,8 +85,6 @@ public class BoardView extends ApplicationAdapter {
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
-
-
     }
 
     @Override

@@ -33,7 +33,7 @@ public class MainMenuView extends AbstractView {
         Gdx.input.setInputProcessor(stage);
 
         // Back Button
-        Button multiplayerButton = this.createButton("Play");
+        Button multiplayerButton = createButton("Play");
         multiplayerButton.setPosition(100, 200);
         multiplayerButton.setSize(100, 50);
 
@@ -46,7 +46,7 @@ public class MainMenuView extends AbstractView {
             }
         });
 
-        Button tutorialButton = this.createButton("Tutorial");
+        Button tutorialButton = createButton("Tutorial");
         tutorialButton.setPosition(100, 400);
         tutorialButton.setSize(100, 50);
 

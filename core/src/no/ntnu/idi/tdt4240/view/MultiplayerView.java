@@ -31,7 +31,7 @@ public class MultiplayerView extends AbstractView {
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        Button backButton = this.createButton("Back to main");
+        Button backButton = createButton("Back to main");
         backButton.setPosition(100, 100);
         backButton.setSize(100, 50);
 
