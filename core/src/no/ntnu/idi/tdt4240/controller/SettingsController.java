@@ -4,16 +4,17 @@ import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class SettingsController {
     private final SettingsModel model;
-    private final SettingsViewer viewer;
+    // TODO: Create SettingsView class
+//    private final SettingsView view;
 
-    public SettingsController(SettingsViewer viewer, SettingsModel model) {
-        this.viewer = viewer;
+    public SettingsController(SettingsModel model) {
+//        view = new SettingsView();
         this.model = model;
     }
 
     public void setSetting1(String string) {
         model.setString("setting1", string);
-        viewer.setSetting1(getSetting1());
+//        view.setSetting1(getSetting1());
     }
 
     public String getSetting1() {

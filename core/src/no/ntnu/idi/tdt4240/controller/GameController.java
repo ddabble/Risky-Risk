@@ -8,15 +8,16 @@ import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.GameModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
+import no.ntnu.idi.tdt4240.view.GameView;
 
 public class GameController {
-    private final GameViewer viewer;
+    private final GameView view;
     private final GameModel model;
     private final BoardModel boardModel;
     private final PhaseModel phaseModel;
 
-    public GameController(GameViewer viewer, GameModel model) {
-        this.viewer = viewer;
+    public GameController(GameView view, GameModel model) {
+        this.view = view;
         this.model = model;
         this.boardModel = model.getBoardModel();
         this.phaseModel = model.getPhaseModel();
@@ -28,12 +29,12 @@ public class GameController {
         Sprite mapSprite = new Sprite(boardModel.getMapTexture());
         float[] playerColorLookup = boardModel.getPlayerColorLookup().getFloatArray();
 
-        viewer.setMapSprite(mapSprite);
-        viewer.setPlayerColorLookup(playerColorLookup);
+        view.setMapSprite(mapSprite);
+        view.setPlayerColorLookup(playerColorLookup);
 
         List<Territory> territories = boardModel.TERRITORY_MAP.getAllTerritories();
         if (territories != null) {
-            viewer.initializeBoard(territories);
+            view.initializeBoard(territories);
         }
 
         this.updatePhase();
@@ -47,7 +48,7 @@ public class GameController {
     public void updatePhase() {
         String curPhase = this.phaseModel.getPhase().getName();
         String nextPhase = this.phaseModel.getPhase().next().getName();
-        viewer.updatePhase(curPhase, nextPhase);
+        view.updatePhase(curPhase, nextPhase);
     }
 
     public void boardClicked(Vector2 touchWorldPos) {
@@ -58,9 +59,9 @@ public class GameController {
 
             // Update the view by getting changes from the model
             Territory territory = model.getSelectedTerritory();
-            viewer.territorySelected(territory);
+            view.territorySelected(territory);
             if (territory != null) {
-                viewer.updateTerritoryTroops(territory);
+                view.updateTerritoryTroops(territory);
             }
         }
     }
@@ -68,7 +69,7 @@ public class GameController {
     /*
     public void setNumberOfPlayers(int num) {
         model.gameSettings.setNumberOfPlayers(num);
-        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
+        view.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
     }
 
     public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}

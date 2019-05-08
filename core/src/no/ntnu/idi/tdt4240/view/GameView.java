@@ -10,12 +10,11 @@ import java.util.List;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
-import no.ntnu.idi.tdt4240.controller.GameViewer;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
 import no.ntnu.idi.tdt4240.util.UIInputProcessor;
 
-public class GameView extends AbstractView implements GameViewer {
+public class GameView extends AbstractView {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
