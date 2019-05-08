@@ -5,7 +5,6 @@ import no.ntnu.idi.tdt4240.data.Territory;
 public class PhaseModel {
 
     private PhaseState phase;
-    private Territory selected;
 
     public PhaseModel() {
         //Initial phase state
@@ -24,6 +23,8 @@ public class PhaseModel {
     public interface PhaseState {
         String getName();
         PhaseState next();
+
+        // TODO: write actual implementation
         void territoryClicked(Territory territory);
     }
 
@@ -40,6 +41,7 @@ public class PhaseModel {
 
         @Override
         public void territoryClicked(Territory territory) {
+            // TODO: debugging code:
             territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }

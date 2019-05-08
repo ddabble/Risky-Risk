@@ -15,14 +15,18 @@ public class PlayerModel {
     private final int numPlayers;
     private final Map<Integer, Integer> playerID_colorMap = new HashMap<>();
 
-    public PlayerModel(TerritoryModel territoryModel, int numPlayers) {
+    public PlayerModel(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
         this.numPlayers = numPlayers;
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
-        assignTerritoryOwners(playerIDs, territoryModel.TERRITORY_MAP);
+    }
+
+    public void init() {
+        List<Integer> playerIDs = new ArrayList<>(playerID_colorMap.keySet());
+        assignTerritoryOwners(playerIDs, TerritoryModel.getInstance().TERRITORY_MAP);
     }
 
     private List<Integer> generatePlayerIDs() {

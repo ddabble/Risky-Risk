@@ -3,33 +3,37 @@ package no.ntnu.idi.tdt4240.model;
 /* The GameModel class is the first entry point when clicking on the GameView.
     Since a click is affected by Phase and the Board, the GameModel has a reference to both
  */
-
-import com.badlogic.gdx.math.Vector2;
-
-import no.ntnu.idi.tdt4240.data.Territory;
-
 public class GameModel {
     public final GameSettings gameSettings;
 
     private final PlayerModel playerModel;
     private final BoardModel boardModel;
-    private PhaseModel phaseModel;
-    private Territory selectedTerritory;
+    private final TroopModel troopModel;
+    private final PhaseModel phaseModel;
 
     private boolean hasInit = false;
 
     public GameModel() {
         gameSettings = new GameSettings();
 
-        TerritoryModel.init();
-        playerModel = new PlayerModel(TerritoryModel.getInstance(), 8);
-        boardModel = new BoardModel(TerritoryModel.getInstance(), playerModel);
+        playerModel = new PlayerModel(8);
+        boardModel = new BoardModel();
+        troopModel = new TroopModel();
         phaseModel = new PhaseModel();
+    }
+
+    public PlayerModel getPlayerModel() {
+        return playerModel;
     }
 
     public BoardModel getBoardModel() {
         return boardModel;
     }
+
+    public TroopModel getTroopModel() {
+        return troopModel;
+    }
+
     public PhaseModel getPhaseModel() {
         return phaseModel;
     }
@@ -38,7 +42,12 @@ public class GameModel {
         if (hasInit)
             reset();
 
+        // TODO: make all models singletons?
+        TerritoryModel.init();
+
+        playerModel.init();
         boardModel.init();
+        troopModel.init();
 
         for (int i = 0; i < gameSettings.numberOfPlayers; i++) {
 
@@ -48,6 +57,7 @@ public class GameModel {
     }
 
     public void reset() {
+        troopModel.reset();
         boardModel.reset();
     }
 
@@ -64,28 +74,6 @@ public class GameModel {
             } else {
                 numberOfPlayers = num;
             }
-        }
-    }
-
-    public Territory getSelectedTerritory() {
-        return this.selectedTerritory;
-    }
-
-
-    public void onClickTerritory(Vector2 touchWorldPos) {
-        Vector2 mapPos = boardModel.worldPosToMapTexturePos(touchWorldPos, boardModel.getMapSprite());
-        Territory territory = boardModel.getTerritory(mapPos);
-        if (territory != null) {
-            System.out.println(territory.name);
-            System.out.println("\tOwnerID: " + territory.getOwnerID());
-            System.out.println("\tNumber of Troops: " + territory.getNumTroops());
-
-            // Update territory based on the phase we are in
-            phaseModel.getPhase().territoryClicked(territory);
-            this.selectedTerritory = territory;
-        } else {
-            System.out.println("None");
-            this.selectedTerritory = null;
         }
     }
 }

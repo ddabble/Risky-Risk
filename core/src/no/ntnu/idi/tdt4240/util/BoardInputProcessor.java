@@ -7,16 +7,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.view.BoardView;
 
 public class BoardInputProcessor implements InputProcessor {
-    private GameController controller;
+    private final GameController gameController;
+    private final BoardView view;
     private OrthographicCamera camera;
 
-
-    public BoardInputProcessor(OrthographicCamera camera, GameController controller){
+    public BoardInputProcessor(GameController gameController, BoardView view, OrthographicCamera camera) {
+        this.gameController = gameController;
+        this.view = view;
         this.camera = camera;
-        this.controller = controller;
-
     }
     public boolean keyDown (int keycode) {
         return false;
@@ -52,9 +53,10 @@ public class BoardInputProcessor implements InputProcessor {
         // This is related to UI, so we keep this in here
         Vector3 _touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
         Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
+        if (!view.isPosWithinMap(touchWorldPos))
+            return false;
 
-        controller.boardClicked(touchWorldPos);
-
+        gameController.boardClicked(touchWorldPos);
         return true;
     }
 }

@@ -7,15 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import no.ntnu.idi.tdt4240.controller.GameController;
-import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.view.PhaseView;
 
 public class UIInputProcessor implements InputProcessor {
-
-    private GameController gameController;
-    private PhaseView phaseView;
+    private final GameController gameController;
+    private final PhaseView phaseView;
     private OrthographicCamera camera;
-    public UIInputProcessor(PhaseView phaseView, OrthographicCamera camera, GameController gameController){
+
+    public UIInputProcessor(GameController gameController, PhaseView phaseView, OrthographicCamera camera) {
         this.phaseView = phaseView;
         this.camera = camera;
         this.gameController = gameController;

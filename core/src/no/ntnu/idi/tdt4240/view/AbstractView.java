@@ -2,7 +2,6 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
@@ -14,13 +13,17 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public abstract class AbstractView implements Screen {
     protected final RiskyRisk game;
-    private final SelectBoxStyle selectStyle;
-    private final Label.LabelStyle labelStyle;
+    private SelectBoxStyle selectStyle;
+    private Label.LabelStyle labelStyle;
     private Skin skin;
     private TextButtonStyle textButtonStyle;
 
     public AbstractView(RiskyRisk game) {
         this.game = game;
+    }
+
+    @Override
+    public void show() {
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
@@ -47,4 +50,24 @@ public abstract class AbstractView implements Screen {
     protected Label createLabel(String text) {
         return new Label(text, this.labelStyle);
     }
+
+    @Override
+    public void render(float delta) {}
+
+    @Override
+    public void resize(int width, int height) {}
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {
+        skin.dispose();
+    }
+
+    @Override
+    public void dispose() {}
 }

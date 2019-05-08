@@ -1,48 +1,64 @@
 package no.ntnu.idi.tdt4240.controller;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.List;
-
+import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.GameModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
+import no.ntnu.idi.tdt4240.model.TroopModel;
+import no.ntnu.idi.tdt4240.view.BoardView;
 import no.ntnu.idi.tdt4240.view.GameView;
+import no.ntnu.idi.tdt4240.view.PhaseView;
+import no.ntnu.idi.tdt4240.view.TroopView;
 
-public class GameController {
-    private final GameView view;
+public class GameController implements Screen {
     private final GameModel model;
     private final BoardModel boardModel;
+    private final TroopModel troopModel;
     private final PhaseModel phaseModel;
 
-    public GameController(GameView view, GameModel model) {
-        this.view = view;
-        this.model = model;
-        this.boardModel = model.getBoardModel();
-        this.phaseModel = model.getPhaseModel();
-        this.initializeBoard();
+    private final GameView view;
+    private final PhaseView phaseView;
+    private final BoardView boardView;
+    private final TroopView troopView;
+
+    public GameController(RiskyRisk game) {
+        model = new GameModel();
+        boardModel = model.getBoardModel();
+        troopModel = model.getTroopModel();
+        phaseModel = model.getPhaseModel();
+
+        view = new GameView(this, game);
+        phaseView = view.getPhaseView();
+        boardView = view.getBoardView();
+        troopView = view.getTroopView();
     }
 
-    public void initializeBoard() {
+    public int getPlayerColor(int playerID) {
+        return model.getPlayerModel().getPlayerColor(playerID);
+    }
 
-        Sprite mapSprite = new Sprite(boardModel.getMapTexture());
-        float[] playerColorLookup = boardModel.getPlayerColorLookup().getFloatArray();
+    public Territory getSelectedTerritory() {
+        return troopModel.getSelectedTerritory();
+    }
 
-        view.setMapSprite(mapSprite);
-        view.setPlayerColorLookup(playerColorLookup);
-
-        List<Territory> territories = boardModel.TERRITORY_MAP.getAllTerritories();
-        if (territories != null) {
-            view.initializeBoard(territories);
-        }
-
-        this.updatePhase();
+    public void setSelectedTerritory(Territory territory) {
+        troopModel.setSelectedTerritory(territory);
     }
 
     public void nextPhaseButtonClicked() {
         phaseModel.nextPhase();
         this.updatePhase();
+    }
+
+    @Override
+    public void show() {
+        model.init();
+        view.show(boardModel.getMapTexture(), troopModel.getCircleTexture(), troopModel.getCircleSelectTexture());
+        updatePhase();
     }
 
     public void updatePhase() {
@@ -52,18 +68,49 @@ public class GameController {
     }
 
     public void boardClicked(Vector2 touchWorldPos) {
-        Sprite mapSprite = boardModel.getMapSprite();
-        //If this is a valid touch
-        if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
-            model.onClickTerritory(touchWorldPos);
+        Vector2 mapPos = boardView.worldPosToMapTexturePos(touchWorldPos);
+        Territory territory = boardModel.getTerritory(mapPos);
+        troopView.onSelectTerritory(territory);
+        if (territory != null) {
+            System.out.println(territory.name);
 
-            // Update the view by getting changes from the model
-            Territory territory = model.getSelectedTerritory();
-            view.territorySelected(territory);
-            if (territory != null) {
-                view.updateTerritoryTroops(territory);
-            }
-        }
+            // Update territory based on the phase we are in
+            phaseModel.getPhase().territoryClicked(territory);
+
+            troopView.onTerritoryChangeNumTroops(territory);
+        } else
+            System.out.println("None");
+    }
+
+    @Override
+    public void render(float delta) {
+        view.render(delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        view.resize(width, height);
+    }
+
+    @Override
+    public void pause() {
+        view.pause();
+    }
+
+    @Override
+    public void resume() {
+        view.resume();
+    }
+
+    @Override
+    public void hide() {
+        view.hide();
+        model.reset();
+    }
+
+    @Override
+    public void dispose() {
+        view.dispose();
     }
 
     /*

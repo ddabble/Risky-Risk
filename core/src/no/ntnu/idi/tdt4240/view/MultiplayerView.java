@@ -19,13 +19,16 @@ public class MultiplayerView extends AbstractView {
 
     public MultiplayerView(RiskyRisk game) {
         super(game);
-        background = new Texture("background.png");
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
     }
 
     @Override
     public void show() {
+        super.show();
+
+        camera.setToOrtho(false, 800, 480);
+        background = new Texture("background.png");
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         Button backButton = this.createButton("Back to main");
@@ -68,7 +71,9 @@ public class MultiplayerView extends AbstractView {
 
     @Override
     public void hide() {
-
+        background.dispose();
+        stage.dispose();
+        super.hide();
     }
 
     @Override

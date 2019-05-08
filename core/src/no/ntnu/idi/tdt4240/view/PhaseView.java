@@ -8,16 +8,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class PhaseView extends AbstractView {
-
-    public TextButton phaseButton;
+    private TextButton phaseButton;
     private Label phaseLabel;
     private Stage stage;
 
     public PhaseView(RiskyRisk game) {
         super(game);
+    }
 
-        //For drawing and input handling
-        this.stage = new Stage(new ScreenViewport());
+    @Override
+    public void show() {
+        super.show();
+
+        // For drawing and input handling
+        stage = new Stage(new ScreenViewport());
 
         // Actors
         this.phaseLabel = this.createLabel("");
@@ -27,11 +31,6 @@ public class PhaseView extends AbstractView {
 
         stage.addActor(phaseLabel);
         stage.addActor(phaseButton);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override
@@ -59,12 +58,13 @@ public class PhaseView extends AbstractView {
 
     @Override
     public void hide() {
-
+        stage.dispose();
+        super.hide();
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
 
     public void updatePhase(String curPhase, String nextPhase){

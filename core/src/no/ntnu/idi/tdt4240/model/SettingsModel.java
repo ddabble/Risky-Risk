@@ -7,8 +7,8 @@ public class SettingsModel {
     private Preferences prefs;
     private final String FILENAME = "GAME_SETTINGS";
 
-    public SettingsModel() {
-        this.prefs = Gdx.app.getPreferences(FILENAME);
+    public void init() {
+        prefs = Gdx.app.getPreferences(FILENAME);
     }
 
     public void setString(String key, String value) {
