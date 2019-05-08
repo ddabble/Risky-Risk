@@ -97,5 +97,4 @@ public class BoardModel {
             mapPixmap.dispose();
         mapTexture.dispose();
     }
-
 }

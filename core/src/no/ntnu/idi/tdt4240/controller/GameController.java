@@ -51,7 +51,7 @@ public class GameController implements Screen {
 
     public void nextPhaseButtonClicked() {
         phaseModel.nextPhase();
-        this.updatePhase();
+        updatePhase();
     }
 
     @Override
@@ -62,8 +62,8 @@ public class GameController implements Screen {
     }
 
     public void updatePhase() {
-        String curPhase = this.phaseModel.getPhase().getName();
-        String nextPhase = this.phaseModel.getPhase().next().getName();
+        String curPhase = phaseModel.getPhase().getName();
+        String nextPhase = phaseModel.getPhase().next().getName();
         view.updatePhase(curPhase, nextPhase);
     }
 

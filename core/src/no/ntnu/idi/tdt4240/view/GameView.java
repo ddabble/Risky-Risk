@@ -19,7 +19,7 @@ public class GameView extends AbstractView {
     private OrthographicCamera camera;
     private final GameController controller;
 
-    //Pseudoviews -- they all are a part of the GameView
+    // Pseudo-views - they all are a part of the GameView
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
@@ -33,7 +33,7 @@ public class GameView extends AbstractView {
 
         camera = new OrthographicCamera();
 
-        //Pseudoviews -- they all are a part of the GameView
+        // Pseudo-views - they all are a part of the GameView
         phaseView = new PhaseView(game);
         boardView = new BoardView(controller, camera);
         troopView = new TroopView(controller);
@@ -60,7 +60,6 @@ public class GameView extends AbstractView {
         boardView.render();
         troopView.render();
         phaseView.render(delta);
-
     }
 
     private void setUpInputProcessors() {
@@ -68,8 +67,8 @@ public class GameView extends AbstractView {
         multiplexer.addProcessor(new UIInputProcessor(controller, phaseView, camera));
         multiplexer.addProcessor(new BoardInputProcessor(controller, boardView, camera));
         Gdx.input.setInputProcessor(multiplexer);
-
     }
+
     @Override
     public void resize(int width, int height) {
     }
@@ -104,11 +103,13 @@ public class GameView extends AbstractView {
     public void territorySelected(Territory t) {
         this.troopView.onSelectTerritory(t);
     }
+
     public void updateTerritoryTroops(Territory t) {
         this.troopView.onTerritoryChangeNumTroops(t);
     }
+
     public void updatePhase(String curPhase, String nextPhase) {
-        this.phaseView.updatePhase(curPhase, nextPhase);
+        phaseView.updatePhase(curPhase, nextPhase);
     }
 
     public PhaseView getPhaseView() {

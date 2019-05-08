@@ -1,7 +1,8 @@
 package no.ntnu.idi.tdt4240.model;
 
-/* The GameModel class is the first entry point when clicking on the GameView.
-    Since a click is affected by Phase and the Board, the GameModel has a reference to both
+/**
+ * The GameModel class is the first entry point when clicking on the GameView.
+ * Since a click is affected by Phase and the Board, the GameModel has a reference to both
  */
 public class GameModel {
     public final GameSettings gameSettings;
@@ -50,7 +51,7 @@ public class GameModel {
         troopModel.init();
 
         for (int i = 0; i < gameSettings.numberOfPlayers; i++) {
-
+            // TODO:
         }
 
         hasInit = true;

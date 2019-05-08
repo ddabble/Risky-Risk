@@ -37,18 +37,17 @@ public abstract class AbstractView implements Screen {
     }
 
     protected TextButton createButton(String text) {
-        TextButton button = new TextButton(text, this.textButtonStyle);
-        return button;
+        return new TextButton(text, textButtonStyle);
     }
 
     protected <T> SelectBox<T> createSelectBox(T[] options) {
-        SelectBox<T> selectBox = new SelectBox<T>(selectStyle);
+        SelectBox<T> selectBox = new SelectBox<>(selectStyle);
         selectBox.setItems(options);
         return selectBox;
     }
 
     protected Label createLabel(String text) {
-        return new Label(text, this.labelStyle);
+        return new Label(text, labelStyle);
     }
 
     @Override

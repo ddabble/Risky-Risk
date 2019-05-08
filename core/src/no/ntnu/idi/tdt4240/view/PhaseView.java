@@ -24,9 +24,9 @@ public class PhaseView extends AbstractView {
         stage = new Stage(new ScreenViewport());
 
         // Actors
-        this.phaseLabel = this.createLabel("");
-        phaseLabel.setPosition(0,200);
-        this.phaseButton = this.createButton("");
+        phaseLabel = createLabel("");
+        phaseLabel.setPosition(0, 200);
+        phaseButton = createButton("");
         phaseButton.setWidth(100);
 
         stage.addActor(phaseLabel);
@@ -36,9 +36,9 @@ public class PhaseView extends AbstractView {
     @Override
     public void render(float delta) {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Draw and update
-        this.stage.act(delta); //Updates all actors
-        this.stage.draw();
+        // Draw and update
+        stage.act(delta); // Updates all actors
+        stage.draw();
     }
 
     @Override
@@ -67,8 +67,8 @@ public class PhaseView extends AbstractView {
 
     }
 
-    public void updatePhase(String curPhase, String nextPhase){
-        this.phaseLabel.setText("Current Phase: " + curPhase);
-        this.phaseButton.setText(nextPhase);
+    public void updatePhase(String curPhase, String nextPhase) {
+        phaseLabel.setText("Current Phase: " + curPhase);
+        phaseButton.setText(nextPhase);
     }
 }

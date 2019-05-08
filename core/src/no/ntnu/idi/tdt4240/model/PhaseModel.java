@@ -3,25 +3,25 @@ package no.ntnu.idi.tdt4240.model;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class PhaseModel {
-
     private PhaseState phase;
 
     public PhaseModel() {
-        //Initial phase state
-        this.phase = new SetupPhase();
+        // Initial phase state
+        phase = new SetupPhase();
     }
 
     public PhaseState getPhase() {
-        return this.phase;
+        return phase;
     }
 
     public void nextPhase() {
-        this.phase = this.phase.next();
+        phase = phase.next();
     }
 
     // Phases
     public interface PhaseState {
         String getName();
+
         PhaseState next();
 
         // TODO: write actual implementation
@@ -96,6 +96,4 @@ public class PhaseModel {
             territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }
-
-
 }
