@@ -92,35 +92,10 @@ public class GameView extends AbstractView {
     }
 
     @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
     public void hide() {
         phaseView.hide();
         troopView.dispose();
         boardView.dispose();
         super.hide();
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    // Update functions for controller
-    public void territorySelected(Territory t) {
-        this.troopView.onSelectTerritory(t);
-    }
-
-    public void updateTerritoryTroops(Territory t) {
-        this.troopView.onTerritoryChangeNumTroops(t);
     }
 }

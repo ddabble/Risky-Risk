@@ -55,29 +55,9 @@ public class MultiplayerView extends AbstractView {
     }
 
     @Override
-    public void resize(int i, int i1) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
         background.dispose();
         stage.dispose();
         super.hide();
-    }
-
-    @Override
-    public void dispose() {
-
     }
 }
