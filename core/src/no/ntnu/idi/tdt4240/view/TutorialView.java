@@ -17,11 +17,14 @@ public class TutorialView extends AbstractView {
 
     public TutorialView(RiskyRisk game) {
         super(game);
-        background = new Texture("background.png");
     }
 
     @Override
     public void show() {
+        super.show();
+
+        background = new Texture("background.png");
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         Button backButton = this.createButton("Back to main");
@@ -62,6 +65,9 @@ public class TutorialView extends AbstractView {
 
     @Override
     public void hide() {
+        background.dispose();
+        stage.dispose();
+        super.hide();
     }
 
     @Override

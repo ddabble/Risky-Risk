@@ -19,13 +19,16 @@ public class MainMenuView extends AbstractView {
 
     public MainMenuView(RiskyRisk game) {
         super(game);
-        background = new Texture("background.png");
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
     }
 
     @Override
     public void show() {
+        super.show();
+
+        camera.setToOrtho(false, 800, 480);
+        background = new Texture("background.png");
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -39,7 +42,7 @@ public class MainMenuView extends AbstractView {
             public void clicked(InputEvent event, float x, float y) {
                 // TODO: Should be MultiplayerView, GameView is only temporary to easier see the board being rendered
 //                game.setScreen(new MultiplayerView(game));
-                game.setScreen(new GameView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.GAME);
             }
         });
 
@@ -85,7 +88,9 @@ public class MainMenuView extends AbstractView {
 
     @Override
     public void hide() {
-
+        background.dispose();
+        stage.dispose();
+        super.hide();
     }
 
     @Override

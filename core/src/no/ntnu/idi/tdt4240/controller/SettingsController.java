@@ -7,9 +7,13 @@ public class SettingsController {
     // TODO: Create SettingsView class
 //    private final SettingsView view;
 
-    public SettingsController(SettingsModel model) {
+    public SettingsController() {
 //        view = new SettingsView();
-        this.model = model;
+        model = new SettingsModel();
+    }
+
+    public void init() {
+        model.init();
     }
 
     public void setSetting1(String string) {

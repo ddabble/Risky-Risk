@@ -2,45 +2,44 @@ package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
 
-import no.ntnu.idi.tdt4240.model.GameModel;
-import no.ntnu.idi.tdt4240.model.SettingsModel;
-import no.ntnu.idi.tdt4240.view.GameView;
+import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.SettingsController;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
-    private SettingsModel settingsModel;
-    private GameModel gameModel;
+    private final SettingsController settingsController;
+    private final MainMenuView mainMenuView;
+    private final GameController gameController;
 
-    private GameView gameView;
-
-    public SettingsModel getSettingsModel() {
-        return settingsModel;
+    public RiskyRisk() {
+        settingsController = new SettingsController();
+        mainMenuView = new MainMenuView(this);
+        gameController = new GameController(this);
     }
 
-    public GameModel getGameModel() {
-        return gameModel;
+    public void setScreen(ScreenEnum screen) {
+        // TODO: add other screens
+        switch (screen) {
+            case MAIN_MENU:
+                // TODO: should be mainMenuController
+                setScreen(mainMenuView);
+                break;
+
+            case GAME:
+                setScreen(gameController);
+                break;
+        }
     }
 
     @Override
     public void create() {
-        settingsModel = new SettingsModel();
-        gameModel = new GameModel();
-        gameModel.init();
-
-//        gameView = new GameView(this);
-
-        this.setScreen(new MainMenuView(this));
+        settingsController.init();
+        setScreen(ScreenEnum.MAIN_MENU);
     }
 
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void dispose() {
-        gameModel.reset();
-        super.dispose();
+    public enum ScreenEnum {
+        MAIN_MENU,
+        GAME,
     }
 }
