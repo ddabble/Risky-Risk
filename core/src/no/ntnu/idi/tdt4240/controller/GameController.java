@@ -25,6 +25,8 @@ public class GameController implements Screen {
     private final BoardView boardView;
     private final TroopView troopView;
 
+    private final PhaseController phaseController;
+
     public GameController(RiskyRisk game) {
         model = new GameModel();
         boardModel = model.getBoardModel();
@@ -35,6 +37,10 @@ public class GameController implements Screen {
         phaseView = view.getPhaseView();
         boardView = view.getBoardView();
         troopView = view.getTroopView();
+
+
+        phaseController = new PhaseController(phaseView, phaseModel);
+
     }
 
     public int getPlayerColor(int playerID) {
@@ -62,8 +68,8 @@ public class GameController implements Screen {
             System.out.println(territory.name);
 
             // Update territory based on the phase we are in
-            phaseModel.getPhase().territoryClicked(territory);
-
+            //phaseModel.getPhase().territoryClicked(territory);
+            phaseController.territoryClicked(territory);
             troopView.onTerritoryChangeNumTroops(territory);
         } else
             System.out.println("None");
