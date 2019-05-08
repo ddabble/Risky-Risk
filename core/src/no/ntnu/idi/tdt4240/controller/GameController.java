@@ -54,19 +54,6 @@ public class GameController implements Screen {
         updatePhase();
     }
 
-    @Override
-    public void show() {
-        model.init();
-        view.show(boardModel.getMapTexture(), troopModel.getCircleTexture(), troopModel.getCircleSelectTexture());
-        updatePhase();
-    }
-
-    public void updatePhase() {
-        String curPhase = phaseModel.getPhase().getName();
-        String nextPhase = phaseModel.getPhase().next().getName();
-        view.updatePhase(curPhase, nextPhase);
-    }
-
     public void boardClicked(Vector2 touchWorldPos) {
         Vector2 mapPos = boardView.worldPosToMapTexturePos(touchWorldPos);
         Territory territory = boardModel.getTerritory(mapPos);
@@ -80,6 +67,19 @@ public class GameController implements Screen {
             troopView.onTerritoryChangeNumTroops(territory);
         } else
             System.out.println("None");
+    }
+
+    @Override
+    public void show() {
+        model.init();
+        view.show(boardModel.getMapTexture(), troopModel.getCircleTexture(), troopModel.getCircleSelectTexture());
+        updatePhase();
+    }
+
+    public void updatePhase() {
+        String curPhase = phaseModel.getPhase().getName();
+        String nextPhase = phaseModel.getPhase().next().getName();
+        view.updatePhase(curPhase, nextPhase);
     }
 
     @Override

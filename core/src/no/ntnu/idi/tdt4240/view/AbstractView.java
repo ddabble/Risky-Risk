@@ -22,20 +22,6 @@ public abstract class AbstractView implements Screen {
         this.game = game;
     }
 
-    @Override
-    public void show() {
-        skin = new Skin(Gdx.files.internal("button/uiskin.json"));
-        textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
-        selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
-        labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-
-        textButtonStyle.up = skin.getDrawable("default-round");
-        textButtonStyle.down = skin.getDrawable("default-round-down");
-        textButtonStyle.font = skin.getFont("default-font");
-
-        selectStyle.font = skin.getFont("default-font");
-    }
-
     protected TextButton createButton(String text) {
         return new TextButton(text, textButtonStyle);
     }
@@ -48,6 +34,20 @@ public abstract class AbstractView implements Screen {
 
     protected Label createLabel(String text) {
         return new Label(text, labelStyle);
+    }
+
+    @Override
+    public void show() {
+        skin = new Skin(Gdx.files.internal("button/uiskin.json"));
+        textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
+        selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
+        labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+
+        textButtonStyle.up = skin.getDrawable("default-round");
+        textButtonStyle.down = skin.getDrawable("default-round-down");
+        textButtonStyle.font = skin.getFont("default-font");
+
+        selectStyle.font = skin.getFont("default-font");
     }
 
     @Override
