@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +12,7 @@ import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
 
-public class GameView extends AbstractView {
+public class GameView implements Screen {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
@@ -60,9 +61,8 @@ public class GameView extends AbstractView {
         phaseView.updatePhase(curPhase, nextPhase);
     }
 
-    public void show(Texture mapTexture, Texture circleTexture, Texture circleSelectTexture) {
-        super.show();
-
+    @Override
+    public void show() {
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
         boardView.create(mapTexture, TerritoryModel.getTerritoryMap());
@@ -89,14 +89,33 @@ public class GameView extends AbstractView {
 
         boardView.render();
         troopView.render();
-        phaseView.render(delta);
+        phaseView.render();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 
     @Override
     public void hide() {
-        phaseView.hide();
+        phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
-        super.hide();
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }
