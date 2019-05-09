@@ -1,11 +1,19 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import javax.xml.soap.Text;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
@@ -14,7 +22,11 @@ public class PhaseView extends AbstractView {
     private final GameController gameController;
 
     private TextButton phaseButton;
+    private TextButton cancelButton;
+    private TextButton attackButton;
+    private TextButton turnButton;
     private Label phaseLabel;
+    private Label playerLabel;
     private Stage stage;
 
     public PhaseView(RiskyRisk game, GameController gameController) {
@@ -31,6 +43,75 @@ public class PhaseView extends AbstractView {
         phaseButton.setText(nextPhase);
     }
 
+    public void addCancelButton(){
+        cancelButton = createButton("Cancel Move");
+        cancelButton.setWidth(100);
+        cancelButton.setPosition(0, 30);
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameController.cancelButtonClicked();
+            }
+        });
+        stage.addActor(cancelButton);
+    }
+    public void addAttackButton(){
+        attackButton = createButton("Attack");
+        attackButton.setWidth(100);
+        attackButton.setPosition(0, 60);
+        attackButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameController.attackButtonClicked();
+            }
+        });
+        stage.addActor(attackButton);
+    }
+
+    public void addTurnButton(){
+        phaseButton.remove();
+        turnButton = createButton("End Turn");
+        turnButton.setWidth(100);
+        turnButton.setPosition(0, 0);
+        turnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameController.nextTurnButtonClicked();
+            }
+        });
+        stage.addActor(turnButton);
+    }
+
+    public void removeTurnButton(){
+        turnButton.remove();
+        phaseButton = createButton("");
+        phaseButton.setWidth(100);
+        phaseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameController.nextPhaseButtonClicked();
+            }
+        });
+        stage.addActor(phaseButton);
+    }
+
+    public void removeCancelButton(){cancelButton.remove();}
+    public void removeAttackButton(){
+        if (stage.getActors().contains(attackButton, false)) {
+            attackButton.remove();
+        }
+    }
+
+    public void updateRenderedVariables(String phase){
+        phaseLabel.setText("Current Phase: " + phase + " " +
+                "\nNumber of Troops to place: " + gameController.getPlayer().getTroopsToPlace());
+    }
+
+    public void updateRenderedCurrentPlayer(int playerID, Color playerColor){
+        playerLabel.setText("Player" + playerID);
+        playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
+    }
+
     @Override
     public void show() {
         super.show();
@@ -41,6 +122,8 @@ public class PhaseView extends AbstractView {
         // Actors
         phaseLabel = createLabel("");
         phaseLabel.setPosition(0, 200);
+        playerLabel = createLabel("");
+        playerLabel.setPosition(0, 90);
         phaseButton = createButton("");
         phaseButton.setWidth(100);
         phaseButton.addListener(new ClickListener() {
@@ -50,14 +133,18 @@ public class PhaseView extends AbstractView {
             }
         });
 
+
         stage.addActor(phaseLabel);
+        stage.addActor(playerLabel);
         stage.addActor(phaseButton);
     }
+
 
     @Override
     public void render(float delta) {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Draw and update
+
         stage.act(delta); // Updates all actors
         stage.draw();
     }
