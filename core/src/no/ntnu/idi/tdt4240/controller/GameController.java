@@ -6,8 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.model.GameModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
+import no.ntnu.idi.tdt4240.model.PlayerModel;
+import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.view.BoardView;
 import no.ntnu.idi.tdt4240.view.GameView;
@@ -15,22 +16,12 @@ import no.ntnu.idi.tdt4240.view.PhaseView;
 import no.ntnu.idi.tdt4240.view.TroopView;
 
 public class GameController implements Screen {
-    private final GameModel model;
-    private final BoardModel boardModel;
-    private final TroopModel troopModel;
-    private final PhaseModel phaseModel;
-
     private final GameView view;
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
 
     public GameController(RiskyRisk game) {
-        model = new GameModel();
-        boardModel = model.getBoardModel();
-        troopModel = model.getTroopModel();
-        phaseModel = model.getPhaseModel();
-
         view = new GameView(this, game);
         phaseView = view.getPhaseView();
         boardView = view.getBoardView();
@@ -38,31 +29,31 @@ public class GameController implements Screen {
     }
 
     public int getPlayerColor(int playerID) {
-        return model.getPlayerModel().getPlayerColor(playerID);
+        return PlayerModel.INSTANCE.getPlayerColor(playerID);
     }
 
     public Territory getSelectedTerritory() {
-        return troopModel.getSelectedTerritory();
+        return TroopModel.INSTANCE.getSelectedTerritory();
     }
 
     public void setSelectedTerritory(Territory territory) {
-        troopModel.setSelectedTerritory(territory);
+        TroopModel.INSTANCE.setSelectedTerritory(territory);
     }
 
     public void nextPhaseButtonClicked() {
-        phaseModel.nextPhase();
+        PhaseModel.INSTANCE.nextPhase();
         updatePhase();
     }
 
     public void boardClicked(Vector2 touchWorldPos) {
         Vector2 mapPos = boardView.worldPosToMapTexturePos(touchWorldPos);
-        Territory territory = boardModel.getTerritory(mapPos);
+        Territory territory = BoardModel.INSTANCE.getTerritory(mapPos);
         troopView.onSelectTerritory(territory);
         if (territory != null) {
             System.out.println(territory.name);
 
             // Update territory based on the phase we are in
-            phaseModel.getPhase().territoryClicked(territory);
+            PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
 
             troopView.onTerritoryChangeNumTroops(territory);
         } else
@@ -71,14 +62,19 @@ public class GameController implements Screen {
 
     @Override
     public void show() {
-        model.init();
-        view.show(boardModel.getMapTexture(), troopModel.getCircleTexture(), troopModel.getCircleSelectTexture());
+        TerritoryModel.init();
+
+        PlayerModel.INSTANCE.init();
+        BoardModel.INSTANCE.init();
+        TroopModel.INSTANCE.init();
+
+        view.show(BoardModel.INSTANCE.getMapTexture(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
         updatePhase();
     }
 
     public void updatePhase() {
-        String curPhase = phaseModel.getPhase().getName();
-        String nextPhase = phaseModel.getPhase().next().getName();
+        String curPhase = PhaseModel.INSTANCE.getPhase().getName();
+        String nextPhase = PhaseModel.INSTANCE.getPhase().next().getName();
         view.updatePhase(curPhase, nextPhase);
     }
 
@@ -105,7 +101,9 @@ public class GameController implements Screen {
     @Override
     public void hide() {
         view.hide();
-        model.reset();
+
+        TroopModel.INSTANCE.reset();
+        BoardModel.INSTANCE.reset();
     }
 
     @Override

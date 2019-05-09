@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.SettingsController;
+import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 
 // Switches between App states, loads shared resources
@@ -34,6 +35,7 @@ public class RiskyRisk extends Game {
 
     @Override
     public void create() {
+        TerritoryModel.init();
         settingsController.init();
         setScreen(ScreenEnum.MAIN_MENU);
     }

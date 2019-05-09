@@ -3,9 +3,11 @@ package no.ntnu.idi.tdt4240.model;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class PhaseModel {
+    public static final PhaseModel INSTANCE = new PhaseModel();
+
     private PhaseState phase;
 
-    public PhaseModel() {
+    private PhaseModel() {
         // Initial phase state
         phase = new SetupPhase();
     }

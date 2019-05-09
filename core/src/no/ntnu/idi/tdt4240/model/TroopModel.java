@@ -5,10 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class TroopModel {
+    public static final TroopModel INSTANCE = new TroopModel();
+
     private Texture circleTexture;
     private Texture circleSelectTexture;
 
     private Territory selectedTerritory;
+
+    private TroopModel() {}
 
     public Texture getCircleTexture() {
         return circleTexture;
