@@ -35,6 +35,8 @@ public class GameController implements Screen {
     private final BoardView boardView;
     private final TroopView troopView;
 
+    private final PhaseController phaseController;
+
     public GameController(RiskyRisk game) {
         model = new GameModel();
         boardModel = model.getBoardModel();
@@ -46,8 +48,9 @@ public class GameController implements Screen {
         boardView = view.getBoardView();
         troopView = view.getTroopView();
 
+        phaseController = new PhaseController(phaseView, phaseModel);
+      
         player = new Player();
-
         //Temporary first player ID
         turn = new TurnModel(1, 7);
     }
@@ -120,6 +123,12 @@ public class GameController implements Screen {
             System.out.println(territory.name);
 
             // Update territory based on the phase we are in
+
+            //phaseModel.getPhase().territoryClicked(territory);
+  
+            //From Fortify needs fixing.
+            //phaseController.territoryClicked(territory);
+            //troopView.onTerritoryChangeNumTroops(territory);
             if (phaseModel.getPhase().getName() == "Place") {
                 if (player.getTroopsToPlace() > 0 && territory.getOwnerID() == turn.getCurrentPlayerID()) {
                     phaseModel.getPhase().territoryClicked(territory);
