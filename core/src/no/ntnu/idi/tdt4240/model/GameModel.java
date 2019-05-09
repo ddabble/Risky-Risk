@@ -7,7 +7,7 @@ package no.ntnu.idi.tdt4240.model;
 public class GameModel {
     public final GameSettings gameSettings;
 
-    private final PlayerModel playerModel;
+    private final MultiplayerModel multiplayerModel;
     private final BoardModel boardModel;
     private final TroopModel troopModel;
     private final PhaseModel phaseModel;
@@ -17,14 +17,14 @@ public class GameModel {
     public GameModel() {
         gameSettings = new GameSettings();
 
-        playerModel = new PlayerModel(8);
+        multiplayerModel = new MultiplayerModel(8);
         boardModel = new BoardModel();
         troopModel = new TroopModel();
         phaseModel = new PhaseModel();
     }
 
-    public PlayerModel getPlayerModel() {
-        return playerModel;
+    public MultiplayerModel getMultiplayerModel() {
+        return multiplayerModel;
     }
 
     public BoardModel getBoardModel() {
@@ -39,6 +39,7 @@ public class GameModel {
         return phaseModel;
     }
 
+
     public void init() {
         if (hasInit)
             reset();
@@ -46,7 +47,7 @@ public class GameModel {
         // TODO: make all models singletons?
         TerritoryModel.init();
 
-        playerModel.init();
+        multiplayerModel.init();
         boardModel.init();
         troopModel.init();
 
