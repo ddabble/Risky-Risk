@@ -32,8 +32,8 @@ public class PhaseView extends AbstractView {
     }
 
     @Override
-    public void show() {
-        super.show();
+    public void create() {
+        super.create();
 
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
@@ -55,16 +55,16 @@ public class PhaseView extends AbstractView {
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Draw and update
-        stage.act(delta); // Updates all actors
+        stage.act(); // Updates all actors
         stage.draw();
     }
 
     @Override
-    public void hide() {
+    public void dispose() {
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 }

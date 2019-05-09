@@ -23,8 +23,8 @@ public class MultiplayerView extends AbstractView {
     }
 
     @Override
-    public void show() {
-        super.show();
+    public void create() {
+        super.create();
 
         camera.setToOrtho(false, 800, 480);
         background = new Texture("background.png");
@@ -45,19 +45,19 @@ public class MultiplayerView extends AbstractView {
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
     @Override
-    public void hide() {
+    public void dispose() {
         background.dispose();
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 }
