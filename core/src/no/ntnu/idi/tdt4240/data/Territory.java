@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240.data;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Territory {
     }
 
     public void setNeighbors(List<Territory> neighbors) {
-        neighbors = new ArrayList<>(neighbors);
+        this.neighbors = new ArrayList<>(neighbors);
     }
 
     public int getNumTroops() {

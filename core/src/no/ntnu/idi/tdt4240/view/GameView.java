@@ -10,7 +10,6 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
-import no.ntnu.idi.tdt4240.util.UIInputProcessor;
 
 public class GameView extends AbstractView {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
@@ -34,7 +33,10 @@ public class GameView extends AbstractView {
         camera = new OrthographicCamera();
 
         // Pseudo-views - they all are a part of the GameView
+        //FROM FORTIFY
         phaseView = new PhaseView(game, camera);
+      
+        phaseView = new PhaseView(game, controller);
         boardView = new BoardView(controller, camera);
         troopView = new TroopView(controller);
     }
@@ -65,18 +67,20 @@ public class GameView extends AbstractView {
         super.show();
 
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        setUpInputProcessors();
 
         boardView.create(mapTexture, TerritoryModel.getInstance().TERRITORY_MAP);
         troopView.create(TerritoryModel.getInstance().TERRITORY_MAP, circleTexture, circleSelectTexture);
         phaseView.show();
+
+        setUpInputProcessors();
 
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
     private void setUpInputProcessors() {
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new UIInputProcessor(controller, phaseView, camera));
+        // Note: the input processors added first get to handle input first
+        multiplexer.addProcessor(phaseView.getStage());
         multiplexer.addProcessor(new BoardInputProcessor(controller, boardView, camera));
         Gdx.input.setInputProcessor(multiplexer);
     }

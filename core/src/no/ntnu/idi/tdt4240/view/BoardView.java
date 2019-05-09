@@ -70,7 +70,7 @@ public class BoardView extends ApplicationAdapter {
         ShaderProgram.pedantic = false;
     }
 
-    private void initColorLookupArray(TerritoryMap territoryMap) {
+    public void initColorLookupArray(TerritoryMap territoryMap) {
         for (Territory territory : territoryMap.getAllTerritories()) {
             int playerColor = gameController.getPlayerColor(territory.getOwnerID());
             PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
