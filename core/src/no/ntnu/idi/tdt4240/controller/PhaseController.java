@@ -59,6 +59,7 @@ public class PhaseController {
                 (turnModel.getCurrentPlayerID(), getPlayerRGBAColor(turnModel.getCurrentPlayerID()));
         phaseView.removeTurnButton();
         phaseModel.nextPhase();
+        updateTroopsToPlace();
 
     }
 
@@ -98,6 +99,7 @@ public class PhaseController {
         if (territoriesOwned == 0){
             turnModel.takeTurn();
             updateTroopsToPlace();
+            phaseView.updateRenderedCurrentPlayer(turnModel.getCurrentPlayerID(), getPlayerRGBAColor(turnModel.getCurrentPlayerID()));;
 
         }
         else{
