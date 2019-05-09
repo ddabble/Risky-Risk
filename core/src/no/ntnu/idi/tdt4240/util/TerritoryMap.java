@@ -101,7 +101,6 @@ public class TerritoryMap {
             List<Territory> neighbors = new ArrayList<>();
             for (String neighborID : neighborEntry.getValue())
                 neighbors.add(IDmap.get(neighborID.toLowerCase()));
-
             Territory territory = IDmap.get(neighborEntry.getKey().toLowerCase());
             territory.setNeighbors(neighbors);
         }
