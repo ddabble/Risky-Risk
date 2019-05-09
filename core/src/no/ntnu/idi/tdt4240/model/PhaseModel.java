@@ -77,7 +77,6 @@ public class PhaseModel {
 
     public class FortifyPhase implements PhaseState {
 
-        private int myID = 1; //  MOCK the playerID of the user. Different users have different ids
         private Territory selectedFrom;
         private Territory selectedTo;
         private int nextCount = 0;
@@ -92,24 +91,11 @@ public class PhaseModel {
             System.out.println("Started fortify phase");
         }
 
-        private void end() { //called when the phase is ending
-            // TODO: warning when going next without selecting anything
-            //do fortification
-            if(selectedFrom == null) //do nothing when nothing selected
-                return;
-            FortifyModel.move(myID, selectedFrom, selectedTo, 3);
-            // TODO: UI to change num of troops to fortify
-            System.out.println("Ended fortify phase");
-
-        }
-
         @Override
         public PhaseState next() { //called in the beginning.
             if (nextCount == 0) {
                 nextCount++;
                 start();
-            } else {
-                end();
             }
             return new PlacePhase();
         }
@@ -122,22 +108,34 @@ public class PhaseModel {
             return selectedTo;
         }
 
+        public void clearTerritorySelection(){
+            selectedFrom = null;
+            selectedTo = null;
+        }
+
+
+
         @Override
-        public void territoryClicked(Territory territory) {
-            territory.setNumTroops(territory.getNumTroops() + 1);
-            if (territory.getOwnerID() != myID) {
-                System.out.println("You have selected a territory you don't own.");
+        public void territoryClicked(Territory territory){
+            return;
+        }
+        public void territoryClicked(Territory territory, int currentPlayerID) {
+            //territory.setNumTroops(territory.getNumTroops() + 1);
+            if (territory.getOwnerID() == currentPlayerID){
+                if (selectedFrom == null && territory.getNumTroops() > 1) {
+                    selectedFrom = territory;
+                }
+                else if (selectedTo == null && territory != null && selectedFrom != null) { //at this point the from is selected
+                    if (isConnected(selectedFrom, territory))
+                        selectedTo = territory;
+                }
+                else if (selectedTo != null && selectedTo != selectedFrom && selectedFrom != territory &&
+                selectedFrom != null && territory != null){
+                    if (isConnected(selectedFrom, territory))
+                        selectedTo = territory;
+                }
             }
-            if (selectedFrom == null) {
-                selectedFrom = territory;
-            } else if (selectedFrom == territory) { //selected the same territory twice.
-                selectedFrom = null;
-            } else if (selectedTo == null) { //at this point the from is selected
-                selectedTo = territory;
-            } else {  //after both are set, to reset the selected territories, just pick another territory
-                selectedFrom = territory;
-                selectedTo = null;
-            }
+
             //update the ui, show what is being selected.
 
 

@@ -28,8 +28,8 @@ public class GameController implements Screen {
     private final BoardModel boardModel;
     private final TroopModel troopModel;
     private final PhaseModel phaseModel;
-    private final Player player;
-    private final TurnModel turn;
+    private final Player playerModel;
+    private final TurnModel turnModel;
     private final GameView view;
     private final PhaseView phaseView;
     private final BoardView boardView;
@@ -42,28 +42,23 @@ public class GameController implements Screen {
         boardModel = model.getBoardModel();
         troopModel = model.getTroopModel();
         phaseModel = model.getPhaseModel();
+        playerModel = model.getPlayerModel();
+        turnModel = model.getTurnModel();
 
         view = new GameView(this, game);
         phaseView = view.getPhaseView();
         boardView = view.getBoardView();
         troopView = view.getTroopView();
 
-        phaseController = new PhaseController(phaseView, phaseModel);
-      
-        player = new Player();
-        //Temporary first player ID
-        turn = new TurnModel(1, 7);
+        phaseController = new PhaseController(model, view);
+
     }
 
     public int getPlayerColor(int playerID) {
         return model.getMultiplayerModel().getPlayerColor(playerID);
     }
 
-    public Color getPlayerRGBAColor(int playerID){
-        return model.getMultiplayerModel().getPlayerRGBAColor(playerID);
-    }
-
-    public Player getPlayer(){ return player; }
+    public Player getPlayer(){ return playerModel; }
     public Territory getSelectedTerritory() {
         return troopModel.getSelectedTerritory();
     }
@@ -73,48 +68,46 @@ public class GameController implements Screen {
     }
 
     public void nextTurnButtonClicked(){
-        turn.takeTurn();
-        phaseView.updateRenderedCurrentPlayer(turn.getCurrentPlayerID(), getPlayerRGBAColor(turn.getCurrentPlayerID()));
-        phaseView.removeTurnButton();
-        phaseModel.nextPhase();
+        phaseController.nextTurnButtonClicked();
         updatePhase();
         setSelectedTerritory(null);
+        phaseView.onSelectedTerritoriesChange(null, null);
+
+
     }
 
-
     public void nextPhaseButtonClicked() {
+        phaseController.clearRenderedButtons();
         phaseModel.nextPhase();
         if (phaseModel.getPhase().getName() == "Fortify"){
             phaseView.addTurnButton();
         }
         updatePhase();
         setSelectedTerritory(null);
+        phaseView.onSelectedTerritoriesChange(null, null);
+
     }
 
     public void cancelButtonClicked(){
-        player.cancelAttack();
-        phaseView.removeAttackButton();
-        phaseView.removeCancelButton();
+        if (phaseModel.getPhase().getName() == "Attack"){
+            playerModel.cancelAttack();
+            phaseController.clearRenderedButtons();
+            phaseView.onSelectedTerritoriesChange(null, null);
+        }
+        if (phaseModel.getPhase().getName() == "Fortify"){
+            phaseController.cancelFortify();
+            phaseView.onSelectedTerritoriesChange(null, null);
+        }
+
     }
 
     public void attackButtonClicked(){
-        int[] winner = BattleModel.fight(player.getFromTerritory().getOwnerID(),
-                player.getToTerritory().getOwnerID(),
-                player.getFromTerritory().getNumTroops() - 1,
-                player.getToTerritory().getNumTroops());
-        phaseView.removeCancelButton();
-        phaseView.removeAttackButton();
-        player.getToTerritory().setOwnerID(winner[0]);
-        player.getToTerritory().setNumTroops(winner[1]);
-        player.getFromTerritory().setNumTroops(1);
-        troopView.onTerritoryChangeNumTroops(player.getFromTerritory());
-        troopView.onTerritoryChangeNumTroops(player.getToTerritory());
-        boardView.initColorLookupArray(TerritoryModel.getInstance().TERRITORY_MAP);
-        //Clears the attack HashMap after the attack has gone through.
-        player.cancelAttack();
-        System.out.println(winner.toString());
+        phaseController.attackButtonClicked();
     }
 
+    public void fortifyButtonClicked(){
+        phaseController.fortifyButtonClicked();
+    }
     public void boardClicked(Vector2 touchWorldPos) {
         Vector2 mapPos = boardView.worldPosToMapTexturePos(touchWorldPos);
         Territory territory = boardModel.getTerritory(mapPos);
@@ -123,41 +116,9 @@ public class GameController implements Screen {
             System.out.println(territory.name);
 
             // Update territory based on the phase we are in
-
             //phaseModel.getPhase().territoryClicked(territory);
-  
-            //From Fortify needs fixing.
-            //phaseController.territoryClicked(territory);
+            phaseController.territoryClicked(territory);
             //troopView.onTerritoryChangeNumTroops(territory);
-            if (phaseModel.getPhase().getName() == "Place") {
-                if (player.getTroopsToPlace() > 0 && territory.getOwnerID() == turn.getCurrentPlayerID()) {
-                    phaseModel.getPhase().territoryClicked(territory);
-                    player.setTroopsToPlace(player.getTroopsToPlace() - 1);
-                    troopView.onTerritoryChangeNumTroops(territory);
-                    phaseView.updateRenderedVariables(phaseModel.getPhase().getName());
-                } else {
-                    System.out.println("No troops left to place");
-                }
-            }
-            if (phaseModel.getPhase().getName() == "Attack"){
-                //Temporary playerID
-
-                if (territory.getOwnerID() == turn.getCurrentPlayerID() && territory.getNumTroops() > 1){
-                    if (player.getAttack() == null || player.getAttack().size() == 0){
-                        player.setAttackFrom(territory);
-                        phaseView.addCancelButton();
-                    }
-                }
-                if (player.getAttack() != null){
-                    if (player.getAttack().size() == 1 && territory.getOwnerID() != turn.getCurrentPlayerID()){
-                        System.out.println(player.getFromTerritory().getNeighbors().toString());
-                        if (player.getFromTerritory().getNeighbors().contains(territory)){
-                            player.setAttackTo(territory);
-                            phaseView.addAttackButton();
-                        }
-                    }
-                }
-            }
         } else
             System.out.println("None");
     }
@@ -167,7 +128,7 @@ public class GameController implements Screen {
         model.init();
         view.show(boardModel.getMapTexture(), troopModel.getCircleTexture(), troopModel.getCircleSelectTexture());
         updatePhase();
-        phaseView.updateRenderedCurrentPlayer(turn.getCurrentPlayerID(), getPlayerRGBAColor(turn.getCurrentPlayerID()));
+        phaseController.updateRenderedCurrentPlayer();
     }
 
     public void updatePhase() {
@@ -175,22 +136,7 @@ public class GameController implements Screen {
         String nextPhase = phaseModel.getPhase().next().getName();
         view.updatePhase(curPhase, nextPhase);
         if (phaseModel.getPhase().getName() == "Place"){
-            List<Territory> territories = TerritoryModel.getInstance().TERRITORY_MAP.getAllTerritories();
-            int territoriesOwned = 0;
-            for (Territory territory : territories)
-                // Temporary ID Check
-                if (territory.getOwnerID() ==  turn.getCurrentPlayerID())
-                    territoriesOwned++;
-            if (territoriesOwned == 0){
-                turn.takeTurn();
-                updatePhase();
-
-            }
-            else{
-                player.setTroopsToPlace(territoriesOwned);
-                phaseView.updateRenderedVariables("Place");
-            }
-
+            phaseController.updateTroopsToPlace();
         }
 
 

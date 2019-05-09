@@ -1,6 +1,5 @@
 package no.ntnu.idi.tdt4240.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
@@ -19,6 +18,10 @@ public class Player {
     }
 
     public void setAttackTo(Territory territory){
+        System.out.println(attack.size());
+        if (attack.size() == 2){
+            attack.remove(toTerritory.name);
+        }
         toTerritory = territory;
         attack.put(territory.name, territory.getNumTroops());
     }
