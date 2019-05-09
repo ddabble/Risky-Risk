@@ -9,17 +9,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.PhaseController;
+import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 
-public class PhaseView extends AbstractView {
-    private final GameController gameController;
-
+public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton phaseButton;
     private Label phaseLabel;
     private Stage stage;
 
-    public PhaseView(RiskyRisk game, GameController gameController) {
+    public PhaseView(RiskyRisk game) {
         super(game);
-        this.gameController = gameController;
+        PhaseController.addObserver(this);
     }
 
     public Stage getStage() {
@@ -46,7 +46,7 @@ public class PhaseView extends AbstractView {
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameController.nextPhaseButtonClicked();
+                GameController.INSTANCE.nextPhaseButtonClicked();
             }
         });
 

@@ -13,14 +13,14 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
+import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
-public class BoardView extends ApplicationAdapter {
-    private final GameController gameController;
-
+public class BoardView extends ApplicationAdapter implements BoardObserver {
     private OrthographicCamera camera;
 
     private SpriteBatch batch;
@@ -30,8 +30,8 @@ public class BoardView extends ApplicationAdapter {
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
-    public BoardView(GameController gameController, OrthographicCamera camera) {
-        this.gameController = gameController;
+    public BoardView(OrthographicCamera camera) {
+        BoardController.addObserver(this);
         this.camera = camera;
     }
 
@@ -72,7 +72,7 @@ public class BoardView extends ApplicationAdapter {
 
     private void initColorLookupArray(TerritoryMap territoryMap) {
         for (Territory territory : territoryMap.getAllTerritories()) {
-            int playerColor = gameController.getPlayerColor(territory.getOwnerID());
+            int playerColor = GameController.INSTANCE.getPlayerColor(territory.getOwnerID());
             PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
         }
     }
