@@ -100,6 +100,7 @@ public class TroopView extends ApplicationAdapter {
         stage.draw();
     }
 
+
     @Override
     public void dispose() {
         stage.dispose();

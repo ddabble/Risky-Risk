@@ -99,7 +99,7 @@
         "Eu6": {
             "color": "0x000080",
             "coords": [611, 478],
-            "neighbors": ["Eu2", "Eu3", "Eu5", "Eu7"]
+            "neighbors": ["Eu2", "Eu3", "Eu4","Eu5", "Eu7"]
         },
         "Eu7": {
             "color": "0x000067",
@@ -127,7 +127,7 @@
         "Af4": {
             "color": "0x999900",
             "coords": [703, 290],
-            "neighbors": ["Af1", "Af2", "Af3", "Af5", "Af6"]
+            "neighbors": ["Af1", "Af2", "Af3", "Af5", "Af6", "As9"]
         },
         "Af5": {
             "color": "0x7F8000",
@@ -185,7 +185,7 @@
         "As9": {
             "color": "0x005C00",
             "coords": [730, 394],
-            "neighbors": ["As5", "As10", "NA4", "NA7", "Af2", "Af4"]
+            "neighbors": ["As5", "As10", "NA4", "NA7", "Af2", "Af4", "Eu4"]
         },
         "As10": {
             "color": "0x004700",
