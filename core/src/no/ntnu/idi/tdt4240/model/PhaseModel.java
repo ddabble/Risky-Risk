@@ -1,12 +1,15 @@
 package no.ntnu.idi.tdt4240.model;
 
 
+
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
+
 
 import no.ntnu.idi.tdt4240.data.Territory;
 
@@ -16,7 +19,7 @@ public class PhaseModel {
 
     public PhaseModel() {
         // Initial phase state
-        phase = new SetupPhase();
+        phase = new PlacePhase();
     }
 
     public PhaseState getPhase() {
@@ -36,24 +39,6 @@ public class PhaseModel {
 
         // TODO: write actual implementation
         void territoryClicked(Territory territory);
-    }
-
-    private class SetupPhase implements PhaseState {
-        @Override
-        public String getName() {
-            return "Set-up";
-        }
-
-        @Override
-        public PhaseState next() {
-            return new PlacePhase();
-        }
-
-        @Override
-        public void territoryClicked(Territory territory) {
-            // TODO: debugging code:
-            territory.setNumTroops(territory.getNumTroops() + 1);
-        }
     }
 
     private class PlacePhase implements PhaseState {
@@ -86,7 +71,7 @@ public class PhaseModel {
 
         @Override
         public void territoryClicked(Territory territory) {
-            territory.setNumTroops(territory.getNumTroops() + 1);
+            return;
         }
     }
 
