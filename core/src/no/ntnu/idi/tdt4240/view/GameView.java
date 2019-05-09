@@ -33,6 +33,9 @@ public class GameView extends AbstractView {
         camera = new OrthographicCamera();
 
         // Pseudo-views - they all are a part of the GameView
+        //FROM FORTIFY
+        phaseView = new PhaseView(game, camera);
+      
         phaseView = new PhaseView(game, controller);
         boardView = new BoardView(controller, camera);
         troopView = new TroopView(controller);

@@ -1,5 +1,12 @@
 package no.ntnu.idi.tdt4240.view;
 
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,7 +23,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javax.xml.soap.Text;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.PhaseController;
+import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.controller.GameController;
+
 
 public class PhaseView extends AbstractView {
     private final GameController gameController;
@@ -28,7 +38,17 @@ public class PhaseView extends AbstractView {
     private Label phaseLabel;
     private Label playerLabel;
     private Stage stage;
+    private static OrthographicCamera camera;
+    private PhaseController controller;
 
+
+    private Vector2 lineFrom;
+    private Vector2 lineTo;
+    private boolean shouldDrawArrow = false;
+
+    public PhaseView(RiskyRisk game, OrthographicCamera camera) {
+        super(game);
+        this.camera = camera;
     public PhaseView(RiskyRisk game, GameController gameController) {
         super(game);
         this.gameController = gameController;
@@ -147,11 +167,42 @@ public class PhaseView extends AbstractView {
 
         stage.act(delta); // Updates all actors
         stage.draw();
+
+        if(shouldDrawArrow)
+            drawLine(lineFrom,lineTo);
+
     }
 
     @Override
     public void hide() {
         stage.dispose();
         super.hide();
+    }
+
+    public void onSelectedTerritoriesChange(Territory start, Territory end) {
+        if (start != null && end != null){
+            lineFrom = start.getTroopCircleVector();
+            lineTo = end.getTroopCircleVector();
+            shouldDrawArrow = true;
+        } else {
+            shouldDrawArrow = false;
+        }
+    }
+
+
+
+    public void onMapMove() {
+    }
+
+    private void drawLine(Vector2 start, Vector2 end)
+    {
+        ShapeRenderer debugRenderer = new ShapeRenderer();
+        Gdx.gl.glLineWidth(4);
+        debugRenderer.setProjectionMatrix(camera.combined);
+        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
+        debugRenderer.setColor(Color.BLACK);
+        debugRenderer.line(start, end);
+        debugRenderer.end();
+        Gdx.gl.glLineWidth(1); //set back to default
     }
 }
