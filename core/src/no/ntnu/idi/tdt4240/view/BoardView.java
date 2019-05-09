@@ -1,12 +1,15 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -27,6 +30,8 @@ public class BoardView extends ApplicationAdapter {
     private Sprite mapSprite;
 
     private ShaderProgram mapShader;
+
+
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
@@ -85,6 +90,7 @@ public class BoardView extends ApplicationAdapter {
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
+
     }
 
     @Override

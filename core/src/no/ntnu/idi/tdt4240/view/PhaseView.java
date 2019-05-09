@@ -32,18 +32,19 @@ import no.ntnu.idi.tdt4240.controller.GameController;
 
 
 public class PhaseView extends AbstractView {
+
     private final GameController gameController;
 
     private TextButton phaseButton;
     private TextButton cancelButton;
     private TextButton attackButton;
     private TextButton turnButton;
+    private TextButton fortifyButton;
     private Label phaseLabel;
     private Label playerLabel;
     private Stage stage;
     private static OrthographicCamera camera;
     private PhaseController controller;
-
 
     private Vector2 lineFrom;
     private Vector2 lineTo;
@@ -55,12 +56,11 @@ public class PhaseView extends AbstractView {
 
     // Renderers
 
-    public PhaseView(RiskyRisk game, OrthographicCamera camera) {
-        super(game);
-        this.camera = camera;
-    public PhaseView(RiskyRisk game, GameController gameController) {
+
+    public PhaseView(RiskyRisk game, GameController gameController, OrthographicCamera camera) {
         super(game);
         this.gameController = gameController;
+        this.camera = camera;
     }
 
     public Stage getStage() {
@@ -72,29 +72,50 @@ public class PhaseView extends AbstractView {
         phaseButton.setText(nextPhase);
     }
 
+
+    public void addFortifyButton(){
+        if (!stage.getActors().contains(fortifyButton, false)) {
+            fortifyButton = createButton("Move 1 Troop");
+            fortifyButton.setWidth(100);
+            fortifyButton.setPosition(0, 60);
+            fortifyButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameController.fortifyButtonClicked();
+                }
+            });
+            stage.addActor(fortifyButton);
+        }
+    }
+
     public void addCancelButton(){
-        cancelButton = createButton("Cancel Move");
-        cancelButton.setWidth(100);
-        cancelButton.setPosition(0, 30);
-        cancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameController.cancelButtonClicked();
-            }
-        });
-        stage.addActor(cancelButton);
+        if (!stage.getActors().contains(cancelButton, false)){
+            cancelButton = createButton("Cancel Move");
+            cancelButton.setWidth(100);
+            cancelButton.setPosition(0, 30);
+            cancelButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameController.cancelButtonClicked();
+                }
+            });
+            stage.addActor(cancelButton);
+        }
+
     }
     public void addAttackButton(){
-        attackButton = createButton("Attack");
-        attackButton.setWidth(100);
-        attackButton.setPosition(0, 60);
-        attackButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameController.attackButtonClicked();
-            }
-        });
-        stage.addActor(attackButton);
+        if (!stage.getActors().contains(attackButton, false)) {
+            attackButton = createButton("Attack");
+            attackButton.setWidth(100);
+            attackButton.setPosition(0, 60);
+            attackButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameController.attackButtonClicked();
+                }
+            });
+            stage.addActor(attackButton);
+        }
     }
 
     public void addTurnButton(){
@@ -112,6 +133,7 @@ public class PhaseView extends AbstractView {
     }
 
     public void removeTurnButton(){
+
         turnButton.remove();
         phaseButton = createButton("");
         phaseButton.setWidth(100);
@@ -124,11 +146,18 @@ public class PhaseView extends AbstractView {
         stage.addActor(phaseButton);
     }
 
-    public void removeCancelButton(){cancelButton.remove();}
+    public void removeFortifyButton(){
+        if (stage.getActors().contains(fortifyButton, false))
+            fortifyButton.remove();
+    }
+    public void removeCancelButton(){
+        if (stage.getActors().contains(cancelButton, false))
+            cancelButton.remove();
+
+    }
     public void removeAttackButton(){
-        if (stage.getActors().contains(attackButton, false)) {
+        if (stage.getActors().contains(attackButton, false))
             attackButton.remove();
-        }
     }
 
     public void updateRenderedVariables(String phase){
@@ -160,7 +189,7 @@ public class PhaseView extends AbstractView {
         phaseLabel = createLabel("");
         phaseLabel.setPosition(0, 200);
         playerLabel = createLabel("");
-        playerLabel.setPosition(0, 90);
+        playerLabel.setPosition(0, 105);
         phaseButton = createButton("");
         phaseButton.setWidth(100);
         phaseButton.addListener(new ClickListener() {
@@ -188,12 +217,6 @@ public class PhaseView extends AbstractView {
         if(shouldDrawArrow){
             drawArrow(lineFrom,lineTo);
         }
-    }
-
-    @Override
-    public void hide() {
-        stage.dispose();
-        super.hide();
     }
 
     public void onSelectedTerritoriesChange(Territory start, Territory end) {
@@ -232,9 +255,17 @@ public class PhaseView extends AbstractView {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.setColor(0,0,0, 0.02f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default
     }
+
+    @Override
+    public void hide() {
+        stage.dispose();
+        super.hide();
+    }
+
+
 }
