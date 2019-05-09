@@ -65,8 +65,8 @@ public class GameView extends AbstractView {
 
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-        boardView.create(mapTexture, TerritoryModel.getInstance().TERRITORY_MAP);
-        troopView.create(TerritoryModel.getInstance().TERRITORY_MAP, circleTexture, circleSelectTexture);
+        boardView.create(mapTexture, TerritoryModel.getTerritoryMap());
+        troopView.create(TerritoryModel.getTerritoryMap(), circleTexture, circleSelectTexture);
         phaseView.show();
 
         setUpInputProcessors();

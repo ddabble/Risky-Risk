@@ -12,17 +12,21 @@ import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class BoardModel {
+    public static final BoardModel INSTANCE = new BoardModel();
+
     private TerritoryMap territoryMap;
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
+
+    private BoardModel() {}
 
     public Texture getMapTexture() {
         return mapTexture;
     }
 
     public void init() {
-        territoryMap = TerritoryModel.getInstance().TERRITORY_MAP;
+        territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
