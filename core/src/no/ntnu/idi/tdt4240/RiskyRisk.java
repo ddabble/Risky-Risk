@@ -9,14 +9,10 @@ import no.ntnu.idi.tdt4240.view.MainMenuView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
-    private final SettingsController settingsController;
     private final MainMenuView mainMenuView;
-    private final GameController gameController;
 
     public RiskyRisk() {
-        settingsController = new SettingsController();
         mainMenuView = new MainMenuView(this);
-        gameController = new GameController(this);
     }
 
     public void setScreen(ScreenEnum screen) {
@@ -28,7 +24,7 @@ public class RiskyRisk extends Game {
                 break;
 
             case GAME:
-                setScreen(gameController);
+                setScreen(GameController.INSTANCE);
                 break;
         }
     }
@@ -36,7 +32,7 @@ public class RiskyRisk extends Game {
     @Override
     public void create() {
         TerritoryModel.init();
-        settingsController.init();
+        SettingsController.INSTANCE.init();
         setScreen(ScreenEnum.MAIN_MENU);
     }
 

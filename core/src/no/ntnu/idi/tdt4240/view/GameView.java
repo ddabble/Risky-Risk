@@ -11,44 +11,29 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
+import no.ntnu.idi.tdt4240.observer.GameObserver;
 
-public class GameView implements Screen {
+public class GameView implements GameObserver, Screen {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
     private OrthographicCamera camera;
-    private final GameController controller;
 
     // Pseudo-views - they all are a part of the GameView
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
 
-    public GameView(GameController controller, RiskyRisk game) {
+    public GameView(RiskyRisk game) {
         super(game);
-
-        // TODO: Problem. The view uses the controller to relay UI clicks,
-        // but the controller needs to initialize the view with data...
-        this.controller = controller;
+        GameController.addObserver(this);
 
         camera = new OrthographicCamera();
 
         // Pseudo-views - they all are a part of the GameView
-        phaseView = new PhaseView(game, controller);
-        boardView = new BoardView(controller, camera);
-        troopView = new TroopView(controller);
-    }
-
-    public PhaseView getPhaseView() {
-        return phaseView;
-    }
-
-    public BoardView getBoardView() {
-        return boardView;
-    }
-
-    public TroopView getTroopView() {
-        return troopView;
+        phaseView = new PhaseView(game);
+        boardView = new BoardView(camera);
+        troopView = new TroopView();
     }
 
     /*
@@ -78,7 +63,7 @@ public class GameView implements Screen {
         InputMultiplexer multiplexer = new InputMultiplexer();
         // Note: the input processors added first get to handle input first
         multiplexer.addProcessor(phaseView.getStage());
-        multiplexer.addProcessor(new BoardInputProcessor(controller, boardView, camera));
+        multiplexer.addProcessor(new BoardInputProcessor(boardView, camera));
         Gdx.input.setInputProcessor(multiplexer);
     }
 

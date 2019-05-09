@@ -12,15 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.MenuController;
+import no.ntnu.idi.tdt4240.observer.MenuObserver;
 
-public class MainMenuView extends AbstractView implements Screen {
-
+public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
         super(game);
+        MenuController.addObserver(this);
         camera = new OrthographicCamera();
     }
 

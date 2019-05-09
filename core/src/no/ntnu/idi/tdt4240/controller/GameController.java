@@ -3,30 +3,23 @@ package no.ntnu.idi.tdt4240.controller;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
 import no.ntnu.idi.tdt4240.model.PlayerModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
-import no.ntnu.idi.tdt4240.view.BoardView;
-import no.ntnu.idi.tdt4240.view.GameView;
-import no.ntnu.idi.tdt4240.view.PhaseView;
-import no.ntnu.idi.tdt4240.view.TroopView;
+import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GameController implements Screen {
-    private final GameView view;
-    private final PhaseView phaseView;
-    private final BoardView boardView;
-    private final TroopView troopView;
+    public static final GameController INSTANCE = new GameController();
 
-    public GameController(RiskyRisk game) {
-        view = new GameView(this, game);
-        phaseView = view.getPhaseView();
-        boardView = view.getBoardView();
-        troopView = view.getTroopView();
-    }
+    private Collection<GameObserver> observers = new ArrayList<>();
+
+    private GameController() {}
 
     public int getPlayerColor(int playerID) {
         return PlayerModel.INSTANCE.getPlayerColor(playerID);
@@ -122,4 +115,8 @@ public class GameController implements Screen {
     // The role of the controller is to translate inputs into changes and relay this back
     // Below is the translation of clicks to model changes
     */
+
+    public static void addObserver(GameObserver observer) {
+        INSTANCE.observers.add(observer);
+    }
 }

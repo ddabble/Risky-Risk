@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.observer.TroopObserver;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-public class TroopView extends ApplicationAdapter {
+public class TroopView extends ApplicationAdapter implements TroopObserver {
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
-
-    private final GameController gameController;
 
     private SpriteBatch batch;
     private Map<Territory, Sprite> circleSpriteMap;
@@ -32,8 +32,8 @@ public class TroopView extends ApplicationAdapter {
 
     private Sprite circleSelectSprite;
 
-    public TroopView(GameController gameController) {
-        this.gameController = gameController;
+    public TroopView() {
+        BoardController.addObserver(this);
     }
 
     // TODO: maybe change this to take no parameters and just loop over all territories?
@@ -46,7 +46,7 @@ public class TroopView extends ApplicationAdapter {
             Vector2 circlePos = territory.getTroopCircleVector();
             circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
         }
-        gameController.setSelectedTerritory(territory);
+        GameController.INSTANCE.setSelectedTerritory(territory);
     }
 
     public void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
@@ -93,7 +93,7 @@ public class TroopView extends ApplicationAdapter {
         for (Sprite sprite : circleSpriteMap.values())
             sprite.draw(batch);
 
-        if (gameController.getSelectedTerritory() != null)
+        if (GameController.INSTANCE.getSelectedTerritory() != null)
             circleSelectSprite.draw(batch);
         batch.end();
 
