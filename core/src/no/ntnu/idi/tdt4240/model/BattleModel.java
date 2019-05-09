@@ -10,6 +10,11 @@ public class BattleModel {
         int[] winner = new int[2];
         winner[0] = 1337;
         while (winner[0] == 1337) {
+            if (defenderTroops == 0){
+                winner[0] = attackerID;
+                winner[1] = attackerTroops;
+                return winner;
+            }
             if (attackerTroops >= 3) {
                 attdies = rollDies(new int[3]);
             } else {
@@ -68,7 +73,7 @@ public class BattleModel {
 
     private static int mostDies(int[] attdies, int[] defdies) {
         //System.out.println("mostDies: " + Math.min(Math.max(attdies.length, defdies.length), 2));
-        return Math.min(Math.max(attdies.length, defdies.length), 2);
+        return Math.min(Math.max(attdies.length, defdies.length), 1);
     }
 
     private static int[] rollDies(int[] dies) {
