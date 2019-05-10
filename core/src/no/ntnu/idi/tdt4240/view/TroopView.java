@@ -15,43 +15,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.observer.TroopObserver;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-public class TroopView extends ApplicationAdapter {
+public class TroopView extends ApplicationAdapter implements TroopObserver {
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
+
     private SpriteBatch batch;
-    private Texture circleTexture;
     private Map<Territory, Sprite> circleSpriteMap;
 
     private Map<Territory, TextField> circleTextMap;
     private Stage stage;
 
-    private Texture circleSelectTexture;
     private Sprite circleSelectSprite;
+
     private Territory selectedTerritory;
 
-    // TODO: maybe change this to take no parameters and just loop over all territories?
-    public void onTerritoryChangeNumTroops(Territory territory) {
-        circleTextMap.get(territory).setText(String.valueOf(territory.getNumTroops()));
+    public TroopView() {
+        BoardController.addObserver(this);
     }
 
+    @Override
     public void onSelectTerritory(Territory territory) {
+        selectedTerritory = territory;
+
         if (territory != null) {
             Vector2 circlePos = territory.getTroopCircleVector();
             circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
         }
-        selectedTerritory = territory;
     }
 
     @Override
-    public void create() {
-        batch = new SpriteBatch();
+    public void onTerritoryChangeNumTroops(Territory territory) {
+        circleTextMap.get(territory).setText(String.valueOf(territory.getNumTroops()));
     }
 
-    private void createCircleSprites(List<Territory> territories) {
-        circleTexture = new Texture("map/troop_circle.png");
+    @Override
+    public void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
+        batch = new SpriteBatch();
 
+        List<Territory> territories = territoryMap.getAllTerritories();
+        createCircleSprites(territories, circleTexture, circleSelectTexture);
+        createCircleText(territories);
+    }
+
+    private void createCircleSprites(List<Territory> territories, Texture circleTexture, Texture circleSelectTexture) {
         circleSpriteMap = new HashMap<>();
         for (Territory territory : territories) {
             Vector2 circlePos = territory.getTroopCircleVector();
@@ -60,7 +70,6 @@ public class TroopView extends ApplicationAdapter {
             circleSpriteMap.put(territory, sprite);
         }
 
-        circleSelectTexture = new Texture("map/troop_circle_select.png");
         circleSelectSprite = new Sprite(circleSelectTexture);
     }
 
@@ -98,14 +107,6 @@ public class TroopView extends ApplicationAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        circleSelectTexture.dispose();
-        circleTexture.dispose();
         batch.dispose();
-    }
-
-    public void createCircles(List<Territory> territories) {
-        //List<Territory> territories = territoryMap.getAllTerritories();
-        createCircleSprites(territories);
-        createCircleText(territories);
     }
 }

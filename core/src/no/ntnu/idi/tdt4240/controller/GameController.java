@@ -1,74 +1,30 @@
 package no.ntnu.idi.tdt4240.controller;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import no.ntnu.idi.tdt4240.data.Territory;
-import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.model.GameModel;
-import no.ntnu.idi.tdt4240.model.PhaseModel;
+import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GameController {
-    private final GameViewer viewer;
-    private final GameModel model;
-    private final BoardModel boardModel;
-    private final PhaseModel phaseModel;
+    public static final GameController INSTANCE = new GameController();
 
-    public GameController(GameViewer viewer, GameModel model) {
-        this.viewer = viewer;
-        this.model = model;
-        this.boardModel = model.getBoardModel();
-        this.phaseModel = model.getPhaseModel();
-        this.initializeBoard();
+    private Collection<GameObserver> observers = new ArrayList<>();
+
+    private GameController() {}
+
+    public void init() {
+        BoardController.INSTANCE.init();
+        PhaseController.INSTANCE.init();
     }
 
-    public void initializeBoard() {
-
-        Sprite mapSprite = new Sprite(boardModel.getMapTexture());
-        float[] playerColorLookup = boardModel.getPlayerColorLookup().getFloatArray();
-
-        viewer.setMapSprite(mapSprite);
-        viewer.setPlayerColorLookup(playerColorLookup);
-
-        List<Territory> territories = boardModel.TERRITORY_MAP.getAllTerritories();
-        if (territories != null) {
-            viewer.initializeBoard(territories);
-        }
-
-        this.updatePhase();
-    }
-
-    public void nextPhaseButtonClicked() {
-        phaseModel.nextPhase();
-        this.updatePhase();
-    }
-
-    public void updatePhase() {
-        String curPhase = this.phaseModel.getPhase().getName();
-        String nextPhase = this.phaseModel.getPhase().next().getName();
-        viewer.updatePhase(curPhase, nextPhase);
-    }
-
-    public void boardClicked(Vector2 touchWorldPos) {
-        Sprite mapSprite = boardModel.getMapSprite();
-        //If this is a valid touch
-        if (mapSprite.getBoundingRectangle().contains(touchWorldPos)) {
-            model.onClickTerritory(touchWorldPos);
-
-            // Update the view by getting changes from the model
-            Territory territory = model.getSelectedTerritory();
-            viewer.territorySelected(territory);
-            if (territory != null) {
-                viewer.updateTerritoryTroops(territory);
-            }
-        }
+    public void reset() {
+        BoardController.INSTANCE.reset();
     }
 
     /*
     public void setNumberOfPlayers(int num) {
         model.gameSettings.setNumberOfPlayers(num);
-        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
+        view.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
     }
 
     public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
@@ -76,4 +32,8 @@ public class GameController {
     // The role of the controller is to translate inputs into changes and relay this back
     // Below is the translation of clicks to model changes
     */
+
+    public static void addObserver(GameObserver observer) {
+        INSTANCE.observers.add(observer);
+    }
 }

@@ -2,45 +2,55 @@ package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
 
-import no.ntnu.idi.tdt4240.model.GameModel;
-import no.ntnu.idi.tdt4240.model.SettingsModel;
+import no.ntnu.idi.tdt4240.controller.SettingsController;
+import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
+import no.ntnu.idi.tdt4240.view.TutorialView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
-    private SettingsModel settingsModel;
-    private GameModel gameModel;
+    private final MainMenuView mainMenuView;
+    private final TutorialView tutorialView;
+    private final GameView gameView;
 
-    private GameView gameView;
-
-    public SettingsModel getSettingsModel() {
-        return settingsModel;
+    public RiskyRisk() {
+        mainMenuView = new MainMenuView(this);
+        tutorialView = new TutorialView(this);
+        gameView = new GameView();
     }
 
-    public GameModel getGameModel() {
-        return gameModel;
+    public void setScreen(ScreenEnum screen) {
+        // TODO: add other screens
+        switch (screen) {
+            case MAIN_MENU:
+                setScreen(mainMenuView);
+                break;
+
+            case TUTORIAL:
+                setScreen(tutorialView);
+                break;
+
+            case GAME:
+                setScreen(gameView);
+                break;
+        }
     }
 
     @Override
     public void create() {
-        settingsModel = new SettingsModel();
-        gameModel = new GameModel();
-        gameModel.init();
+        TerritoryModel.init();
+        SettingsController.INSTANCE.init();
 
-//        gameView = new GameView(this);
+        // TODO: set number of players from (settings) menu
+        SettingsController.INSTANCE.setNumPlayers(8);
 
-        this.setScreen(new MainMenuView(this));
+        setScreen(ScreenEnum.MAIN_MENU);
     }
 
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void dispose() {
-        gameModel.reset();
-        super.dispose();
+    public enum ScreenEnum {
+        MAIN_MENU,
+        TUTORIAL,
+        GAME,
     }
 }

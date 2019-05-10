@@ -1,74 +1,69 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.PhaseController;
+import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 
-public class PhaseView extends AbstractView {
-
-    public TextButton phaseButton;
+public class PhaseView extends AbstractView implements PhaseObserver {
+    private TextButton phaseButton;
     private Label phaseLabel;
     private Stage stage;
 
-    public PhaseView(RiskyRisk game) {
-        super(game);
+    public PhaseView() {
+        PhaseController.addObserver(this);
+    }
 
-        //For drawing and input handling
-        this.stage = new Stage(new ScreenViewport());
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
+    @Override
+    public void create() {
+        super.create();
+
+        // For drawing and input handling
+        stage = new Stage(new ScreenViewport());
 
         // Actors
-        this.phaseLabel = this.createLabel("");
-        phaseLabel.setPosition(0,200);
-        this.phaseButton = this.createButton("");
+        phaseLabel = createLabel("");
+        phaseLabel.setPosition(0, 200);
+        phaseButton = createButton("");
         phaseButton.setWidth(100);
+        phaseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhaseController.INSTANCE.nextPhaseButtonClicked();
+            }
+        });
 
         stage.addActor(phaseLabel);
         stage.addActor(phaseButton);
     }
 
     @Override
-    public void show() {
-
+    public void updatePhase(String curPhase, String nextPhase) {
+        phaseLabel.setText("Current Phase: " + curPhase);
+        phaseButton.setText(nextPhase);
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Draw and update
-        this.stage.act(delta); //Updates all actors
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
+        // Draw and update
+        stage.act(); // Updates all actors
+        stage.draw();
     }
 
     @Override
     public void dispose() {
         stage.dispose();
-    }
-
-    public void updatePhase(String curPhase, String nextPhase){
-        this.phaseLabel.setText("Current Phase: " + curPhase);
-        this.phaseButton.setText(nextPhase);
+        super.dispose();
     }
 }

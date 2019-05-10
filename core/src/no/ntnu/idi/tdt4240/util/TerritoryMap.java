@@ -76,7 +76,6 @@ public class TerritoryMap {
             List<Territory> continentTerritories = new ArrayList<>();
             for (Map.Entry<String, Map<String, Object>> territoryEntry : continentEntry.getValue().entrySet()) {
 
-
                 Map<String, Object> territoryFields = territoryEntry.getValue();
                 String territoryColor = (String)territoryFields.get("color");
                 @SuppressWarnings("unchecked")
