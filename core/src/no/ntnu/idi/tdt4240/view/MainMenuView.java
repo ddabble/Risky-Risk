@@ -60,7 +60,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
             }
         });
 
