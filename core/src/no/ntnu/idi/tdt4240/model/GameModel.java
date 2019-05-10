@@ -28,7 +28,7 @@ public class GameModel {
 
         playerModel = new Player();
         //Temporary first player ID
-        turnModel = new TurnModel(1, 7);
+        turnModel = new TurnModel(0, 8);
 
     }
 

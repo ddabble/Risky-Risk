@@ -3,8 +3,10 @@ package no.ntnu.idi.tdt4240.controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import no.ntnu.idi.tdt4240.data.Continent;
 import no.ntnu.idi.tdt4240.data.Player;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BattleModel;
@@ -89,13 +91,16 @@ public class PhaseController {
 
     }
 
-    public void updateTroopsToPlace(){
+    public void updateTroopsToPlace() {
         List<Territory> territories = TerritoryModel.getInstance().TERRITORY_MAP.getAllTerritories();
+        List<Territory> possibleContinent = new ArrayList<>();
         int territoriesOwned = 0;
         for (Territory territory : territories)
             // Temporary ID Check
-            if (territory.getOwnerID() ==  turnModel.getCurrentPlayerID())
+            if (territory.getOwnerID() == turnModel.getCurrentPlayerID()){
                 territoriesOwned++;
+                possibleContinent.add(territory);
+            }
         if (territoriesOwned == 0){
             turnModel.takeTurn();
             updateTroopsToPlace();
@@ -103,7 +108,38 @@ public class PhaseController {
 
         }
         else{
-            playerModel.setTroopsToPlace(territoriesOwned);
+            boolean hasContinent;
+            int extraTroops = 0;
+            for (Continent continent : TerritoryModel.getInstance().TERRITORY_MAP.getAllContinents()){
+                hasContinent = true;
+                for (Territory territory : continent.getTerritories()){
+                    if (!possibleContinent.contains(territory))
+                        hasContinent = false;
+                }
+                if (hasContinent){
+                    switch (continent.name){
+                        case "South America":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                        case "Europe":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                        case "North America":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                        case "Asia":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                        case "Africa":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                        case "Australia":
+                            extraTroops += continent.getBonusTroops();
+                            break;
+                    }
+                }
+            }
+            playerModel.setTroopsToPlace(Math.max((int)Math.round(Math.ceil(territoriesOwned/3)), 3) + extraTroops);
             phaseView.updateRenderedVariables("Place");
         }
     }

@@ -13,8 +13,8 @@ public class TurnModel {
 
     public void takeTurn(){
         currentPlayerID++;
-        if (currentPlayerID > numberOfPlayers){
-            currentPlayerID = 1;
+        if (currentPlayerID >= numberOfPlayers){
+            currentPlayerID = 0;
         }
     }
 
