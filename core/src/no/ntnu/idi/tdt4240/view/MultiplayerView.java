@@ -13,12 +13,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class MultiplayerView extends AbstractView {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MultiplayerView(RiskyRisk game) {
-        super(game);
+        this.game = game;
         camera = new OrthographicCamera();
     }
 
