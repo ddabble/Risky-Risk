@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,26 +12,35 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.MenuController;
+import no.ntnu.idi.tdt4240.observer.MenuObserver;
 
-public class MainMenuView extends AbstractView {
+public class MainMenuView extends AbstractView implements MenuObserver, Screen {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
-        super(game);
-        background = new Texture("background.png");
+        MenuController.addObserver(this);
+
+        this.game = game;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
     }
 
     @Override
     public void show() {
+        super.create();
+
+        camera.setToOrtho(false, 800, 480);
+        background = new Texture("background.png");
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
         // Back Button
-        Button multiplayerButton = this.createButton("Play");
+        Button multiplayerButton = createButton("Play");
         multiplayerButton.setPosition(100, 200);
         multiplayerButton.setSize(100, 50);
 
@@ -39,18 +49,18 @@ public class MainMenuView extends AbstractView {
             public void clicked(InputEvent event, float x, float y) {
                 // TODO: Should be MultiplayerView, GameView is only temporary to easier see the board being rendered
 //                game.setScreen(new MultiplayerView(game));
-                game.setScreen(new GameView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.GAME);
             }
         });
 
-        Button tutorialButton = this.createButton("Tutorial");
+        Button tutorialButton = createButton("Tutorial");
         tutorialButton.setPosition(100, 400);
         tutorialButton.setSize(100, 50);
 
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
             }
         });
 
@@ -64,32 +74,14 @@ public class MainMenuView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        super.dispose();
     }
 }

@@ -1,31 +1,33 @@
 package no.ntnu.idi.tdt4240.model;
 
+import no.ntnu.idi.tdt4240.data.Territory;
+
 public class PhaseModel {
+    public static final PhaseModel INSTANCE = new PhaseModel();
 
     private PhaseState phase;
 
-    public PhaseModel() {
-        //Initial phase state
-        this.phase = new SetupPhase();
+    private PhaseModel() {
+        // Initial phase state
+        phase = new SetupPhase();
     }
 
     public PhaseState getPhase() {
-        return this.phase;
+        return phase;
     }
 
     public void nextPhase() {
-        this.phase = this.phase.next();
-    }
-
-    // Temporary method
-    public void territoryClicked(int id){
-        return;
+        phase = phase.next();
     }
 
     // Phases
     public interface PhaseState {
         String getName();
+
         PhaseState next();
+
+        // TODO: write actual implementation
+        void territoryClicked(Territory territory);
     }
 
     private class SetupPhase implements PhaseState {
@@ -37,6 +39,12 @@ public class PhaseModel {
         @Override
         public PhaseState next() {
             return new PlacePhase();
+        }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            // TODO: debugging code:
+            territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }
 
@@ -50,6 +58,11 @@ public class PhaseModel {
         public PhaseState next() {
             return new AttackPhase();
         }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
+        }
     }
 
     private class AttackPhase implements PhaseState {
@@ -62,6 +75,11 @@ public class PhaseModel {
         public PhaseState next() {
             return new FortifyPhase();
         }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
+        }
     }
 
     private class FortifyPhase implements PhaseState {
@@ -73,6 +91,11 @@ public class PhaseModel {
         @Override
         public PhaseState next() {
             return new PlacePhase();
+        }
+
+        @Override
+        public void territoryClicked(Territory territory) {
+            territory.setNumTroops(territory.getNumTroops() + 1);
         }
     }
 }
