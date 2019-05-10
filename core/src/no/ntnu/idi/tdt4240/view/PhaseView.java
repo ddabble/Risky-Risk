@@ -23,18 +23,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.xml.soap.Text;
-
-import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.PhaseController;
+import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.data.Territory;
-import no.ntnu.idi.tdt4240.controller.GameController;
 
-
-public class PhaseView extends AbstractView {
-
-    private final GameController gameController;
-
+public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton phaseButton;
     private TextButton cancelButton;
     private TextButton attackButton;
@@ -57,19 +51,14 @@ public class PhaseView extends AbstractView {
     // Renderers
 
 
-    public PhaseView(RiskyRisk game, GameController gameController, OrthographicCamera camera) {
-        super(game);
-        this.gameController = gameController;
+    public PhaseView(OrthographicCamera camera) {
+        PhaseController.addObserver(this);
         this.camera = camera;
     }
 
+    @Override
     public Stage getStage() {
         return stage;
-    }
-
-    public void updatePhase(String curPhase, String nextPhase) {
-        phaseLabel.setText("Current Phase: " + curPhase);
-        phaseButton.setText(nextPhase);
     }
 
 
@@ -171,8 +160,8 @@ public class PhaseView extends AbstractView {
     }
 
     @Override
-    public void show() {
-        super.show();
+    public void create() {
+        super.create();
 
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
@@ -195,7 +184,7 @@ public class PhaseView extends AbstractView {
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameController.nextPhaseButtonClicked();
+                PhaseController.INSTANCE.nextPhaseButtonClicked();
             }
         });
 
@@ -207,11 +196,16 @@ public class PhaseView extends AbstractView {
 
 
     @Override
-    public void render(float delta) {
+    public void updatePhase(String curPhase, String nextPhase) {
+        phaseLabel.setText("Current Phase: " + curPhase);
+        phaseButton.setText(nextPhase);
+    }
+
+    @Override
+    public void render() {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Draw and update
-
-        stage.act(delta); // Updates all actors
+        stage.act(); // Updates all actors
         stage.draw();
 
         if(shouldDrawArrow){
@@ -262,9 +256,9 @@ public class PhaseView extends AbstractView {
     }
 
     @Override
-    public void hide() {
+    public void dispose() {
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 
 

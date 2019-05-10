@@ -2,85 +2,48 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
-import no.ntnu.idi.tdt4240.model.TerritoryModel;
-import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
+import no.ntnu.idi.tdt4240.observer.GameObserver;
 
-public class GameView extends AbstractView {
+public class GameView implements GameObserver, Screen {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
-    private OrthographicCamera camera;
-    private final GameController controller;
-
-    // Pseudo-views - they all are a part of the GameView
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
 
-    public GameView(GameController controller, RiskyRisk game) {
-        super(game);
+    private OrthographicCamera camera;
 
-        // TODO: Problem. The view uses the controller to relay UI clicks,
-        // but the controller needs to initialize the view with data...
-        this.controller = controller;
+    public GameView() {
+        GameController.addObserver(this);
 
         camera = new OrthographicCamera();
 
-        // Pseudo-views - they all are a part of the GameView
-        //FROM FORTIFY
-      
-        phaseView = new PhaseView(game, controller, camera);
-        boardView = new BoardView(controller, camera);
-        troopView = new TroopView(controller);
+        phaseView = new PhaseView(camera);
+        boardView = new BoardView(camera);
+        troopView = new TroopView();
     }
 
-    public PhaseView getPhaseView() {
-        return phaseView;
-    }
-
-    public BoardView getBoardView() {
-        return boardView;
-    }
-
-    public TroopView getTroopView() {
-        return troopView;
-    }
-
-    /*
-    public void setNumberOfPlayers(int num) {
-
-    }
-    */
-
-    public void updatePhase(String curPhase, String nextPhase) {
-        phaseView.updatePhase(curPhase, nextPhase);
-    }
-
-    public void show(Texture mapTexture, Texture circleTexture, Texture circleSelectTexture) {
-        super.show();
-
+    @Override
+    public void show() {
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-        boardView.create(mapTexture, TerritoryModel.getInstance().TERRITORY_MAP);
-        troopView.create(TerritoryModel.getInstance().TERRITORY_MAP, circleTexture, circleSelectTexture);
-        phaseView.show();
-
-        setUpInputProcessors();
+        GameController.INSTANCE.init();
+        setInputProcessors();
 
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
-    private void setUpInputProcessors() {
+    private void setInputProcessors() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         // Note: the input processors added first get to handle input first
         multiplexer.addProcessor(phaseView.getStage());
-        multiplexer.addProcessor(new BoardInputProcessor(controller, boardView, camera));
+        boardView.setInputProcessors(multiplexer);
         Gdx.input.setInputProcessor(multiplexer);
     }
 
@@ -91,14 +54,34 @@ public class GameView extends AbstractView {
 
         boardView.render();
         troopView.render();
-        phaseView.render(delta);
+        phaseView.render();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 
     @Override
     public void hide() {
-        phaseView.hide();
+        phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
-        super.hide();
+        GameController.INSTANCE.reset();
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

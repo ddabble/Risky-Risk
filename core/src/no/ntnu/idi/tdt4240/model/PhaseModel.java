@@ -14,10 +14,12 @@ import java.util.HashMap;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class PhaseModel {
+    public static final PhaseModel INSTANCE = new PhaseModel();
+
     private PhaseState phase;
     // TODO: enums for phases instead of string names
 
-    public PhaseModel() {
+    private PhaseModel() {
         // Initial phase state
         phase = new PlacePhase();
     }
