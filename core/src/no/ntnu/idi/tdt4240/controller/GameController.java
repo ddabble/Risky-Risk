@@ -78,6 +78,8 @@ public class GameController implements Screen {
 
     public void nextPhaseButtonClicked() {
         phaseController.clearRenderedButtons();
+        if (phaseModel.getPhase().getName() == "Attack")
+            model.getPlayerModel().cancelAttack();
         phaseModel.nextPhase();
         if (phaseModel.getPhase().getName() == "Fortify"){
             phaseView.addTurnButton();

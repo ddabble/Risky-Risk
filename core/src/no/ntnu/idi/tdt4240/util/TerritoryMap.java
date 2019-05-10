@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,10 @@ public class TerritoryMap {
         return new ArrayList<>(IDmap.values());
     }
 
+    public List<Continent> getAllContinents(){
+        return new ArrayList<>(continents);
+    }
+
     public String getID(int color) {
         return color_IDmap.get(color);
     }
@@ -55,6 +60,23 @@ public class TerritoryMap {
     public void setColor_IDmap(Map<Integer, String> color_IDmap) {
         this.color_IDmap = new HashMap<>(color_IDmap);
     }
+
+    public void parseJsonBonusStrucutre(List<Continent> continents, FileHandle jsonFile) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map readJson;
+        try {
+            readJson = mapper.readValue(jsonFile.readString(), Map.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Map<String, Integer> continentMap = readJson;
+        for (int i = 0; i < continents.size(); i++)
+            for (String continent : continentMap.keySet()) {
+                if (continents.get(i).name == continent)
+                    continents.get(i).setBonusTroops(continentMap.get(continent));
+            }
+    }
+
 
     public static TerritoryMap parseJsonMapStructure(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
