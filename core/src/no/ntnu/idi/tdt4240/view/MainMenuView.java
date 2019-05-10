@@ -16,13 +16,16 @@ import no.ntnu.idi.tdt4240.controller.MenuController;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 
 public class MainMenuView extends AbstractView implements MenuObserver, Screen {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
-        super(game);
         MenuController.addObserver(this);
+
+        this.game = game;
         camera = new OrthographicCamera();
     }
 

@@ -13,11 +13,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 public class TutorialView extends AbstractView implements Screen {
+    private final RiskyRisk game;
+
     private Stage stage;
     private Texture background;
 
     public TutorialView(RiskyRisk game) {
-        super(game);
+        this.game = game;
     }
 
     @Override

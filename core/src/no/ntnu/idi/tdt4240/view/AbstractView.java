@@ -9,18 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
-
 public abstract class AbstractView extends ApplicationAdapter {
-    protected final RiskyRisk game;
     private SelectBoxStyle selectStyle;
     private Label.LabelStyle labelStyle;
     private Skin skin;
     private TextButtonStyle textButtonStyle;
-
-    public AbstractView(RiskyRisk game) {
-        this.game = game;
-    }
 
     protected TextButton createButton(String text) {
         return new TextButton(text, textButtonStyle);

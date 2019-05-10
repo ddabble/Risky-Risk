@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
@@ -23,8 +22,7 @@ public class GameView implements GameObserver, Screen {
     private final BoardView boardView;
     private final TroopView troopView;
 
-    public GameView(RiskyRisk game) {
-        super(game);
+    public GameView() {
         GameController.addObserver(this);
 
         camera = new OrthographicCamera();

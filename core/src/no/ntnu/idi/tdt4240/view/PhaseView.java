@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
@@ -17,8 +16,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Label phaseLabel;
     private Stage stage;
 
-    public PhaseView(RiskyRisk game) {
-        super(game);
+    public PhaseView() {
         PhaseController.addObserver(this);
     }
 
