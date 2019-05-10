@@ -102,6 +102,12 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     }
 
     @Override
+    public void onTerritoryChangeColor(Territory territory, int color) {
+        // Shift color 8 bits to the left to turn it from RGB to RGBA format
+        PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, color << 8);
+    }
+
+    @Override
     public void render() {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();

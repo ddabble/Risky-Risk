@@ -1,6 +1,6 @@
 package no.ntnu.idi.tdt4240.controller;
 
-import no.ntnu.idi.tdt4240.model.PlayerModel;
+import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class SettingsController {
@@ -16,7 +16,7 @@ public class SettingsController {
 
     public void setNumPlayers(int num) {
         SettingsModel.INSTANCE.setNumPlayers(num);
-        PlayerModel.INSTANCE.init(num);
+        MultiplayerModel.INSTANCE.init(num);
     }
 
     public void setSetting1(String string) {

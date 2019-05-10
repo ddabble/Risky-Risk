@@ -9,4 +9,6 @@ import no.ntnu.idi.tdt4240.data.Territory;
 
 public interface BoardObserver {
     void create(Texture mapTexture, List<Territory> territories, Map<Integer, Integer> playerID_colorMap);
+
+    void onTerritoryChangeColor(Territory territory, int color);
 }

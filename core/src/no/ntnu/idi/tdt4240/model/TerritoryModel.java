@@ -20,6 +20,6 @@ public class TerritoryModel {
             return;
 
         INSTANCE.TERRITORY_MAP = TerritoryMap.parseJsonMapStructure(Gdx.files.internal("map/risk_map_structure.json"));
-        INSTANCE.TERRITORY_MAP.parseJsonBonusStrucutre(INSTANCE.TERRITORY_MAP.getAllContinents(), Gdx.files.internal("map/risk_continent_bonuses.json"));
+        INSTANCE.TERRITORY_MAP.parseJsonBonusStrucutre(Gdx.files.internal("map/risk_continent_bonuses.json"));
     }
 }
