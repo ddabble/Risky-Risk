@@ -53,6 +53,7 @@ public class GameView implements GameObserver, Screen {
         troopView.create(TerritoryModel.getTerritoryMap(), circleTexture, circleSelectTexture);
         phaseView.show();
 
+        GameController.INSTANCE.init();
         setInputProcessors();
 
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -96,6 +97,7 @@ public class GameView implements GameObserver, Screen {
         phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
+        GameController.INSTANCE.reset();
     }
 
     @Override

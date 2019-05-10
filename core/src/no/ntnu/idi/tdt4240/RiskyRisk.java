@@ -2,17 +2,19 @@ package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.SettingsController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
+import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private final MainMenuView mainMenuView;
+    private final GameView gameView;
 
     public RiskyRisk() {
         mainMenuView = new MainMenuView(this);
+        gameView = new GameView();
     }
 
     public void setScreen(ScreenEnum screen) {
@@ -24,7 +26,7 @@ public class RiskyRisk extends Game {
                 break;
 
             case GAME:
-                setScreen(GameController.INSTANCE);
+                setScreen(gameView);
                 break;
         }
     }
