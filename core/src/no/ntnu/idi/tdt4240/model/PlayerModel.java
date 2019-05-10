@@ -10,28 +10,26 @@ import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class PlayerModel {
-    public static final PlayerModel INSTANCE = new PlayerModel(8);
+    public static final PlayerModel INSTANCE = new PlayerModel();
 
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
     private int numPlayers;
     private Map<Integer, Integer> playerID_colorMap;
 
+    private PlayerModel() {}
+
     public Map<Integer, Integer> getPlayerID_colorMap() {
         return new HashMap<>(playerID_colorMap);
     }
 
-    private PlayerModel(int numPlayers) {
+    public void init(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
         this.numPlayers = numPlayers;
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
-    }
-
-    public void init() {
-        List<Integer> playerIDs = new ArrayList<>(playerID_colorMap.keySet());
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
     }
 
