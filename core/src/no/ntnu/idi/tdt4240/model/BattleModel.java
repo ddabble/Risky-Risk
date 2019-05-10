@@ -10,7 +10,7 @@ public class BattleModel {
         int[] winner = new int[2];
         winner[0] = 1337;
         while (winner[0] == 1337) {
-            if (defenderTroops == 0){
+            if (defenderTroops == 0) {
                 winner[0] = attackerID;
                 winner[1] = attackerTroops;
                 return winner;

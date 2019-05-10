@@ -12,32 +12,47 @@ public class AttackModel {
     private Territory toTerritory;
     private HashMap<String, Integer> attack;
 
-    private AttackModel() {
+    private AttackModel() {}
+
+    public void init() {
         attack = new HashMap<>();
     }
 
-    public void setAttackFrom(Territory territory){
+    public void setAttackFrom(Territory territory) {
         fromTerritory = territory;
         attack.put(territory.name, territory.getNumTroops());
     }
 
-    public void setAttackTo(Territory territory){
+    public void setAttackTo(Territory territory) {
         System.out.println(attack.size());
-        if (attack.size() == 2){
+        if (attack.size() == 2) {
             attack.remove(toTerritory.name);
         }
         toTerritory = territory;
         attack.put(territory.name, territory.getNumTroops());
     }
 
-    public void setTroopsToPlace(int troopsToPlace){
+    public void setTroopsToPlace(int troopsToPlace) {
         this.troopsToPlace = troopsToPlace;
     }
-    public int getTroopsToPlace(){
+
+    public int getTroopsToPlace() {
         return troopsToPlace;
     }
-    public Territory getToTerritory(){ return toTerritory; }
-    public Territory getFromTerritory(){ return fromTerritory; }
-    public HashMap<String, Integer> getAttack(){ return attack; }
-    public void cancelAttack(){ attack.clear(); }
+
+    public Territory getToTerritory() {
+        return toTerritory;
+    }
+
+    public Territory getFromTerritory() {
+        return fromTerritory;
+    }
+
+    public HashMap<String, Integer> getAttack() {
+        return attack;
+    }
+
+    public void cancelAttack() {
+        attack.clear();
+    }
 }

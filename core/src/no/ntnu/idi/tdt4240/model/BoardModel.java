@@ -45,7 +45,7 @@ public class BoardModel {
     }
 
     /**
-     * Has a max limit of 255 different territories, because {@link #generateColor(byte)} works bytewise.
+     * Has a max limit of 255 different territories, because {@link #indexToColor(byte)} works bytewise.
      */
     private Texture createColorLookupTexture() {
         // Makes `Pixmap.drawPixel()` directly set the pixel, instead of drawing the new color on top of the old one
@@ -67,7 +67,7 @@ public class BoardModel {
 
                 Territory territory = territoryMap.getTerritory(pixelColor);
                 if (territory != null)
-                    pixelColor = generateColor(territory.colorIndex);
+                    pixelColor = indexToColor(territory.colorIndex);
                 int newPixel = (pixelColor << 8) | pixelAlpha;
                 mapPixmap.drawPixel(x, y, newPixel);
             }
@@ -77,17 +77,17 @@ public class BoardModel {
         return new Texture(mapPixmap);
     }
 
+    private static int indexToColor(byte index) {
+        return (index << 2 * 8) | (index << 8) | (index);
+    }
+
     private void updateColorTerritoryMap() {
         Map<Integer, String> color_IDmap = territoryMap.getColor_IDmap();
         for (int color : new ArrayList<>(color_IDmap.keySet())) {
             String ID = color_IDmap.remove(color);
-            color_IDmap.put(generateColor(territoryMap.getTerritory(ID).colorIndex), ID);
+            color_IDmap.put(indexToColor(territoryMap.getTerritory(ID).colorIndex), ID);
         }
         territoryMap.setColor_IDmap(color_IDmap);
-    }
-
-    private static int generateColor(byte index) {
-        return (index << 2 * 8) | (index << 8) | (index);
     }
 
     public Territory getTerritory(Vector2 mapPos) {

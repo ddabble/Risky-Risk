@@ -1,31 +1,25 @@
 package no.ntnu.idi.tdt4240.view;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.controller.PhaseController;
-import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton phaseButton;
@@ -45,9 +39,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private TextureRegion region;
     private Texture texture;
     private Sprite spriteArrowHead;
-
-    // Renderers
-
 
     public PhaseView(OrthographicCamera camera) {
         PhaseController.addObserver(this);
@@ -94,7 +85,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void addFortifyButton(){
+    public void addFortifyButton() {
         if (!stage.getActors().contains(fortifyButton, false)) {
             fortifyButton = createButton("Move 1 Troop");
             fortifyButton.setWidth(100);
@@ -110,8 +101,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void addCancelButton(){
-        if (!stage.getActors().contains(cancelButton, false)){
+    public void addCancelButton() {
+        if (!stage.getActors().contains(cancelButton, false)) {
             cancelButton = createButton("Cancel Move");
             cancelButton.setWidth(100);
             cancelButton.setPosition(0, 30);
@@ -123,11 +114,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             });
             stage.addActor(cancelButton);
         }
-
     }
 
     @Override
-    public void addAttackButton(){
+    public void addAttackButton() {
         if (!stage.getActors().contains(attackButton, false)) {
             attackButton = createButton("Attack");
             attackButton.setWidth(100);
@@ -143,7 +133,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void addTurnButton(){
+    public void addTurnButton() {
         phaseButton.remove();
         turnButton = createButton("End Turn");
         turnButton.setWidth(100);
@@ -158,8 +148,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void removeTurnButton(){
-
+    public void removeTurnButton() {
         turnButton.remove();
         phaseButton = createButton("");
         phaseButton.setWidth(100);
@@ -173,20 +162,19 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void removeFortifyButton(){
+    public void removeFortifyButton() {
         if (stage.getActors().contains(fortifyButton, false))
             fortifyButton.remove();
     }
 
     @Override
-    public void removeCancelButton(){
+    public void removeCancelButton() {
         if (stage.getActors().contains(cancelButton, false))
             cancelButton.remove();
-
     }
 
     @Override
-    public void removeAttackButton(){
+    public void removeAttackButton() {
         if (stage.getActors().contains(attackButton, false))
             attackButton.remove();
     }
@@ -194,11 +182,11 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void updateRenderedVariables(String phase, int troopsToPlace) {
         phaseLabel.setText("Current Phase: " + phase + " " +
-                "\nNumber of Troops to place: " + troopsToPlace);
+                           "\nNumber of Troops to place: " + troopsToPlace);
     }
 
     @Override
-    public void updateRenderedCurrentPlayer(int playerID, Color playerColor){
+    public void updateRenderedCurrentPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID);
         playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
     }
@@ -211,7 +199,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void onSelectedTerritoriesChange(Territory start, Territory end) {
-        if (start != null && end != null){
+        if (start != null && end != null) {
             lineFrom = start.getTroopCircleVector();
             lineTo = end.getTroopCircleVector();
             shouldDrawArrow = true;
@@ -230,35 +218,33 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         stage.act(); // Updates all actors
         stage.draw();
 
-        if(shouldDrawArrow){
-            drawArrow(lineFrom,lineTo);
+        if (shouldDrawArrow) {
+            drawArrow(lineFrom, lineTo);
         }
     }
 
-    private void drawArrow(Vector2 start, Vector2 end){
+    private void drawArrow(Vector2 start, Vector2 end) {
         drawLine(start, end);
         // draw arrow head at end vector
-
 
         spriteBatch.enableBlending();
         spriteBatch.begin();
         //spriteBatch.draw(region, end.x, end.y);
         //rotate head
         float angle = new Vector2(end).sub(start).angle();
-        spriteArrowHead.setRotation(angle-90f);
-        spriteArrowHead.setOriginBasedPosition(end.x,end.y); // center the sprite at (x, y)
+        spriteArrowHead.setRotation(angle - 90f);
+        spriteArrowHead.setOriginBasedPosition(end.x, end.y); // center the sprite at (x, y)
         spriteArrowHead.draw(spriteBatch);
         spriteBatch.end();
     }
 
-    private void drawLine(Vector2 start, Vector2 end)
-    {
+    private void drawLine(Vector2 start, Vector2 end) {
         Gdx.gl.glLineWidth(4);
 
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0,0,0, 0.02f);
+        shapeRenderer.setColor(0, 0, 0, 0.02f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default
@@ -269,6 +255,4 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         stage.dispose();
         super.dispose();
     }
-
-
 }

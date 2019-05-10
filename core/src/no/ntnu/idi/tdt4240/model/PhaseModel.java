@@ -1,15 +1,7 @@
 package no.ntnu.idi.tdt4240.model;
 
-
-
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.HashMap;
-
 
 import no.ntnu.idi.tdt4240.data.Territory;
 
@@ -110,37 +102,32 @@ public class PhaseModel {
             return selectedTo;
         }
 
-        public void clearTerritorySelection(){
+        public void clearTerritorySelection() {
             selectedFrom = null;
             selectedTo = null;
         }
 
-
-
         @Override
-        public void territoryClicked(Territory territory){
+        public void territoryClicked(Territory territory) {
             return;
         }
+
         public void territoryClicked(Territory territory, int currentPlayerID) {
             //territory.setNumTroops(territory.getNumTroops() + 1);
-            if (territory.getOwnerID() == currentPlayerID){
+            if (territory.getOwnerID() == currentPlayerID) {
                 if (selectedFrom == null && territory.getNumTroops() > 1) {
                     selectedFrom = territory;
-                }
-                else if (selectedTo == null && territory != null && selectedFrom != null) { //at this point the from is selected
+                } else if (selectedTo == null && territory != null && selectedFrom != null) { //at this point the from is selected
                     if (isConnected(selectedFrom, territory))
                         selectedTo = territory;
-                }
-                else if (selectedTo != null && selectedTo != selectedFrom && selectedFrom != territory &&
-                selectedFrom != null && territory != null){
+                } else if (selectedTo != null && selectedTo != selectedFrom && selectedFrom != territory &&
+                           selectedFrom != null && territory != null) {
                     if (isConnected(selectedFrom, territory))
                         selectedTo = territory;
                 }
             }
 
             //update the ui, show what is being selected.
-
-
         }
 
         /**
@@ -148,12 +135,12 @@ public class PhaseModel {
          *
          * @param t1 Territory
          * @param t2 Territory
+         *
          * @return List of visited territories.
          */
         private boolean isConnected(Territory t1, Territory t2) {
             return dfs(t1, t2, new ArrayList<>());
         }
-
 
         private boolean dfs(Territory t1, Territory t2, List<Territory> visited) { //boolean indicate found or not
             if (!visited.contains(t1)) {
@@ -170,7 +157,5 @@ public class PhaseModel {
                 return false;
             }
         }
-
-
     }
 }
