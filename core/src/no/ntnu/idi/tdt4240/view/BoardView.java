@@ -1,6 +1,9 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,20 +38,6 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         this.camera = camera;
     }
 
-    public boolean isPosWithinMap(Vector2 pos) {
-        return mapSprite.getBoundingRectangle().contains(pos);
-    }
-
-    public Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
-        Vector2 mapPos = new Vector2(worldPos).sub(mapSprite.getX(), mapSprite.getY());
-        // Invert y coord, because the texture's origin is in the upper left corner
-        mapPos.y = mapSprite.getHeight() - mapPos.y;
-        // Round the coords, because it's needed for getting texture pixels
-        mapPos.x = MathUtils.roundPositive(mapPos.x);
-        mapPos.y = MathUtils.roundPositive(mapPos.y);
-        return mapPos;
-    }
-
     /**
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
@@ -60,6 +49,35 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 //      mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
 
         initColorLookupArray(territoryMap);
+    }
+
+    public void setInputProcessors(InputMultiplexer multiplexer) {
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if (button != Input.Buttons.LEFT) // Only useful for desktop
+                    return false;
+
+                Vector3 _touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
+                Vector2 touchWorldPos = new Vector2(_touchWorldPos.x, _touchWorldPos.y);
+                if (!mapSprite.getBoundingRectangle().contains(touchWorldPos))
+                    return false;
+
+                Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
+                GameController.INSTANCE.onBoardClicked(mapPos);
+                return true;
+            }
+        });
+    }
+
+    private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
+        Vector2 mapPos = new Vector2(worldPos).sub(mapSprite.getX(), mapSprite.getY());
+        // Invert y coord, because the texture's origin is in the upper left corner
+        mapPos.y = mapSprite.getHeight() - mapPos.y;
+        // Round the coords, because it's needed for getting texture pixels
+        mapPos.x = MathUtils.roundPositive(mapPos.x);
+        mapPos.y = MathUtils.roundPositive(mapPos.y);
+        return mapPos;
     }
 
     private void initShader() {
