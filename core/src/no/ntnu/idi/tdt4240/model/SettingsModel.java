@@ -4,11 +4,30 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class SettingsModel {
-    private Preferences prefs;
-    private final String FILENAME = "GAME_SETTINGS";
+    public static final SettingsModel INSTANCE = new SettingsModel();
+    private static final String FILENAME = "GAME_SETTINGS";
 
-    public SettingsModel() {
-        this.prefs = Gdx.app.getPreferences(FILENAME);
+    private Preferences prefs;
+
+    private int numberOfPlayers;
+
+    private SettingsModel() {}
+
+    public void init() {
+        prefs = Gdx.app.getPreferences(FILENAME);
+    }
+
+    public int getNumPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumPlayers(int num) {
+        if (num > 6)
+            numberOfPlayers = 6;
+        else if (num < 2)
+            numberOfPlayers = 2;
+        else
+            numberOfPlayers = num;
     }
 
     public void setString(String key, String value) {

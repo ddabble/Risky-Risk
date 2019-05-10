@@ -1,23 +1,35 @@
 package no.ntnu.idi.tdt4240.controller;
 
+import no.ntnu.idi.tdt4240.model.PlayerModel;
 import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class SettingsController {
-    private final SettingsModel model;
-    private final SettingsViewer viewer;
+    public static final SettingsController INSTANCE = new SettingsController();
 
-    public SettingsController(SettingsViewer viewer, SettingsModel model) {
-        this.viewer = viewer;
-        this.model = model;
+//    private Collection<SettingsObserver> observers = new ArrayList<>();
+
+    private SettingsController() {}
+
+    public void init() {
+        SettingsModel.INSTANCE.init();
+    }
+
+    public void setNumPlayers(int num) {
+        SettingsModel.INSTANCE.setNumPlayers(num);
+        PlayerModel.INSTANCE.init(num);
     }
 
     public void setSetting1(String string) {
-        model.setString("setting1", string);
-        viewer.setSetting1(getSetting1());
+        SettingsModel.INSTANCE.setString("setting1", string);
+//        view.setSetting1(getSetting1());
     }
 
     public String getSetting1() {
-        return model.getString("setting1", "null");
+        return SettingsModel.INSTANCE.getString("setting1", "null");
     }
+
+//    public static void addObserver(SettingsObserver observer) {
+//        INSTANCE.observers.add(observer);
+//    }
 }
 

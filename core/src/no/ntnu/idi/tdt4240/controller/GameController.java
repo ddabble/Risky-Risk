@@ -1,28 +1,39 @@
 package no.ntnu.idi.tdt4240.controller;
 
-import no.ntnu.idi.tdt4240.model.GameModel;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GameController {
-    private final GameViewer viewer;
-    private final GameModel model;
+    public static final GameController INSTANCE = new GameController();
 
-    public GameController(GameViewer viewer, GameModel model) {
-        this.viewer = viewer;
-        this.model = model;
+    private Collection<GameObserver> observers = new ArrayList<>();
+
+    private GameController() {}
+
+    public void init() {
+        BoardController.INSTANCE.init();
+        PhaseController.INSTANCE.init();
     }
 
+    public void reset() {
+        BoardController.INSTANCE.reset();
+    }
+
+    /*
     public void setNumberOfPlayers(int num) {
         model.gameSettings.setNumberOfPlayers(num);
-        viewer.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
+        view.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
     }
 
     public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
 
-    /*
-    The RenderSystem should maybe just have its own camera? especially if
-    the ECS handles its own inputs
-    public void setCamera(Camera cam){
-        //or w/e idk
-        model.renderSystem.setCamera(cam);
-    } */
+    // The role of the controller is to translate inputs into changes and relay this back
+    // Below is the translation of clicks to model changes
+    */
+
+    public static void addObserver(GameObserver observer) {
+        INSTANCE.observers.add(observer);
+    }
 }
