@@ -35,6 +35,10 @@ public class RiskyRisk extends Game {
     public void create() {
         TerritoryModel.init();
         SettingsController.INSTANCE.init();
+
+        // TODO: set number of players from (settings) menu
+        SettingsController.INSTANCE.setNumPlayers(8);
+
         setScreen(ScreenEnum.MAIN_MENU);
     }
 
