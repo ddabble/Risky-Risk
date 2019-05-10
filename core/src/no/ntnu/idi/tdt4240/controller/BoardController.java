@@ -1,47 +1,64 @@
 package no.ntnu.idi.tdt4240.controller;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.BoardModel;
-import no.ntnu.idi.tdt4240.util.gl.ColorArray;
-import no.ntnu.idi.tdt4240.view.BoardView;
+import no.ntnu.idi.tdt4240.model.PlayerModel;
+import no.ntnu.idi.tdt4240.model.TerritoryModel;
+import no.ntnu.idi.tdt4240.model.TroopModel;
+import no.ntnu.idi.tdt4240.observer.BoardObserver;
+import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
 public class BoardController {
+    public static final BoardController INSTANCE = new BoardController();
 
-    // TODO: make this controller actually do something
+    private Collection<BoardObserver> boardObservers = new ArrayList<>();
+    private Collection<TroopObserver> troopObservers = new ArrayList<>();
 
-    private final BoardModel model;
-    private final BoardView view;
+    private BoardController() {}
 
-    public BoardController(BoardModel model, BoardView view) {
-        this.model = model;
-        this.view = view;
+    public void init() {
+        BoardModel.INSTANCE.init();
+        TroopModel.INSTANCE.init();
+
+        for (BoardObserver observer : boardObservers) {
+            observer.create(BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
+                            PlayerModel.INSTANCE.getPlayerID_colorMap());
+        }
+        for (TroopObserver observer : troopObservers)
+            observer.create(TerritoryModel.getTerritoryMap(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
     }
 
-    public BoardModel getModel() {
-        return model;
+    public void onBoardClicked(Vector2 mapPos) {
+        Territory clickedTerritory = BoardModel.INSTANCE.getTerritory(mapPos);
+        TroopModel.INSTANCE.onSelectTerritory(clickedTerritory);
+        for (TroopObserver observer : troopObservers)
+            observer.onSelectTerritory(clickedTerritory);
+
+        if (clickedTerritory != null) {
+            System.out.println(clickedTerritory.name);
+
+            PhaseController.INSTANCE.onTerritoryClicked(clickedTerritory);
+            for (TroopObserver observer : troopObservers)
+                observer.onTerritoryChangeNumTroops(clickedTerritory);
+        } else
+            System.out.println("None");
     }
 
-    public BoardView getView() {
-        return view;
+    public void reset() {
+        TroopModel.INSTANCE.reset();
+        BoardModel.INSTANCE.reset();
     }
 
-    public ColorArray getPlayerColorLookup() {
-        return model.getPlayerColorLookup();
+    public static void addObserver(BoardObserver observer) {
+        INSTANCE.boardObservers.add(observer);
     }
 
-    public Texture getMapTexture() {
-        return model.getMapTexture();
-    }
-
-    public Vector2 worldPosToMapTexturePos(Vector2 worldPos, Sprite mapSprite) {
-        return model.worldPosToMapTexturePos(worldPos, mapSprite);
-    }
-
-    public Territory getTerritory(Vector2 mapPos) {
-        return model.getTerritory(mapPos);
+    public static void addObserver(TroopObserver observer) {
+        INSTANCE.troopObservers.add(observer);
     }
 }
