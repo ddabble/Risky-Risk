@@ -106,7 +106,6 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
         stage.draw();
     }
 
-
     @Override
     public void dispose() {
         stage.dispose();

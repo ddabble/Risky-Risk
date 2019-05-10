@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.List;
 
 import no.ntnu.idi.tdt4240.data.Continent;
-import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.model.BattleModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
@@ -27,6 +27,8 @@ public class PhaseController {
     private PhaseController() {}
 
     public void init() {
+        AttackModel.INSTANCE.init();
+
         for (PhaseObserver observer : phaseObservers) {
             observer.create();
             updatePhase(observer);
@@ -34,21 +36,21 @@ public class PhaseController {
         updateRenderedCurrentPlayer();
     }
 
-    public void updatePhase(PhaseObserver observer) {
+    private void updatePhase(PhaseObserver observer) {
         String currentPhase = PhaseModel.INSTANCE.getPhase().getName();
         String nextPhase = PhaseModel.INSTANCE.getPhase().next().getName();
         observer.updatePhase(currentPhase, nextPhase);
 
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Place"){
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Place")) {
             updateTroopsToPlace();
         }
     }
 
-    public void boardClicked(Vector2 touchWorldPos){ // maybe make interface for this
+    public void boardClicked(Vector2 touchWorldPos) { // maybe make interface for this
 
     }
 
-    public void nextTurnButtonClicked(){
+    public void nextTurnButtonClicked() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
         clearRenderedButtons();
@@ -56,6 +58,7 @@ public class PhaseController {
         updateRenderedCurrentPlayer();
         for (PhaseObserver observer : phaseObservers)
             observer.removeTurnButton();
+
         PhaseModel.INSTANCE.nextPhase();
         updateTroopsToPlace();
 
@@ -68,10 +71,10 @@ public class PhaseController {
 
     public void nextPhaseButtonClicked() {
         PhaseController.INSTANCE.clearRenderedButtons();
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Attack")
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack"))
             AttackModel.INSTANCE.cancelAttack();
         PhaseModel.INSTANCE.nextPhase();
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Fortify"){
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
             for (PhaseObserver observer : phaseObservers)
                 observer.addTurnButton();
         }
@@ -82,34 +85,34 @@ public class PhaseController {
             observer.onSelectedTerritoriesChange(null, null);
     }
 
-    public void cancelButtonClicked(){
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Attack"){
+    public void cancelButtonClicked() {
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack")) {
             AttackModel.INSTANCE.cancelAttack();
             PhaseController.INSTANCE.clearRenderedButtons();
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(null, null);
         }
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Fortify"){
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
             PhaseController.INSTANCE.cancelFortify();
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(null, null);
         }
     }
 
-    private void updateRenderedCurrentPlayer(){
+    private void updateRenderedCurrentPlayer() {
         for (PhaseObserver observer : phaseObservers) {
             observer.updateRenderedCurrentPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
                                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
         }
     }
 
-    public void cancelFortify(){
+    private void cancelFortify() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
         clearRenderedButtons();
     }
 
-    public void fortifyButtonClicked(){
+    public void fortifyButtonClicked() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         if (phase.getSelectedFrom().getNumTroops() > 1) {
             phase.getSelectedFrom().setNumTroops(phase.getSelectedFrom().getNumTroops() - 1);
@@ -118,7 +121,7 @@ public class PhaseController {
                 observer.onTerritoryChangeNumTroops(phase.getSelectedFrom());
                 observer.onTerritoryChangeNumTroops(phase.getSelectedTo());
             }
-            if (phase.getSelectedFrom().getNumTroops() == 1){
+            if (phase.getSelectedFrom().getNumTroops() == 1) {
                 phase.clearTerritorySelection();
                 clearRenderedButtons();
                 for (PhaseObserver observer : phaseObservers)
@@ -128,60 +131,40 @@ public class PhaseController {
 
     }
 
-    public void updateTroopsToPlace() {
+    private void updateTroopsToPlace() {
         List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
         List<Territory> possibleContinent = new ArrayList<>();
         int territoriesOwned = 0;
-        for (Territory territory : territories)
+        for (Territory territory : territories) {
             // Temporary ID Check
-            if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()){
+            if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
                 territoriesOwned++;
                 possibleContinent.add(territory);
             }
-        if (territoriesOwned == 0){
+        }
+        if (territoriesOwned == 0) {
             TurnModel.INSTANCE.takeTurn();
             updateTroopsToPlace();
             updateRenderedCurrentPlayer();
-        }
-        else{
+        } else {
             boolean hasContinent;
             int extraTroops = 0;
-            for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()){
+            for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
                 hasContinent = true;
-                for (Territory territory : continent.getTerritories()){
+                for (Territory territory : continent.getTerritories()) {
                     if (!possibleContinent.contains(territory))
                         hasContinent = false;
                 }
-                if (hasContinent){
-                    switch (continent.name){
-                        case "South America":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                        case "Europe":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                        case "North America":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                        case "Asia":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                        case "Africa":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                        case "Australia":
-                            extraTroops += continent.getBonusTroops();
-                            break;
-                    }
-                }
+                if (hasContinent)
+                    extraTroops = continent.getBonusTroops();
             }
-            AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.round(Math.ceil(territoriesOwned/3)), 3) + extraTroops);
+            AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
             for (PhaseObserver observer : phaseObservers)
                 observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
         }
     }
 
-    public void clearRenderedButtons(){
+    private void clearRenderedButtons() {
         for (PhaseObserver observer : phaseObservers) {
             observer.removeAttackButton();
             observer.removeFortifyButton();
@@ -189,11 +172,11 @@ public class PhaseController {
         }
     }
 
-    public void attackButtonClicked(){
+    public void attackButtonClicked() {
         int[] winner = BattleModel.fight(AttackModel.INSTANCE.getFromTerritory().getOwnerID(),
-                AttackModel.INSTANCE.getToTerritory().getOwnerID(),
-                AttackModel.INSTANCE.getFromTerritory().getNumTroops() - 1,
-                AttackModel.INSTANCE.getToTerritory().getNumTroops());
+                                         AttackModel.INSTANCE.getToTerritory().getOwnerID(),
+                                         AttackModel.INSTANCE.getFromTerritory().getNumTroops() - 1,
+                                         AttackModel.INSTANCE.getToTerritory().getNumTroops());
         clearRenderedButtons();
         AttackModel.INSTANCE.getToTerritory().setOwnerID(winner[0]);
         AttackModel.INSTANCE.getToTerritory().setNumTroops(winner[1]);
@@ -212,10 +195,10 @@ public class PhaseController {
         System.out.println(winner.toString());
     }
 
-    public void onTerritoryClicked(Territory territory){ // called GameController
+    public void onTerritoryClicked(Territory territory) { // called GameController
         //PhaseModel.INSTANCE.getPhase().territoryClicked(territory); //update the model
         // update the view
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Place") {
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Place")) {
             if (AttackModel.INSTANCE.getTroopsToPlace() > 0 && territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
                 PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
                 AttackModel.INSTANCE.setTroopsToPlace(AttackModel.INSTANCE.getTroopsToPlace() - 1);
@@ -227,7 +210,7 @@ public class PhaseController {
                 System.out.println("No troops left to place");
             }
         }
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Attack") {
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack")) {
             if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID() && territory.getNumTroops() > 1) {
                 if (AttackModel.INSTANCE.getAttack() == null || AttackModel.INSTANCE.getAttack().size() == 0) {
                     AttackModel.INSTANCE.setAttackFrom(territory);
@@ -236,7 +219,7 @@ public class PhaseController {
                 }
             }
             if (AttackModel.INSTANCE.getAttack() != null) {
-                if (AttackModel.INSTANCE.getAttack().size() == 1 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()){
+                if (AttackModel.INSTANCE.getAttack().size() == 1 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
                     if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
                         AttackModel.INSTANCE.setAttackTo(territory);
                         for (PhaseObserver observer : phaseObservers) {
@@ -244,8 +227,7 @@ public class PhaseController {
                             observer.addAttackButton();
                         }
                     }
-                }
-                else if (AttackModel.INSTANCE.getAttack().size() == 2 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()){
+                } else if (AttackModel.INSTANCE.getAttack().size() == 2 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
                     if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
                         AttackModel.INSTANCE.setAttackTo(territory);
                         for (PhaseObserver observer : phaseObservers)
@@ -254,13 +236,13 @@ public class PhaseController {
                 }
             }
         }
-        if (PhaseModel.INSTANCE.getPhase().getName() == "Fortify") {
+        if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
             PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
             phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
             //phase.getSelectedFrom();
             //update UI
             System.out.println("Draw line");
-            if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null){
+            if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null) {
                 for (PhaseObserver observer : phaseObservers) {
                     observer.addFortifyButton();
                     observer.addCancelButton();
