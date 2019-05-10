@@ -1,6 +1,5 @@
 package no.ntnu.idi.tdt4240.controller;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -54,11 +53,9 @@ public class PhaseController {
         phase.clearTerritorySelection();
         clearRenderedButtons();
         TurnModel.INSTANCE.takeTurn();
-        for (PhaseObserver observer : phaseObservers) {
-            observer.updateRenderedCurrentPlayer
-                (TurnModel.INSTANCE.getCurrentPlayerID(), getPlayerRGBAColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+        updateRenderedCurrentPlayer();
+        for (PhaseObserver observer : phaseObservers)
             observer.removeTurnButton();
-        }
         PhaseModel.INSTANCE.nextPhase();
         updateTroopsToPlace();
 
@@ -99,9 +96,11 @@ public class PhaseController {
         }
     }
 
-    public void updateRenderedCurrentPlayer(){
-        for (PhaseObserver observer : phaseObservers)
-            observer.updateRenderedCurrentPlayer(TurnModel.INSTANCE.getCurrentPlayerID(), getPlayerRGBAColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+    private void updateRenderedCurrentPlayer(){
+        for (PhaseObserver observer : phaseObservers) {
+            observer.updateRenderedCurrentPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
+                                                 MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+        }
     }
 
     public void cancelFortify(){
@@ -142,9 +141,7 @@ public class PhaseController {
         if (territoriesOwned == 0){
             TurnModel.INSTANCE.takeTurn();
             updateTroopsToPlace();
-            for (PhaseObserver observer : phaseObservers)
-                observer.updateRenderedCurrentPlayer(TurnModel.INSTANCE.getCurrentPlayerID(), getPlayerRGBAColor(TurnModel.INSTANCE.getCurrentPlayerID()));;
-
+            updateRenderedCurrentPlayer();
         }
         else{
             boolean hasContinent;
@@ -182,10 +179,6 @@ public class PhaseController {
             for (PhaseObserver observer : phaseObservers)
                 observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
         }
-    }
-
-    public Color getPlayerRGBAColor(int playerID){
-        return MultiplayerModel.INSTANCE.getPlayerRGBAColor(playerID);
     }
 
     public void clearRenderedButtons(){

@@ -17,15 +17,15 @@ public class MultiplayerModel {
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
     private int numPlayers;
-    private Map<Integer, Integer> playerID_colorMap;
+    private Map<Integer, Color> playerID_colorMap;
 
     private MultiplayerModel() {}
 
-    public int getPlayerColor(int playerID) {
+    public Color getPlayerColor(int playerID) {
         return playerID_colorMap.get(playerID);
     }
 
-    public Map<Integer, Integer> getPlayerID_colorMap() {
+    public Map<Integer, Color> getPlayerID_colorMap() {
         return new HashMap<>(playerID_colorMap);
     }
 
@@ -50,7 +50,12 @@ public class MultiplayerModel {
     private void assignPlayerColors(List<Integer> playerIDs) {
         playerID_colorMap = new HashMap<>();
         for (int i = 0; i < playerIDs.size(); i++)
-            playerID_colorMap.put(playerIDs.get(i), COLORS[i]);
+            playerID_colorMap.put(playerIDs.get(i), intToColor(COLORS[i]));
+    }
+
+    private static Color intToColor(int rgbColor) {
+        int rgbaColor = (rgbColor << 8) | 0xFF;
+        return new Color(rgbaColor);
     }
 
     private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
@@ -67,11 +72,5 @@ public class MultiplayerModel {
             territories.get(i).setOwnerID(playerIDsForTerritories.get(i));
             territories.get(i).setNumTroops(1);
         }
-    }
-
-    public Color getPlayerRGBAColor(int playerID){
-        int RGBcolor = playerID_colorMap.get(playerID);
-        int RGBAcolor = (RGBcolor << 8) | 0xFF;
-        return new Color(RGBAcolor);
     }
 }

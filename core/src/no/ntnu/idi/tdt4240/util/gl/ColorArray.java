@@ -23,10 +23,6 @@ public class ColorArray {
         return colors;
     }
 
-    public void setColor(int index, int color) {
-        setColor(index, new Color(color));
-    }
-
     public void setColor(int index, Color color) {
         switch (numComponents) {
             case 4:

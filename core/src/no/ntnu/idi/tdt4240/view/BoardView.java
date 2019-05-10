@@ -2,10 +2,10 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,7 +47,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
     @Override
-    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
+    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
@@ -94,17 +94,16 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         ShaderProgram.pedantic = false;
     }
 
-    public void initColorLookupArray(List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
+    private void initColorLookupArray(List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
         for (Territory territory : territories) {
-            int playerColor = playerID_colorMap.get(territory.getOwnerID());
-            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
+            Color playerColor = playerID_colorMap.get(territory.getOwnerID());
+            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor);
         }
     }
 
     @Override
-    public void onTerritoryChangeColor(Territory territory, int color) {
-        // Shift color 8 bits to the left to turn it from RGB to RGBA format
-        PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, color << 8);
+    public void onTerritoryChangeColor(Territory territory, Color color) {
+        PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, color);
     }
 
     @Override
