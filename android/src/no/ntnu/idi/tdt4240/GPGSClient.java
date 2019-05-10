@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesCallbackStatusCodes;
 import com.google.android.gms.games.GamesClient;
@@ -337,28 +338,11 @@ public class GPGSClient implements IGPGSClient {
         boolean isSignedIn = mTurnBasedMultiplayerClient != null;
 
         if (!isSignedIn) {
-            /*findViewById(R.id.login_layout).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.matchup_layout).setVisibility(View.GONE);
-            findViewById(R.id.gameplay_layout).setVisibility(View.GONE);*/
-
             if (mAlertDialog != null) {
                 mAlertDialog.dismiss();
             }
             return;
         }
-
-
-        /*((TextView) findViewById(R.id.name_field)).setText(mDisplayName);
-        findViewById(R.id.login_layout).setVisibility(View.GONE);
-
-        if (isDoingTurn) {
-            findViewById(R.id.matchup_layout).setVisibility(View.GONE);
-            findViewById(R.id.gameplay_layout).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.matchup_layout).setVisibility(View.VISIBLE);
-            findViewById(R.id.gameplay_layout).setVisibility(View.GONE);
-        }*/
     }
 
     // Switch to gameplay view.
@@ -533,7 +517,7 @@ public class GPGSClient implements IGPGSClient {
             return;
         }
 
-        String message = "foobar";//getString(R.string.status_exception_error, details, status, exception);
+        String message ="Status exception error: " +  details + " Status: " + status + " Exception:" + exception;;
 
         new AlertDialog.Builder(mActivity)
                 .setMessage(message)
@@ -565,7 +549,7 @@ public class GPGSClient implements IGPGSClient {
             } catch (ApiException apiException) {
                 String message = apiException.getMessage();
                 if (message == null || message.isEmpty()) {
-                    message = "sign in other error";//getString(R.string.signin_other_error);
+                    message = "Sign in other error";
                 }
 
                 onDisconnected();
@@ -573,10 +557,13 @@ public class GPGSClient implements IGPGSClient {
                     signInAttemptHandler.onFailure();
                 }
 
-                /*new AlertDialog.Builder(mActivity)
-                        .setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null)
-                        .show();*/
+                if (!message.contains("12501:")) { //Cancel sign in
+                    new AlertDialog.Builder(mActivity)
+                            .setMessage(message)
+                            .setNeutralButton(android.R.string.ok, null)
+                            .show();
+                }
+
             }
 
         } else if (requestCode == RC_LOOK_AT_MATCHES) {
@@ -868,8 +855,8 @@ public class GPGSClient implements IGPGSClient {
         }
     };
 
-    public void showErrorMessage(int stringId) {
-        //showWarning("Warning", getResources().getString(stringId));
+    public void showErrorMessage(String message) {
+        showWarning("Warning", message);
     }
 
     // Returns false if something went wrong, probably. This should handle
@@ -880,25 +867,25 @@ public class GPGSClient implements IGPGSClient {
                 return true;
             //TODO: error messages
             case GamesClientStatusCodes.MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
-                //showErrorMessage(R.string.status_multiplayer_error_not_trusted_tester);
+                showErrorMessage("status_multiplayer_error_not_trusted_tester");
                 break;
             case GamesClientStatusCodes.MATCH_ERROR_ALREADY_REMATCHED:
-                //showErrorMessage(R.string.match_error_already_rematched);
+                showErrorMessage("match_error_already_rematched");
                 break;
             case GamesClientStatusCodes.NETWORK_ERROR_OPERATION_FAILED:
-                //showErrorMessage(R.string.network_error_operation_failed);
+                showErrorMessage("network_error_operation_failed");
                 break;
             case GamesClientStatusCodes.INTERNAL_ERROR:
-                //showErrorMessage(R.string.internal_error);
+                showErrorMessage("internal_error");
                 break;
             case GamesClientStatusCodes.MATCH_ERROR_INACTIVE_MATCH:
-                //showErrorMessage(R.string.match_error_inactive_match);
+                showErrorMessage("match_error_inactive_match");
                 break;
             case GamesClientStatusCodes.MATCH_ERROR_LOCALLY_MODIFIED:
-                //showErrorMessage(R.string.match_error_locally_modified);
+                showErrorMessage("match_error_locally_modified");
                 break;
             default:
-                //showErrorMessage(R.string.unexpected_status);
+                showErrorMessage("unexpected_status");
                 Log.d(TAG, "Did not have warning or string to deal with: "
                         + statusCode);
         }
