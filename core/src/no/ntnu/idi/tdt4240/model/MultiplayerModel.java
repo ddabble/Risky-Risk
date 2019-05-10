@@ -12,23 +12,27 @@ import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class MultiplayerModel {
+    public static final MultiplayerModel INSTANCE = new MultiplayerModel();
+
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
-    private final int numPlayers;
-    private final Map<Integer, Integer> playerID_colorMap = new HashMap<>();
+    private int numPlayers;
+    private Map<Integer, Integer> playerID_colorMap;
 
-    public MultiplayerModel(int numPlayers) {
+    private MultiplayerModel() {}
+
+    public Map<Integer, Integer> getPlayerID_colorMap() {
+        return new HashMap<>(playerID_colorMap);
+    }
+
+    public void init(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
         this.numPlayers = numPlayers;
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
-    }
-
-    public void init() {
-        List<Integer> playerIDs = new ArrayList<>(playerID_colorMap.keySet());
-        assignTerritoryOwners(playerIDs, TerritoryModel.getInstance().TERRITORY_MAP);
+        assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
     }
 
     private List<Integer> generatePlayerIDs() {
@@ -40,6 +44,7 @@ public class MultiplayerModel {
     }
 
     private void assignPlayerColors(List<Integer> playerIDs) {
+        playerID_colorMap = new HashMap<>();
         for (int i = 0; i < playerIDs.size(); i++)
             playerID_colorMap.put(playerIDs.get(i), COLORS[i]);
     }
@@ -58,10 +63,6 @@ public class MultiplayerModel {
             territories.get(i).setOwnerID(playerIDsForTerritories.get(i));
             territories.get(i).setNumTroops(1);
         }
-    }
-
-    public int getPlayerColor(int playerID) {
-        return playerID_colorMap.get(playerID);
     }
 
     public Color getPlayerRGBAColor(int playerID){

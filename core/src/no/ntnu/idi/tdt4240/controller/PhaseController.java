@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import no.ntnu.idi.tdt4240.data.Continent;
@@ -17,35 +18,35 @@ import no.ntnu.idi.tdt4240.model.PhaseModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
+import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.view.BoardView;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.PhaseView;
 import no.ntnu.idi.tdt4240.view.TroopView;
 
 public class PhaseController {
-    private GameModel gameModel;
+    public static final PhaseController INSTANCE = new PhaseController();
+
+    private Collection<PhaseObserver> observers = new ArrayList<>();
+
     private GameView gameView;
-    private final BoardModel boardModel;
-    private final TroopModel troopModel;
-    private final PhaseModel phaseModel;
-    private final Player playerModel;
-    private final TurnModel turnModel;
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
 
-    public PhaseController(GameModel gameModel, GameView gameView){
-        this.gameModel = gameModel;
+    public PhaseController(GameView gameView){
         this.gameView = gameView;
-        boardModel = gameModel.getBoardModel();
-        troopModel = gameModel.getTroopModel();
-        phaseModel = gameModel.getPhaseModel();
-        playerModel = gameModel.getPlayerModel();
-        turnModel = gameModel.getTurnModel();
 
         phaseView = gameView.getPhaseView();
         boardView = gameView.getBoardView();
         troopView = gameView.getTroopView();
+    }
+
+    public void init() {
+        for (PhaseObserver observer : observers) {
+            observer.create();
+            updatePhase(observer);
+        }
     }
 
     public void boardClicked(Vector2 touchWorldPos){ // maybe make interface for this
@@ -88,8 +89,8 @@ public class PhaseController {
                 phaseView.onSelectedTerritoriesChange(null, null);
             }
         }
-
     }
+
 
     public void updateTroopsToPlace() {
         List<Territory> territories = TerritoryModel.getInstance().TERRITORY_MAP.getAllTerritories();
@@ -144,8 +145,25 @@ public class PhaseController {
         }
     }
 
+    public void updatePhase(PhaseObserver observer) {
+        String currentPhase = PhaseModel.INSTANCE.getPhase().getName();
+        String nextPhase = PhaseModel.INSTANCE.getPhase().next().getName();
+        observer.updatePhase(currentPhase, nextPhase);
+    }
+
     public Color getPlayerRGBAColor(int playerID){
         return gameModel.getMultiplayerModel().getPlayerRGBAColor(playerID);
+    }
+
+    public void onTerritoryClicked(Territory territory) {
+        // Update territory based on the phase we are in
+        PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
+    }
+
+    public void nextPhaseButtonClicked() {
+        PhaseModel.INSTANCE.nextPhase();
+        for (PhaseObserver observer : observers)
+            updatePhase(observer);
     }
 
     public void clearRenderedButtons(){
@@ -220,5 +238,9 @@ public class PhaseController {
             }
             phaseView.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
         }
+    }
+
+    public static void addObserver(PhaseObserver observer) {
+        INSTANCE.observers.add(observer);
     }
 }

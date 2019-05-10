@@ -15,14 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
+import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.observer.TroopObserver;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-public class TroopView extends ApplicationAdapter {
+public class TroopView extends ApplicationAdapter implements TroopObserver {
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
-
-    private final GameController gameController;
 
     private SpriteBatch batch;
     private Map<Territory, Sprite> circleSpriteMap;
@@ -32,23 +31,28 @@ public class TroopView extends ApplicationAdapter {
 
     private Sprite circleSelectSprite;
 
-    public TroopView(GameController gameController) {
-        this.gameController = gameController;
+    private Territory selectedTerritory;
+
+    public TroopView() {
+        BoardController.addObserver(this);
     }
 
-    // TODO: maybe change this to take no parameters and just loop over all territories?
-    public void onTerritoryChangeNumTroops(Territory territory) {
-        circleTextMap.get(territory).setText(String.valueOf(territory.getNumTroops()));
-    }
-
+    @Override
     public void onSelectTerritory(Territory territory) {
+        selectedTerritory = territory;
+
         if (territory != null) {
             Vector2 circlePos = territory.getTroopCircleVector();
             circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
         }
-        gameController.setSelectedTerritory(territory);
     }
 
+    @Override
+    public void onTerritoryChangeNumTroops(Territory territory) {
+        circleTextMap.get(territory).setText(String.valueOf(territory.getNumTroops()));
+    }
+
+    @Override
     public void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
         batch = new SpriteBatch();
 
@@ -93,7 +97,7 @@ public class TroopView extends ApplicationAdapter {
         for (Sprite sprite : circleSpriteMap.values())
             sprite.draw(batch);
 
-        if (gameController.getSelectedTerritory() != null)
+        if (selectedTerritory != null)
             circleSelectSprite.draw(batch);
         batch.end();
 

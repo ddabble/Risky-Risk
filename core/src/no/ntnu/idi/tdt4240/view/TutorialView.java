@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,17 +12,19 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
-public class TutorialView extends AbstractView {
+public class TutorialView extends AbstractView implements Screen {
+    private final RiskyRisk game;
+
     private Stage stage;
     private Texture background;
 
     public TutorialView(RiskyRisk game) {
-        super(game);
+        this.game = game;
     }
 
     @Override
     public void show() {
-        super.show();
+        super.create();
 
         background = new Texture("background.png");
 
@@ -34,7 +37,7 @@ public class TutorialView extends AbstractView {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
             }
         });
 
@@ -47,7 +50,7 @@ public class TutorialView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
@@ -55,6 +58,6 @@ public class TutorialView extends AbstractView {
     public void hide() {
         background.dispose();
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 }

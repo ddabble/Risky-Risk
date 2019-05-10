@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,20 +12,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.MenuController;
+import no.ntnu.idi.tdt4240.observer.MenuObserver;
 
-public class MainMenuView extends AbstractView {
+public class MainMenuView extends AbstractView implements MenuObserver, Screen {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
-        super(game);
+        MenuController.addObserver(this);
+
+        this.game = game;
         camera = new OrthographicCamera();
     }
 
     @Override
     public void show() {
-        super.show();
+        super.create();
 
         camera.setToOrtho(false, 800, 480);
         background = new Texture("background.png");
@@ -53,7 +60,7 @@ public class MainMenuView extends AbstractView {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
             }
         });
 
@@ -67,7 +74,7 @@ public class MainMenuView extends AbstractView {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
@@ -75,6 +82,6 @@ public class MainMenuView extends AbstractView {
     public void hide() {
         background.dispose();
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 }

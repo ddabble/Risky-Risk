@@ -12,19 +12,22 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
+// TODO: tie this class together with the rest of the program (unsure what it's for)
 public class MultiplayerView extends AbstractView {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
 
     public MultiplayerView(RiskyRisk game) {
-        super(game);
+        this.game = game;
         camera = new OrthographicCamera();
     }
 
     @Override
-    public void show() {
-        super.show();
+    public void create() {
+        super.create();
 
         camera.setToOrtho(false, 800, 480);
         background = new Texture("background.png");
@@ -38,26 +41,26 @@ public class MultiplayerView extends AbstractView {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuView(game));
+//                TODO: game.setScreen(new MainMenuView(game));
             }
         });
         stage.addActor(backButton);
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
     @Override
-    public void hide() {
+    public void dispose() {
         background.dispose();
         stage.dispose();
-        super.hide();
+        super.dispose();
     }
 }
