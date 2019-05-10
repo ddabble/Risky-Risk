@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
+// TODO: tie this class together with the rest of the program (unsure what it's for)
 public class MultiplayerView extends AbstractView {
     private final RiskyRisk game;
 
@@ -40,7 +41,7 @@ public class MultiplayerView extends AbstractView {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuView(game));
+//                TODO: game.setScreen(new MainMenuView(game));
             }
         });
         stage.addActor(backButton);

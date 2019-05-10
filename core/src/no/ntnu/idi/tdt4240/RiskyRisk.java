@@ -6,14 +6,17 @@ import no.ntnu.idi.tdt4240.controller.SettingsController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
+import no.ntnu.idi.tdt4240.view.TutorialView;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private final MainMenuView mainMenuView;
+    private final TutorialView tutorialView;
     private final GameView gameView;
 
     public RiskyRisk() {
         mainMenuView = new MainMenuView(this);
+        tutorialView = new TutorialView(this);
         gameView = new GameView();
     }
 
@@ -21,8 +24,11 @@ public class RiskyRisk extends Game {
         // TODO: add other screens
         switch (screen) {
             case MAIN_MENU:
-                // TODO: should be mainMenuController
                 setScreen(mainMenuView);
+                break;
+
+            case TUTORIAL:
+                setScreen(tutorialView);
                 break;
 
             case GAME:
@@ -44,6 +50,7 @@ public class RiskyRisk extends Game {
 
     public enum ScreenEnum {
         MAIN_MENU,
+        TUTORIAL,
         GAME,
     }
 }

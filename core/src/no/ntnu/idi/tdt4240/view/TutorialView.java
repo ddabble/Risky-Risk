@@ -37,7 +37,7 @@ public class TutorialView extends AbstractView implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuView(game));
+                game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
             }
         });
 
