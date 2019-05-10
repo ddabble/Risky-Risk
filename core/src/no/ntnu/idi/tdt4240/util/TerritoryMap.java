@@ -61,7 +61,7 @@ public class TerritoryMap {
         this.color_IDmap = new HashMap<>(color_IDmap);
     }
 
-    public void parseJsonBonusStrucutre(List<Continent> continents, FileHandle jsonFile) {
+    public void parseJsonBonusStrucutre(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
         Map readJson;
         try {

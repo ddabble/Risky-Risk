@@ -1,14 +1,18 @@
-package no.ntnu.idi.tdt4240.data;
+package no.ntnu.idi.tdt4240.model;
 
 import java.util.HashMap;
 
-public class Player {
+import no.ntnu.idi.tdt4240.data.Territory;
+
+public class AttackModel {
+    public static final AttackModel INSTANCE = new AttackModel();
+
     private int troopsToPlace;
     private Territory fromTerritory;
     private Territory toTerritory;
     private HashMap<String, Integer> attack;
 
-    public Player(){
+    private AttackModel() {
         attack = new HashMap<>();
     }
 

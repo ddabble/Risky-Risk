@@ -25,7 +25,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
-import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
@@ -37,8 +36,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Label phaseLabel;
     private Label playerLabel;
     private Stage stage;
-    private static OrthographicCamera camera;
-    private PhaseController controller;
+    private OrthographicCamera camera;
 
     private Vector2 lineFrom;
     private Vector2 lineTo;
@@ -59,104 +57,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public Stage getStage() {
         return stage;
-    }
-
-
-    public void addFortifyButton(){
-        if (!stage.getActors().contains(fortifyButton, false)) {
-            fortifyButton = createButton("Move 1 Troop");
-            fortifyButton.setWidth(100);
-            fortifyButton.setPosition(0, 60);
-            fortifyButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    gameController.fortifyButtonClicked();
-                }
-            });
-            stage.addActor(fortifyButton);
-        }
-    }
-
-    public void addCancelButton(){
-        if (!stage.getActors().contains(cancelButton, false)){
-            cancelButton = createButton("Cancel Move");
-            cancelButton.setWidth(100);
-            cancelButton.setPosition(0, 30);
-            cancelButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    gameController.cancelButtonClicked();
-                }
-            });
-            stage.addActor(cancelButton);
-        }
-
-    }
-    public void addAttackButton(){
-        if (!stage.getActors().contains(attackButton, false)) {
-            attackButton = createButton("Attack");
-            attackButton.setWidth(100);
-            attackButton.setPosition(0, 60);
-            attackButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    gameController.attackButtonClicked();
-                }
-            });
-            stage.addActor(attackButton);
-        }
-    }
-
-    public void addTurnButton(){
-        phaseButton.remove();
-        turnButton = createButton("End Turn");
-        turnButton.setWidth(100);
-        turnButton.setPosition(0, 0);
-        turnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameController.nextTurnButtonClicked();
-            }
-        });
-        stage.addActor(turnButton);
-    }
-
-    public void removeTurnButton(){
-
-        turnButton.remove();
-        phaseButton = createButton("");
-        phaseButton.setWidth(100);
-        phaseButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameController.nextPhaseButtonClicked();
-            }
-        });
-        stage.addActor(phaseButton);
-    }
-
-    public void removeFortifyButton(){
-        if (stage.getActors().contains(fortifyButton, false))
-            fortifyButton.remove();
-    }
-    public void removeCancelButton(){
-        if (stage.getActors().contains(cancelButton, false))
-            cancelButton.remove();
-
-    }
-    public void removeAttackButton(){
-        if (stage.getActors().contains(attackButton, false))
-            attackButton.remove();
-    }
-
-    public void updateRenderedVariables(String phase){
-        phaseLabel.setText("Current Phase: " + phase + " " +
-                "\nNumber of Troops to place: " + gameController.getPlayer().getTroopsToPlace());
-    }
-
-    public void updateRenderedCurrentPlayer(int playerID, Color playerColor){
-        playerLabel.setText("Player" + playerID);
-        playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
     }
 
     @Override
@@ -188,17 +88,139 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-
         stage.addActor(phaseLabel);
         stage.addActor(playerLabel);
         stage.addActor(phaseButton);
     }
 
+    @Override
+    public void addFortifyButton(){
+        if (!stage.getActors().contains(fortifyButton, false)) {
+            fortifyButton = createButton("Move 1 Troop");
+            fortifyButton.setWidth(100);
+            fortifyButton.setPosition(0, 60);
+            fortifyButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    PhaseController.INSTANCE.fortifyButtonClicked();
+                }
+            });
+            stage.addActor(fortifyButton);
+        }
+    }
+
+    @Override
+    public void addCancelButton(){
+        if (!stage.getActors().contains(cancelButton, false)){
+            cancelButton = createButton("Cancel Move");
+            cancelButton.setWidth(100);
+            cancelButton.setPosition(0, 30);
+            cancelButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    PhaseController.INSTANCE.cancelButtonClicked();
+                }
+            });
+            stage.addActor(cancelButton);
+        }
+
+    }
+
+    @Override
+    public void addAttackButton(){
+        if (!stage.getActors().contains(attackButton, false)) {
+            attackButton = createButton("Attack");
+            attackButton.setWidth(100);
+            attackButton.setPosition(0, 60);
+            attackButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    PhaseController.INSTANCE.attackButtonClicked();
+                }
+            });
+            stage.addActor(attackButton);
+        }
+    }
+
+    @Override
+    public void addTurnButton(){
+        phaseButton.remove();
+        turnButton = createButton("End Turn");
+        turnButton.setWidth(100);
+        turnButton.setPosition(0, 0);
+        turnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhaseController.INSTANCE.nextTurnButtonClicked();
+            }
+        });
+        stage.addActor(turnButton);
+    }
+
+    @Override
+    public void removeTurnButton(){
+
+        turnButton.remove();
+        phaseButton = createButton("");
+        phaseButton.setWidth(100);
+        phaseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhaseController.INSTANCE.nextPhaseButtonClicked();
+            }
+        });
+        stage.addActor(phaseButton);
+    }
+
+    @Override
+    public void removeFortifyButton(){
+        if (stage.getActors().contains(fortifyButton, false))
+            fortifyButton.remove();
+    }
+
+    @Override
+    public void removeCancelButton(){
+        if (stage.getActors().contains(cancelButton, false))
+            cancelButton.remove();
+
+    }
+
+    @Override
+    public void removeAttackButton(){
+        if (stage.getActors().contains(attackButton, false))
+            attackButton.remove();
+    }
+
+    @Override
+    public void updateRenderedVariables(String phase, int troopsToPlace) {
+        phaseLabel.setText("Current Phase: " + phase + " " +
+                "\nNumber of Troops to place: " + troopsToPlace);
+    }
+
+    @Override
+    public void updateRenderedCurrentPlayer(int playerID, Color playerColor){
+        playerLabel.setText("Player" + playerID);
+        playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
+    }
 
     @Override
     public void updatePhase(String curPhase, String nextPhase) {
         phaseLabel.setText("Current Phase: " + curPhase);
         phaseButton.setText(nextPhase);
+    }
+
+    @Override
+    public void onSelectedTerritoriesChange(Territory start, Territory end) {
+        if (start != null && end != null){
+            lineFrom = start.getTroopCircleVector();
+            lineTo = end.getTroopCircleVector();
+            shouldDrawArrow = true;
+        } else {
+            shouldDrawArrow = false;
+        }
+    }
+
+    public void onMapMove() {
     }
 
     @Override
@@ -210,16 +232,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
         if(shouldDrawArrow){
             drawArrow(lineFrom,lineTo);
-        }
-    }
-
-    public void onSelectedTerritoriesChange(Territory start, Territory end) {
-        if (start != null && end != null){
-            lineFrom = start.getTroopCircleVector();
-            lineTo = end.getTroopCircleVector();
-            shouldDrawArrow = true;
-        } else {
-            shouldDrawArrow = false;
         }
     }
 
@@ -237,9 +249,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         spriteArrowHead.setOriginBasedPosition(end.x,end.y); // center the sprite at (x, y)
         spriteArrowHead.draw(spriteBatch);
         spriteBatch.end();
-    }
-
-    public void onMapMove() {
     }
 
     private void drawLine(Vector2 start, Vector2 end)

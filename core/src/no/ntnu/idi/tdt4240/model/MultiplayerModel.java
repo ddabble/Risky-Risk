@@ -21,6 +21,10 @@ public class MultiplayerModel {
 
     private MultiplayerModel() {}
 
+    public int getPlayerColor(int playerID) {
+        return playerID_colorMap.get(playerID);
+    }
+
     public Map<Integer, Integer> getPlayerID_colorMap() {
         return new HashMap<>(playerID_colorMap);
     }
