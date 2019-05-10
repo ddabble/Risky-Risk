@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 
@@ -20,13 +19,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         PhaseController.addObserver(this);
     }
 
+    @Override
     public Stage getStage() {
         return stage;
-    }
-
-    public void updatePhase(String curPhase, String nextPhase) {
-        phaseLabel.setText("Current Phase: " + curPhase);
-        phaseButton.setText(nextPhase);
     }
 
     @Override
@@ -44,12 +39,18 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameController.INSTANCE.nextPhaseButtonClicked();
+                PhaseController.INSTANCE.nextPhaseButtonClicked();
             }
         });
 
         stage.addActor(phaseLabel);
         stage.addActor(phaseButton);
+    }
+
+    @Override
+    public void updatePhase(String curPhase, String nextPhase) {
+        phaseLabel.setText("Current Phase: " + curPhase);
+        phaseButton.setText(nextPhase);
     }
 
     @Override

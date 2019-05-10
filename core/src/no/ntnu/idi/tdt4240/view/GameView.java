@@ -5,51 +5,33 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 
 import no.ntnu.idi.tdt4240.controller.GameController;
-import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GameView implements GameObserver, Screen {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
-    private OrthographicCamera camera;
-
-    // Pseudo-views - they all are a part of the GameView
     private final PhaseView phaseView;
     private final BoardView boardView;
     private final TroopView troopView;
+
+    private OrthographicCamera camera;
 
     public GameView() {
         GameController.addObserver(this);
 
         camera = new OrthographicCamera();
 
-        // Pseudo-views - they all are a part of the GameView
-        phaseView = new PhaseView(game);
+        phaseView = new PhaseView();
         boardView = new BoardView(camera);
         troopView = new TroopView();
-    }
-
-    /*
-    public void setNumberOfPlayers(int num) {
-
-    }
-    */
-
-    public void updatePhase(String curPhase, String nextPhase) {
-        phaseView.updatePhase(curPhase, nextPhase);
     }
 
     @Override
     public void show() {
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-
-        boardView.create(mapTexture, TerritoryModel.getTerritoryMap());
-        troopView.create(TerritoryModel.getTerritoryMap(), circleTexture, circleSelectTexture);
-        phaseView.show();
 
         GameController.INSTANCE.init();
         setInputProcessors();

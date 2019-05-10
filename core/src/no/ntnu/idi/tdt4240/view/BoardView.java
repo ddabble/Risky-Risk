@@ -12,13 +12,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
+import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
-import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
@@ -41,14 +41,15 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     /**
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
-    public void create(Texture mapTexture, TerritoryMap territoryMap) {
+    @Override
+    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
         mapSprite = new Sprite(mapTexture);
 //      mapSprite.setSize(mapTexture.getWidth() / 2f, mapTexture.getHeight() / 2f);
 
-        initColorLookupArray(territoryMap);
+        initColorLookupArray(territories, playerID_colorMap);
     }
 
     public void setInputProcessors(InputMultiplexer multiplexer) {
@@ -64,7 +65,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     return false;
 
                 Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
-                GameController.INSTANCE.onBoardClicked(mapPos);
+                BoardController.INSTANCE.onBoardClicked(mapPos);
                 return true;
             }
         });
@@ -88,9 +89,9 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         ShaderProgram.pedantic = false;
     }
 
-    private void initColorLookupArray(TerritoryMap territoryMap) {
-        for (Territory territory : territoryMap.getAllTerritories()) {
-            int playerColor = GameController.INSTANCE.getPlayerColor(territory.getOwnerID());
+    private void initColorLookupArray(List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
+        for (Territory territory : territories) {
+            int playerColor = playerID_colorMap.get(territory.getOwnerID());
             PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
         }
     }
