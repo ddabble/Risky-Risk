@@ -3,8 +3,11 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Color;
@@ -46,6 +49,12 @@ public class PhaseView extends AbstractView {
     private Vector2 lineFrom;
     private Vector2 lineTo;
     private boolean shouldDrawArrow = false;
+    private SpriteBatch spriteBatch;
+    private TextureRegion region;
+    private Texture texture;
+    private Sprite spriteArrowHead;
+
+    // Renderers
 
 
     public PhaseView(RiskyRisk game, GameController gameController, OrthographicCamera camera) {
@@ -168,6 +177,14 @@ public class PhaseView extends AbstractView {
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
 
+        spriteBatch = new SpriteBatch();
+        texture = new Texture("arrow-tip.png");
+        region = new TextureRegion(texture, 0, 0, 50, 50);
+        spriteArrowHead = new Sprite(texture);
+        spriteArrowHead.setScale(0.5f);
+        //spriteArrowHead.setSize(25,25); //scale the image down to 50%
+        //spriteArrowHead.setOriginCenter();
+
         // Actors
         phaseLabel = createLabel("");
         phaseLabel.setPosition(0, 200);
@@ -196,8 +213,10 @@ public class PhaseView extends AbstractView {
 
         stage.act(delta); // Updates all actors
         stage.draw();
-        if(shouldDrawArrow)
-            drawLine(lineFrom,lineTo);
+
+        if(shouldDrawArrow){
+            drawArrow(lineFrom,lineTo);
+        }
     }
 
     public void onSelectedTerritoriesChange(Territory start, Territory end) {
@@ -210,21 +229,35 @@ public class PhaseView extends AbstractView {
         }
     }
 
+    private void drawArrow(Vector2 start, Vector2 end){
+        drawLine(start, end);
+        // draw arrow head at end vector
 
+
+        spriteBatch.enableBlending();
+        spriteBatch.begin();
+        //spriteBatch.draw(region, end.x, end.y);
+        //rotate head
+        float angle = new Vector2(end).sub(start).angle();
+        spriteArrowHead.setRotation(angle-90f);
+        spriteArrowHead.setOriginBasedPosition(end.x,end.y); // center the sprite at (x, y)
+        spriteArrowHead.draw(spriteBatch);
+        spriteBatch.end();
+    }
 
     public void onMapMove() {
     }
 
     private void drawLine(Vector2 start, Vector2 end)
     {
-        ShapeRenderer debugRenderer = new ShapeRenderer();
         Gdx.gl.glLineWidth(4);
-        //debugRenderer.setProjectionMatrix(camera.combined);
-        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        debugRenderer.setColor(0,0,0, 0.02f);
-        debugRenderer.line(start, end);
-        debugRenderer.end();
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0,0,0, 0.02f);
+        shapeRenderer.line(start, end);
+        shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default
     }
 
