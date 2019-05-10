@@ -62,8 +62,4 @@ public class PlayerModel {
         for (int i = 0; i < numTerritories; i++)
             territories.get(i).setOwnerID(playerIDsForTerritories.get(i));
     }
-
-    public int getPlayerColor(int playerID) {
-        return playerID_colorMap.get(playerID);
-    }
 }

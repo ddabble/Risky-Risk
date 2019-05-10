@@ -22,11 +22,7 @@ public class TroopModel {
         return circleSelectTexture;
     }
 
-    public Territory getSelectedTerritory() {
-        return selectedTerritory;
-    }
-
-    public void setSelectedTerritory(Territory territory) {
+    public void onSelectTerritory(Territory territory) {
         selectedTerritory = territory;
     }
 
