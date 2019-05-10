@@ -14,7 +14,7 @@ import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
-public class GameController implements Screen {
+public class GameController {
     public static final GameController INSTANCE = new GameController();
 
     private Collection<GameObserver> observers = new ArrayList<>();
@@ -52,15 +52,13 @@ public class GameController implements Screen {
             System.out.println("None");
     }
 
-    @Override
-    public void show() {
+    public void init() {
         TerritoryModel.init();
 
         PlayerModel.INSTANCE.init();
         BoardModel.INSTANCE.init();
         TroopModel.INSTANCE.init();
 
-        view.show(BoardModel.INSTANCE.getMapTexture(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
         updatePhase();
     }
 
@@ -70,37 +68,9 @@ public class GameController implements Screen {
         view.updatePhase(curPhase, nextPhase);
     }
 
-    @Override
-    public void render(float delta) {
-        view.render(delta);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        view.resize(width, height);
-    }
-
-    @Override
-    public void pause() {
-        view.pause();
-    }
-
-    @Override
-    public void resume() {
-        view.resume();
-    }
-
-    @Override
-    public void hide() {
-        view.hide();
-
+    public void reset() {
         TroopModel.INSTANCE.reset();
         BoardModel.INSTANCE.reset();
-    }
-
-    @Override
-    public void dispose() {
-        view.dispose();
     }
 
     /*
