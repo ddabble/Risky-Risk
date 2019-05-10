@@ -16,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesCallbackStatusCodes;
 import com.google.android.gms.games.GamesClient;
@@ -92,15 +91,12 @@ public class GPGSClient implements IGPGSClient {
 
 
     protected void onResume() {
-        //super.onResume();
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
         signInSilently();
     }
 
     protected void onPause() {
-        //super.onPause();
-
         // Unregister the invitation callbacks; they will be re-registered via
         // onResume->signInSilently->onConnected.
         if (mInvitationsClient != null) {
@@ -228,33 +224,7 @@ public class GPGSClient implements IGPGSClient {
                 //getString(R.string.error_get_select_opponents)));
     }
 
-    // Create a one-on-one automatch game.
-    /*public void onQuickMatchClicked() {//View view) {
-
-        Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(1, 1, 0);
-
-        TurnBasedMatchConfig turnBasedMatchConfig = TurnBasedMatchConfig.builder()
-                .setAutoMatchCriteria(autoMatchCriteria).build();
-
-        showSpinner();
-
-        // Start the match
-        mTurnBasedMultiplayerClient.createMatch(turnBasedMatchConfig)
-                .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                    @Override
-                    public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                        onInitiateMatch(turnBasedMatch);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem creating a match!"));
-    }*/
-
-    // In-game controls
-
-    // Cancel the game. Should possibly wait until the game is canceled before
-    // giving up on the view.
     public void onCancelClicked() {
-        showSpinner();
 
         mTurnBasedMultiplayerClient.cancelMatch(mMatch.getMatchId())
                 .addOnSuccessListener(new OnSuccessListener<String>() {
@@ -273,7 +243,6 @@ public class GPGSClient implements IGPGSClient {
     // Leave the game during your turn. Note that there is a separate
     // mTurnBasedMultiplayerClient.leaveMatch() if you want to leave NOT on your turn.
     public void onLeaveClicked() {
-        showSpinner();
         String nextParticipantId = getNextParticipantId();
 
         mTurnBasedMultiplayerClient.leaveMatchDuringTurn(mMatch.getMatchId(), nextParticipantId)
@@ -292,7 +261,6 @@ public class GPGSClient implements IGPGSClient {
 
     // Finish the game. Sometimes, this is your only choice.
     public void onFinishClicked() {
-        showSpinner();
         mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
                     @Override
@@ -311,7 +279,6 @@ public class GPGSClient implements IGPGSClient {
     // Upload your new gamestate, then take a turn, and pass it on to the next
     // player.
     public void onDoneClicked(String data) {
-        showSpinner();
 
         String nextParticipantId = getNextParticipantId();
         // Create the next turn
@@ -349,19 +316,6 @@ public class GPGSClient implements IGPGSClient {
     public void setGameplayUI() {
         isDoingTurn = true;
         setViewVisibility();
-        /*mDataView.setText(mTurnData.data);
-        mTurnTextView.setText(getString(R.string.turn_label, mTurnData.turnCounter));
-        */
-    }
-
-    // Helpful dialogs
-
-    public void showSpinner() {
-        //findViewById(R.id.progressLayout).setVisibility(View.VISIBLE);
-    }
-
-    public void dismissSpinner() {
-        //findViewById(R.id.progressLayout).setVisibility(View.GONE);
     }
 
     // Generic warning/info dialog
@@ -624,7 +578,6 @@ public class GPGSClient implements IGPGSClient {
                         }
                     })
                     .addOnFailureListener(createFailureListener("There was a problem creating a match!"));
-            showSpinner();
         }
     }
 
@@ -642,8 +595,6 @@ public class GPGSClient implements IGPGSClient {
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
-        showSpinner();
-
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
                 mTurnData.persist(), myParticipantId)
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
@@ -657,7 +608,6 @@ public class GPGSClient implements IGPGSClient {
 
     // If you choose to rematch, then call it and wait for a response.
     public void rematch() {
-        showSpinner();
         mTurnBasedMultiplayerClient.rematch(mMatch.getMatchId())
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
                     @Override
@@ -766,8 +716,6 @@ public class GPGSClient implements IGPGSClient {
     }
 
     private void onCancelMatch(String matchId) {
-        dismissSpinner();
-
         isDoingTurn = false;
 
         matchActive = false;
@@ -777,8 +725,6 @@ public class GPGSClient implements IGPGSClient {
     }
 
     private void onInitiateMatch(TurnBasedMatch match) {
-        dismissSpinner();
-
         if (match.getData() != null) {
             // This is a game that has already started, so I'll just start
             updateMatch(match);
@@ -789,8 +735,6 @@ public class GPGSClient implements IGPGSClient {
     }
 
     private void onLeaveMatch() {
-        dismissSpinner();
-
         matchActive = false;
 
         isDoingTurn = false;
@@ -799,8 +743,6 @@ public class GPGSClient implements IGPGSClient {
 
 
     public void onUpdateMatch(TurnBasedMatch match) {
-        dismissSpinner();
-
         if (match.canRematch()) {
             askForRematch();
         }
@@ -865,7 +807,6 @@ public class GPGSClient implements IGPGSClient {
         switch (statusCode) {
             case GamesCallbackStatusCodes.OK:
                 return true;
-            //TODO: error messages
             case GamesClientStatusCodes.MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
                 showErrorMessage("status_multiplayer_error_not_trusted_tester");
                 break;
