@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
-import no.ntnu.idi.tdt4240.util.BoardInputProcessor;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GameView implements GameObserver, Screen {
@@ -54,16 +53,16 @@ public class GameView implements GameObserver, Screen {
         troopView.create(TerritoryModel.getTerritoryMap(), circleTexture, circleSelectTexture);
         phaseView.show();
 
-        setUpInputProcessors();
+        setInputProcessors();
 
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
-    private void setUpInputProcessors() {
+    private void setInputProcessors() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         // Note: the input processors added first get to handle input first
         multiplexer.addProcessor(phaseView.getStage());
-        multiplexer.addProcessor(new BoardInputProcessor(boardView, camera));
+        boardView.setInputProcessors(multiplexer);
         Gdx.input.setInputProcessor(multiplexer);
     }
 

@@ -38,8 +38,7 @@ public class GameController implements Screen {
         updatePhase();
     }
 
-    public void boardClicked(Vector2 touchWorldPos) {
-        Vector2 mapPos = boardView.worldPosToMapTexturePos(touchWorldPos);
+    public void boardClicked(Vector2 mapPos) {
         Territory territory = BoardModel.INSTANCE.getTerritory(mapPos);
         troopView.onSelectTerritory(territory);
         if (territory != null) {
