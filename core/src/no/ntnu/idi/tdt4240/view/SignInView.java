@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,23 +16,15 @@ import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 
 
-public class SignInView extends AbstractView {
-    OrthographicCamera camera;
-    Texture background;
+public class SignInView extends AbstractView implements Screen {
+    private final RiskyRisk game;
     private Stage stage;
     private Table table;
     private IGPGSClient gpgsClient;
     private boolean isSignedIn = false;
 
     public SignInView(RiskyRisk game) {
-        super(game);
-
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
-        table = new Table();
-        table.setDebug(true);
-        table.setFillParent(true);
-        stage.addActor(table);
+        this.game = game;
 
         //GPGSTest
         gpgsClient = game.gpgsClient;
@@ -54,11 +47,21 @@ public class SignInView extends AbstractView {
     }
     @Override
     public void show() {
+        super.create();
+
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+        table = new Table();
+        table.setDebug(true);
+        table.setFillParent(true);
+        stage.addActor(table);
+
         //check if we are already signed in
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
             Button signInButton = this.createButton("Connect to google play");
+
             signInButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -76,13 +79,12 @@ public class SignInView extends AbstractView {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
-        //stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
 
         if(isSignedIn) {
-            game.setScreen(new MainMenuView(this.game));
+            game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
         }
     }
 
