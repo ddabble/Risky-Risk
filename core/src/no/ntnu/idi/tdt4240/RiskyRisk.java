@@ -2,8 +2,8 @@ package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
 
-import no.ntnu.idi.tdt4240.controller.SettingsController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
+import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
@@ -40,10 +40,10 @@ public class RiskyRisk extends Game {
     @Override
     public void create() {
         TerritoryModel.init();
-        SettingsController.INSTANCE.init();
+        SettingsPresenter.INSTANCE.init();
 
         // TODO: set number of players from (settings) menu
-        SettingsController.INSTANCE.setNumPlayers(8);
+        SettingsPresenter.INSTANCE.setNumPlayers(8);
 
         setScreen(ScreenEnum.MAIN_MENU);
     }

@@ -1,14 +1,14 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.presenter;
 
-import no.ntnu.idi.tdt4240.model.PlayerModel;
+import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.SettingsModel;
 
-public class SettingsController {
-    public static final SettingsController INSTANCE = new SettingsController();
+public class SettingsPresenter {
+    public static final SettingsPresenter INSTANCE = new SettingsPresenter();
 
 //    private Collection<SettingsObserver> observers = new ArrayList<>();
 
-    private SettingsController() {}
+    private SettingsPresenter() {}
 
     public void init() {
         SettingsModel.INSTANCE.init();
@@ -16,7 +16,7 @@ public class SettingsController {
 
     public void setNumPlayers(int num) {
         SettingsModel.INSTANCE.setNumPlayers(num);
-        PlayerModel.INSTANCE.init(num);
+        MultiplayerModel.INSTANCE.init(num);
     }
 
     public void setSetting1(String string) {
