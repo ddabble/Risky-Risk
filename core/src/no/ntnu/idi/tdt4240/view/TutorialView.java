@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -36,6 +37,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private TextField header;
     private TextField slideHeader;
     private TextField slideText;
+
+    private Button previousButton;
+    private Button nextButton;
+    private Button mainMenuButton;
 
     //private ArrayList<String> slideTexts;
     //private ArrayList<String> slideHeaders;
@@ -109,19 +114,20 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int btnWidth = 100;
 
         // Back to menu button
-        Button mainMenuButton = this.createButton("Back to main");
-        mainMenuButton.setPosition(this.stage_width/100, this.stage_height/100);
-        mainMenuButton.setSize(btnWidth,btnHeight);
+        this.mainMenuButton = this.createButton("Back to main");
+        this.mainMenuButton.setPosition(this.stage_width/100, this.stage_height/100);
+        this.mainMenuButton.setSize(btnWidth,btnHeight);
 
         // Previous button
-        Button previousButton = this.createButton("Previous");
-        previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width/100), this.stage_height/100);
-        previousButton.setSize(btnWidth,btnHeight);
+        this.previousButton = this.createButton("Previous");
+        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width/100), this.stage_height/100);
+        this.previousButton.setSize(btnWidth,btnHeight);
+        this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
-        Button nextButton = this.createButton("Next");
-        nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width/100), this.stage_height/100);
-        nextButton.setSize(btnWidth,btnHeight);
+        this.nextButton = this.createButton("Next");
+        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width/100), this.stage_height/100);
+        this.nextButton.setSize(btnWidth,btnHeight);
 
 
         // Add event listeners to buttons
@@ -218,6 +224,20 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         }
         else if(!increment && this.currentSlideCounter > 0){
             this.currentSlideCounter -= 1;
+        }
+        this.updateButtonState();
+    }
+
+    private void updateButtonState(){
+        if(this.currentSlideCounter == this.tutorialSlides.size()-1){
+            this.nextButton.setTouchable(Touchable.disabled);
+        }
+        else if(this.currentSlideCounter == 0){
+            this.previousButton.setTouchable(Touchable.disabled);
+        }
+        else{
+            this.nextButton.setTouchable(Touchable.enabled);
+            this.previousButton.setTouchable(Touchable.enabled);
         }
     }
 

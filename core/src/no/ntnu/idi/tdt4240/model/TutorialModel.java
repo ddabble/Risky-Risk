@@ -28,6 +28,6 @@ public class TutorialModel {
     }
 
     public static ArrayList<Map<String, String>> getTutorialSlides() {
-        return INSTANCE.TUTORIAL_SLIDES.getTutorialslides();
+        return INSTANCE.TUTORIAL_SLIDES.getTutorialSlides();
     }
 }
