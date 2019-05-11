@@ -31,6 +31,7 @@ uniform vec3 playerColorLookup[224]; //0xFF + 1];
 void main()
 {
     vec4 texColor = texture2D(u_texture, v_texCoords);
-    int territoryIndex = int(texColor.r * float(0xFF));
+    float red_hex = texColor.r * float(0xFF);
+    int territoryIndex = int(round(red_hex));
     gl_FragColor = vec4(playerColorLookup[territoryIndex], texColor.a);
 }
