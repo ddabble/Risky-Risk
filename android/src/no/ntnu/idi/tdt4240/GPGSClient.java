@@ -206,8 +206,8 @@ public class GPGSClient implements IGPGSClient {
                     public void onSuccess(Intent intent) {
                         mActivity.startActivityForResult(intent, RC_LOOK_AT_MATCHES);
                     }
-                });
-                //.addOnFailureListener(createFailureListener(getString(R.string.error_get_inbox_intent)));
+                })
+                .addOnFailureListener(createFailureListener("Error with get_inbox_intent"));
     }
 
     // Open the create-game UI. You will get back an onActivityResult
@@ -220,8 +220,7 @@ public class GPGSClient implements IGPGSClient {
                         mActivity.startActivityForResult(intent, RC_SELECT_PLAYERS);
                     }
                 })
-                .addOnFailureListener(createFailureListener("error_get_select_opponents"));
-                //getString(R.string.error_get_select_opponents)));
+                .addOnFailureListener(createFailureListener("Error with get_select_opponents"));
     }
 
     public void onCancelClicked() {
