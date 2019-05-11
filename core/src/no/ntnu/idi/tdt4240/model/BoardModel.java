@@ -47,7 +47,11 @@ public class BoardModel {
     }
 
     /**
+     * On desktop:
      * Has a max limit of 255 different territories, because {@link #indexToColor(byte)} works bytewise.
+     * <p>
+     * On Android:
+     * Has a max limit of 224 different territories, because of the OpenGL ES 3.0 specification.
      */
     private Texture createColorLookupTexture() {
         abstract class PixmapProcessor implements Runnable {
@@ -91,6 +95,11 @@ public class BoardModel {
         for (int i = startI; i < endI; i++) {
                 int pixel = buf.get(i);
                 int pixelAlpha = pixel & 0x000000FF;
+
+                // If transparent, skip pixel
+                if (pixelAlpha == 0)
+                    continue;
+
                 // (Unsigned) bit shift one byte to the right to discard the alpha value
                 int pixelColor = pixel >>> 8;
 
