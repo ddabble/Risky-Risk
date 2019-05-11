@@ -1,5 +1,4 @@
 package no.ntnu.idi.tdt4240.util;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,6 +13,8 @@ public class TutorialSlide {
         this.tutorialSlides = tutorialSlides;
     }
 
+    public ArrayList<Map<String, String>> getTutorialslides(){ return this.tutorialSlides;}
+
     public static TutorialSlide parseJsonTutorialSlides(FileHandle jsonFile){
         ObjectMapper mapper = new ObjectMapper();
         Map readJson;
@@ -26,8 +27,8 @@ public class TutorialSlide {
         Map<String, Map<String, String>> slides = readJson;
         ArrayList<Map<String, String>> tutorialSlides = new ArrayList<>();
 
-        for(int i=1; i< slides.size()+1; i++){
-            tutorialSlides.add(slides.get(Integer.toString(i)));
+        for(int i=0; i< slides.size(); i++){
+            tutorialSlides.add(slides.get(Integer.toString(i+1)));
             System.out.println(tutorialSlides.get(i));
         }
         TutorialSlide tutorialSlide = new TutorialSlide(tutorialSlides);

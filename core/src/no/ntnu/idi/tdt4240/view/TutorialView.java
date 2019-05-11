@@ -17,11 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.TutorialController;
+import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 //import no.ntnu.idi.tdt4240.view.AbstractView;
 
-public class TutorialView extends AbstractView implements Screen {
+public class TutorialView extends AbstractView implements TutorialObserver, Screen {
     private final RiskyRisk game;
     private Stage stage;
 
@@ -34,20 +37,25 @@ public class TutorialView extends AbstractView implements Screen {
     private TextField slideHeader;
     private TextField slideText;
 
-    private ArrayList<String> slideTexts;
-    private ArrayList<String> slideHeaders;
+    //private ArrayList<String> slideTexts;
+    //private ArrayList<String> slideHeaders;
+    private ArrayList<Map<String, String>> tutorialSlides;
 
 
     public TutorialView(RiskyRisk game) {
         this.game = game;
-
-
-
+        TutorialController.addObserver(this);
     }
 
-    @Override
-    public void create() {
 
+    @Override
+    public void create(ArrayList<Map<String, String>> tutorialSlides) {
+        System.out.println("hello");
+        for (int i=0; i<tutorialSlides.size();i++){
+            System.out.println(tutorialSlides.get(i));
+        }
+
+        this.tutorialSlides = tutorialSlides;
 
     }
 
@@ -63,6 +71,7 @@ public class TutorialView extends AbstractView implements Screen {
     @Override
     public void show(){
         super.create();
+        TutorialController.INSTANCE.init();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -127,8 +136,8 @@ public class TutorialView extends AbstractView implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateCurrentSlide(false);
-                slideHeader.setText(slideHeaders.get(currentSlideCounter));
-                slideText.setText(slideTexts.get(currentSlideCounter));
+                slideHeader.setText(tutorialSlides.get(currentSlideCounter).get("title"));
+                slideText.setText(tutorialSlides.get(currentSlideCounter).get("text"));
             }
         });
 
@@ -136,8 +145,8 @@ public class TutorialView extends AbstractView implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateCurrentSlide(true);
-                slideHeader.setText(slideHeaders.get(currentSlideCounter));
-                slideText.setText(slideTexts.get(currentSlideCounter));
+                slideHeader.setText(tutorialSlides.get(currentSlideCounter).get("title"));
+                slideText.setText(tutorialSlides.get(currentSlideCounter).get("text"));
             }
         });
 
@@ -152,7 +161,7 @@ public class TutorialView extends AbstractView implements Screen {
     private void createTextFields(Stage stage){
 
         // Test array list for slide text
-        this.slideTexts = new ArrayList<>();
+        /*this.slideTexts = new ArrayList<>();
         this.slideTexts.add("Slide 1 sejfd sjfdsl seproj sd sodk sdøok sødok sd dsofgsdøfogksd" +
                 "dsfgjsdkfjgls s fgj slkfjlsdkfjg sdfljgslrij  rogjer oøgkoøsdg fgsdoøfgk øe" +
                 "fdkgmsdlfgsø fdsø sdføl ksdføl ksdølf ksødl ksdølf ksd.");
@@ -169,7 +178,7 @@ public class TutorialView extends AbstractView implements Screen {
         this.slideHeaders.add("Slide header 1");
         this.slideHeaders.add("Slide header 2");
         this.slideHeaders.add("Slide header 3");
-
+*/
         // Bitmap font
         BitmapFont textFont = new BitmapFont();
         TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
@@ -186,14 +195,14 @@ public class TutorialView extends AbstractView implements Screen {
         // Header text
         int slideHeaderWidth = 100;
         int slideHeaderHeight = 50;
-        this.slideHeader = new TextField(this.slideHeaders.get(0), textStyle);
+        this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), textStyle);
         this.slideHeader.setPosition(this.stage_width/2-slideHeaderWidth/2,this.stage_height - 3*(slideHeaderHeight + this.stage_height/100));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
         int tutSlideWidth = 400;
         int tutSlideHeight = 300;
-        this.slideText = new TextArea(this.slideTexts.get(0), textStyle);
+        this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), textStyle);
         this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,(this.stage_height - tutSlideHeight)/2);
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
@@ -204,7 +213,7 @@ public class TutorialView extends AbstractView implements Screen {
     }
 
     private void updateCurrentSlide(boolean increment){
-        if(increment && this.currentSlideCounter < this.slideTexts.size()-1){
+        if(increment && this.currentSlideCounter < this.tutorialSlides.size()-1){
             this.currentSlideCounter += 1;
         }
         else if(!increment && this.currentSlideCounter > 0){
