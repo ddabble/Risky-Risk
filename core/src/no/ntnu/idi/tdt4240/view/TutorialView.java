@@ -191,23 +191,27 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         textStyle.font = textFont;
         textStyle.fontColor = new Color(10/255f,10/255f,10/255f,1);
 
-        // Header text
+        // Text field dimensions
         int headerWidth = 88;
         int headerHeight = 50;
+
+        int slideHeaderWidth = 200;
+        int slideHeaderHeight = 50;
+
+        int tutSlideWidth = 400;
+        int tutSlideHeight = 300;
+
+        // Header text
         this.header = new TextField("Tutorial", textStyle);
         this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/100));
         this.header.setSize(headerWidth, headerHeight);
 
-        // Header text
-        int slideHeaderWidth = 100;
-        int slideHeaderHeight = 50;
+        // Slide header text
         this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), textStyle);
-        this.slideHeader.setPosition(this.stage_width/2-slideHeaderWidth/2,this.stage_height - 3*(slideHeaderHeight + this.stage_height/100));
+        this.slideHeader.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - 3*(slideHeaderHeight + this.stage_height/200));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        int tutSlideWidth = 400;
-        int tutSlideHeight = 300;
         this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), textStyle);
         this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,(this.stage_height - tutSlideHeight)/2);
         slideText.setSize(tutSlideWidth, tutSlideHeight);
