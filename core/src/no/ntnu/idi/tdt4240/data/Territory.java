@@ -34,7 +34,7 @@ public class Territory {
     }
 
     public void setNeighbors(List<Territory> neighbors) {
-        neighbors = new ArrayList<>(neighbors);
+        this.neighbors = new ArrayList<>(neighbors);
     }
 
     public int getNumTroops() {
