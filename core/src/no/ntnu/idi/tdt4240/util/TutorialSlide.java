@@ -29,6 +29,7 @@ public class TutorialSlide {
 
         for(int i=0; i< slides.size(); i++){
             tutorialSlides.add(slides.get(Integer.toString(i+1)));
+            tutorialSlides.get(i).put("text", tutorialSlides.get(i).get("text").replace(" * ","\n"));
         }
         TutorialSlide tutorialSlide = new TutorialSlide(tutorialSlides);
         return tutorialSlide;

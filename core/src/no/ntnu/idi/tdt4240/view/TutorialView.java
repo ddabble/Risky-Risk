@@ -205,11 +205,11 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int headerWidth = 200;
         int headerHeight = 50;
 
-        int slideHeaderWidth = 400;
+        int slideHeaderWidth = this.stage_width/2;
         int slideHeaderHeight = 50;
 
         int tutSlideWidth = this.stage_width/2;
-        int tutSlideHeight = 300;
+        int tutSlideHeight = 400;
 
         // Header text
         this.header = new TextField("Tutorial", headerStyle);
@@ -218,12 +218,12 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
         // Slide header text
         this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), slideHeaderStyle);
-        this.slideHeader.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - 3*(slideHeaderHeight + this.stage_height/200));
+        this.slideHeader.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - 3*slideHeaderHeight + 30);
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
         this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), slideTextStyle);
-        this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,(this.stage_height - tutSlideHeight)/2);
+        this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - (tutSlideHeight+120));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
         // Add actors
