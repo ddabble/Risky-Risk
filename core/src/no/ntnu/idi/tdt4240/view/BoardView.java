@@ -18,9 +18,9 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
+import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
@@ -35,7 +35,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
     public BoardView(OrthographicCamera camera) {
-        BoardController.addObserver(this);
+        BoardPresenter.addObserver(this);
         this.camera = camera;
     }
 
@@ -66,7 +66,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     return false;
 
                 Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
-                BoardController.INSTANCE.onBoardClicked(mapPos);
+                BoardPresenter.INSTANCE.onBoardClicked(mapPos);
                 return true;
             }
         });

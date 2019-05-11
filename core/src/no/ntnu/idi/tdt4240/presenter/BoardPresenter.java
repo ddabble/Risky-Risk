@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.presenter;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,13 +13,13 @@ import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
-public class BoardController {
-    public static final BoardController INSTANCE = new BoardController();
+public class BoardPresenter {
+    public static final BoardPresenter INSTANCE = new BoardPresenter();
 
     private Collection<BoardObserver> boardObservers = new ArrayList<>();
     private Collection<TroopObserver> troopObservers = new ArrayList<>();
 
-    private BoardController() {}
+    private BoardPresenter() {}
 
     public void init() {
         BoardModel.INSTANCE.init();
@@ -42,7 +42,7 @@ public class BoardController {
         if (clickedTerritory != null) {
             System.out.println(clickedTerritory.name);
 
-            PhaseController.INSTANCE.onTerritoryClicked(clickedTerritory);
+            PhasePresenter.INSTANCE.onTerritoryClicked(clickedTerritory);
             for (TroopObserver observer : troopObservers)
                 observer.onTerritoryChangeNumTroops(clickedTerritory);
         } else
