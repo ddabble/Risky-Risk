@@ -114,12 +114,12 @@ public class BoardModel {
     }
 
     private void updateColorTerritoryMap() {
-        Map<Integer, String> color_IDmap = territoryMap.getColor_IDmap();
-        for (int color : new ArrayList<>(color_IDmap.keySet())) {
-            String ID = color_IDmap.remove(color);
-            color_IDmap.put(indexToColor(territoryMap.getTerritory(ID).colorIndex), ID);
+        Map<Integer, Territory> color_territoryMap = territoryMap.getColor_territoryMap();
+        for (int color : new ArrayList<>(color_territoryMap.keySet())) {
+            Territory territory = color_territoryMap.remove(color);
+            color_territoryMap.put(indexToColor(territory.colorIndex), territory);
         }
-        territoryMap.setColor_IDmap(color_IDmap);
+        territoryMap.setColor_territoryMap(color_territoryMap);
     }
 
     public Territory getTerritory(Vector2 mapPos) {
