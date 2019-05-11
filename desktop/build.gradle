@@ -52,4 +52,5 @@ task afterEclipseImport(description: "Post processing after project generation",
 }
 
 dependencies {
+    compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
