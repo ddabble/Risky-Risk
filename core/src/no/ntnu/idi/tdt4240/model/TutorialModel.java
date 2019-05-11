@@ -2,11 +2,14 @@ package no.ntnu.idi.tdt4240.model;
 
 import com.badlogic.gdx.Gdx;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import no.ntnu.idi.tdt4240.util.TutorialSlide;
 
 
 public class TutorialModel {
-    private static TutorialModel INSTANCE;
+    public static TutorialModel INSTANCE;
 
     public final TutorialSlide TUTORIAL_SLIDES;
 
@@ -22,5 +25,9 @@ public class TutorialModel {
 
     public static TutorialModel getInstance() {
         return INSTANCE;
+    }
+
+    public static ArrayList<Map<String, String>> getTutorialSlides() {
+        return INSTANCE.TUTORIAL_SLIDES.getTutorialslides();
     }
 }
