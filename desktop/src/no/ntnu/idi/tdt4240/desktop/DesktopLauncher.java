@@ -10,6 +10,8 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1227; // TODO: temporary window size
         config.height = 601;
-        new LwjglApplication(new RiskyRisk(), config);
+        RiskyRisk game = new RiskyRisk();
+        game.init();
+        new LwjglApplication(game, config);
     }
 }
