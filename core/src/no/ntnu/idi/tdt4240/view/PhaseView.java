@@ -17,9 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.controller.PhaseController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
+import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton phaseButton;
@@ -41,7 +41,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Sprite spriteArrowHead;
 
     public PhaseView(OrthographicCamera camera) {
-        PhaseController.addObserver(this);
+        PhasePresenter.addObserver(this);
         this.camera = camera;
     }
 
@@ -75,7 +75,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PhaseController.INSTANCE.nextPhaseButtonClicked();
+                PhasePresenter.INSTANCE.nextPhaseButtonClicked();
             }
         });
 
@@ -93,7 +93,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             fortifyButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    PhaseController.INSTANCE.fortifyButtonClicked();
+                    PhasePresenter.INSTANCE.fortifyButtonClicked();
                 }
             });
             stage.addActor(fortifyButton);
@@ -109,7 +109,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             cancelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    PhaseController.INSTANCE.cancelButtonClicked();
+                    PhasePresenter.INSTANCE.cancelButtonClicked();
                 }
             });
             stage.addActor(cancelButton);
@@ -125,7 +125,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             attackButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    PhaseController.INSTANCE.attackButtonClicked();
+                    PhasePresenter.INSTANCE.attackButtonClicked();
                 }
             });
             stage.addActor(attackButton);
@@ -141,7 +141,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         turnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PhaseController.INSTANCE.nextTurnButtonClicked();
+                PhasePresenter.INSTANCE.nextTurnButtonClicked();
             }
         });
         stage.addActor(turnButton);
@@ -155,7 +155,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                PhaseController.INSTANCE.nextPhaseButtonClicked();
+                PhasePresenter.INSTANCE.nextPhaseButtonClicked();
             }
         });
         stage.addActor(phaseButton);

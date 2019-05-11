@@ -6,8 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import no.ntnu.idi.tdt4240.controller.GameController;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
+import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
 public class GameView implements GameObserver, Screen {
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
@@ -20,7 +20,7 @@ public class GameView implements GameObserver, Screen {
     private OrthographicCamera camera;
 
     public GameView() {
-        GameController.addObserver(this);
+        GamePresenter.addObserver(this);
 
         camera = new OrthographicCamera();
 
@@ -33,7 +33,7 @@ public class GameView implements GameObserver, Screen {
     public void show() {
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-        GameController.INSTANCE.init();
+        GamePresenter.INSTANCE.init();
         setInputProcessors();
 
         Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -77,7 +77,7 @@ public class GameView implements GameObserver, Screen {
         phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
-        GameController.INSTANCE.reset();
+        GamePresenter.INSTANCE.reset();
     }
 
     @Override

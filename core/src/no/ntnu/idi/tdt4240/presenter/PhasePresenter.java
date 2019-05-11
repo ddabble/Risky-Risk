@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.presenter;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,13 +18,13 @@ import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
-public class PhaseController {
-    public static final PhaseController INSTANCE = new PhaseController();
+public class PhasePresenter {
+    public static final PhasePresenter INSTANCE = new PhasePresenter();
 
     private Collection<PhaseObserver> phaseObservers = new ArrayList<>();
     private Collection<TroopObserver> troopObservers = new ArrayList<>();
 
-    private PhaseController() {}
+    private PhasePresenter() {}
 
     public void init() {
         AttackModel.INSTANCE.init();
@@ -70,7 +70,7 @@ public class PhaseController {
     }
 
     public void nextPhaseButtonClicked() {
-        PhaseController.INSTANCE.clearRenderedButtons();
+        PhasePresenter.INSTANCE.clearRenderedButtons();
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack"))
             AttackModel.INSTANCE.cancelAttack();
         PhaseModel.INSTANCE.nextPhase();
@@ -88,12 +88,12 @@ public class PhaseController {
     public void cancelButtonClicked() {
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack")) {
             AttackModel.INSTANCE.cancelAttack();
-            PhaseController.INSTANCE.clearRenderedButtons();
+            PhasePresenter.INSTANCE.clearRenderedButtons();
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(null, null);
         }
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
-            PhaseController.INSTANCE.cancelFortify();
+            PhasePresenter.INSTANCE.cancelFortify();
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(null, null);
         }
@@ -185,7 +185,7 @@ public class PhaseController {
             observer.onTerritoryChangeNumTroops(AttackModel.INSTANCE.getFromTerritory());
             observer.onTerritoryChangeNumTroops(AttackModel.INSTANCE.getToTerritory());
         }
-        BoardController.INSTANCE.onTerritoryChangedOwner(AttackModel.INSTANCE.getToTerritory());
+        BoardPresenter.INSTANCE.onTerritoryChangedOwner(AttackModel.INSTANCE.getToTerritory());
         //Clears the attack HashMap after the attack has gone through.
         AttackModel.INSTANCE.cancelAttack();
         for (PhaseObserver observer : phaseObservers)
@@ -195,7 +195,7 @@ public class PhaseController {
         System.out.println(winner.toString());
     }
 
-    public void onTerritoryClicked(Territory territory) { // called GameController
+    public void onTerritoryClicked(Territory territory) {
         //PhaseModel.INSTANCE.getPhase().territoryClicked(territory); //update the model
         // update the view
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Place")) {

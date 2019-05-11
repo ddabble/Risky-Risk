@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.MenuController;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
+import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
 public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private final RiskyRisk game;
@@ -23,7 +23,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private Stage stage;
 
     public MainMenuView(RiskyRisk game) {
-        MenuController.addObserver(this);
+        MenuPresenter.addObserver(this);
 
         this.game = game;
         camera = new OrthographicCamera();
