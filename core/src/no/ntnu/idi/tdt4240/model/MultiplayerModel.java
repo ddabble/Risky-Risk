@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
@@ -18,6 +20,7 @@ public class MultiplayerModel {
 
     private int numPlayers;
     private Map<Integer, Color> playerID_colorMap;
+    private Set<Integer> lostPlayers = new HashSet<>();
 
     private MultiplayerModel() {}
 
@@ -73,5 +76,13 @@ public class MultiplayerModel {
             territories.get(i).setOwnerID(playerIDsForTerritories.get(i));
             territories.get(i).setNumTroops(1);
         }
+    }
+
+    public void addLostPlayer(int playerID){
+        lostPlayers.add(playerID);
+    }
+
+    public Set<Integer> getLostPlayers(){
+        return lostPlayers;
     }
 }
