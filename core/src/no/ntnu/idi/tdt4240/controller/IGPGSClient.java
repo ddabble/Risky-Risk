@@ -18,7 +18,7 @@ public interface IGPGSClient {
     void onCheckGamesClicked();
 
 
-    void onDoneClicked(String data);
+    void onDoneClicked(String data); //not sure this is needed -ø 11.05
     void onCancelClicked();
     void onLeaveClicked();
     void onFinishClicked();

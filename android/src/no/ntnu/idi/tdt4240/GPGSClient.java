@@ -282,7 +282,7 @@ public class GPGSClient implements IGPGSClient {
         String nextParticipantId = getNextParticipantId();
         // Create the next turn
         mTurnData.turnCounter += 1;
-        mTurnData.data = data;
+        mTurnData.data = null; //changed from string to null as mTurnData no longer uses string to hold data
 
         mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
                 mTurnData.persist(), nextParticipantId)
@@ -589,7 +589,7 @@ public class GPGSClient implements IGPGSClient {
     public void startMatch(TurnBasedMatch match) {
         mTurnData = new RiskyTurn();
         // Some basic turn data
-        mTurnData.data = "First turn";
+        mTurnData.data = null;
         mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
