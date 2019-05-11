@@ -24,6 +24,8 @@ void main()
 varying vec2 v_texCoords;
 
 uniform sampler2D u_texture;
+// TODO: use a texture to look up player colors
+// 224 is the max number of allowed uniform vectors in a fragment shader in OpenGL ES 3.0
 uniform vec3 playerColorLookup[224]; //0xFF + 1];
 
 void main()
