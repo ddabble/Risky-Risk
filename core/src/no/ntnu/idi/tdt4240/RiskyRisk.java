@@ -27,7 +27,11 @@ public class RiskyRisk extends Game {
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
         gameView = new GameView();
-        signinView = new SignInView(this);
+        signinView = null;
+
+        if (gpgsClient != null) {
+            signinView = new SignInView(this);
+        }
     }
 
     public void setScreen(ScreenEnum screen) {
