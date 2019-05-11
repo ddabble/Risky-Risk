@@ -13,7 +13,7 @@ public class TutorialSlide {
         this.tutorialSlides = tutorialSlides;
     }
 
-    public ArrayList<Map<String, String>> getTutorialslides(){ return this.tutorialSlides;}
+    public ArrayList<Map<String, String>> getTutorialSlides(){ return this.tutorialSlides;}
 
     public static TutorialSlide parseJsonTutorialSlides(FileHandle jsonFile){
         ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +29,6 @@ public class TutorialSlide {
 
         for(int i=0; i< slides.size(); i++){
             tutorialSlides.add(slides.get(Integer.toString(i+1)));
-            System.out.println(tutorialSlides.get(i));
         }
         TutorialSlide tutorialSlide = new TutorialSlide(tutorialSlides);
         return tutorialSlide;

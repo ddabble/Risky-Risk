@@ -21,7 +21,6 @@ public class TutorialController {
     }
 
     public static void addObserver(TutorialObserver tutorialObserver){
-        System.out.println("adding observer");
         INSTANCE.tutorialObservers.add(tutorialObserver);
     }
 }
