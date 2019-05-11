@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ public class TerritoryMap {
     private Map<Integer, String> color_IDmap;
 
     // TODO: move to separate class
-    public List<Continent> continents;
+    public Map<String, Continent> continentMap;
 
     public TerritoryMap(Map<String, Territory> IDmap, Map<Integer, String> color_IDmap) {
         this.IDmap = IDmap;
@@ -41,8 +40,8 @@ public class TerritoryMap {
         return new ArrayList<>(IDmap.values());
     }
 
-    public List<Continent> getAllContinents(){
-        return new ArrayList<>(continents);
+    public List<Continent> getAllContinents() {
+        return new ArrayList<>(continentMap.values());
     }
 
     public String getID(int color) {
@@ -61,23 +60,6 @@ public class TerritoryMap {
         this.color_IDmap = new HashMap<>(color_IDmap);
     }
 
-    public void parseJsonBonusStrucutre(FileHandle jsonFile) {
-        ObjectMapper mapper = new ObjectMapper();
-        Map readJson;
-        try {
-            readJson = mapper.readValue(jsonFile.readString(), Map.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Map<String, Integer> continentMap = readJson;
-        for (int i = 0; i < continents.size(); i++)
-            for (String continent : continentMap.keySet()) {
-                if (continents.get(i).name == continent)
-                    continents.get(i).setBonusTroops(continentMap.get(continent));
-            }
-    }
-
-
     public static TerritoryMap parseJsonMapStructure(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
         Map readJson;
@@ -86,14 +68,23 @@ public class TerritoryMap {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        @SuppressWarnings("unchecked")
-        Map<String, Map<String, Map<String, Object>>> continentMap = readJson;
 
-        List<Continent> continents = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, Map<String, Object>>> continentStructureMap = (Map<String, Map<String, Map<String, Object>>>)readJson.get("continents");
+        @SuppressWarnings("unchecked")
+        Map<String, Integer> continentBonusMap = (Map<String, Integer>)readJson.get("bonus_troops");
+
+        Map<String, List<Territory>> continentTerritoriesMap = new HashMap<>();
+        TerritoryMap territoryMap = parseJsonMapStructure(continentStructureMap, continentTerritoriesMap);
+        territoryMap.continentMap = getContinentMap(continentBonusMap, continentTerritoriesMap);
+        return territoryMap;
+    }
+
+    private static TerritoryMap parseJsonMapStructure(Map<String, Map<String, Map<String, Object>>> continentStructureMap, Map<String, List<Territory>> continentTerritoriesMap_out) {
         Map<String, Territory> IDmap = new HashMap<>();
         Map<Integer, String> color_IDmap = new HashMap<>();
         Map<String, List<String>> neighborMap = new HashMap<>();
-        for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentStructureMap.entrySet()) {
 
             List<Territory> continentTerritories = new ArrayList<>();
             for (Map.Entry<String, Map<String, Object>> territoryEntry : continentEntry.getValue().entrySet()) {
@@ -116,19 +107,31 @@ public class TerritoryMap {
                 color_IDmap.put(Integer.decode(territoryColor), territoryID);
                 neighborMap.put(territoryID, neighborIDs);
             }
-            continents.add(new Continent(continentEntry.getKey(), continentTerritories));
+            continentTerritoriesMap_out.put(continentEntry.getKey(), continentTerritories);
         }
         // Parse and set territories' neighbors
         for (Map.Entry<String, List<String>> neighborEntry : neighborMap.entrySet()) {
             List<Territory> neighbors = new ArrayList<>();
             for (String neighborID : neighborEntry.getValue())
                 neighbors.add(IDmap.get(neighborID.toLowerCase()));
+
             Territory territory = IDmap.get(neighborEntry.getKey().toLowerCase());
             territory.setNeighbors(neighbors);
         }
 
-        TerritoryMap territoryMap = new TerritoryMap(IDmap, color_IDmap);
-        territoryMap.continents = continents;
-        return territoryMap;
+        return new TerritoryMap(IDmap, color_IDmap);
+    }
+
+    private static Map<String, Continent> getContinentMap(Map<String, Integer> continentBonusMap, Map<String, List<Territory>> continentTerritoriesMap) {
+        Map<String, Continent> continentMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> continentEntry : continentBonusMap.entrySet()) {
+            String name = continentEntry.getKey();
+            List<Territory> territories = continentTerritoriesMap.get(name);
+            int bonusTroops = continentBonusMap.get(name);
+            continentMap.put(name, new Continent(name, territories, bonusTroops));
+        }
+
+        return continentMap;
     }
 }
