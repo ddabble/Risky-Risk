@@ -50,6 +50,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         stage.addActor(table);
 
         Button signOutButton = createButton("Sign out");
+        Button singInButton = createButton("Sign in");
         Button checkGamesButton = createButton("Check active games");
         Button startMatchButton = createButton("Start new match");
         Button tutorialButton = createButton("Tutorial");
@@ -60,8 +61,15 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
             public void clicked(InputEvent event, float x, float y) {
                 if (gpgsClient != null) {
                     gpgsClient.signOut();
-                    game.setScreen(RiskyRisk.ScreenEnum.SIGNIN);
+                    game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
                 }
+            }
+        });
+
+        //sign in
+        singInButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(RiskyRisk.ScreenEnum.SIGNIN);
             }
         });
 
@@ -95,7 +103,15 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
 
         table.add(tutorialButton).pad(100);
         table.row();
-        table.add(signOutButton).pad(100);
+        if(gpgsClient != null) {
+            if(gpgsClient.isSignedIn()) {
+                table.add(signOutButton).pad(100);
+            } else {
+                table.add(singInButton).pad(100);
+            }
+        } else {
+            table.add(singInButton).pad(100);
+        }
         table.add(startMatchButton).pad(100);
         table.add(checkGamesButton).pad(100);
         table.row();

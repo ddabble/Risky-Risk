@@ -59,7 +59,7 @@ public class RiskyRisk extends Game {
         // TODO: set number of players from (settings) menu
         SettingsPresenter.INSTANCE.setNumPlayers(8);
 
-        setScreen(ScreenEnum.SIGNIN);
+        setScreen(ScreenEnum.MAIN_MENU);
     }
 
     public enum ScreenEnum {
