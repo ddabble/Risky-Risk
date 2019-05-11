@@ -1,5 +1,7 @@
 package no.ntnu.idi.tdt4240.model;
 
+import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,20 +11,32 @@ import java.util.Map;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-public class PlayerModel {
+public class MultiplayerModel {
+    public static final MultiplayerModel INSTANCE = new MultiplayerModel();
+
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
-    private final int numPlayers;
-    private final Map<Integer, Integer> playerID_colorMap = new HashMap<>();
+    private int numPlayers;
+    private Map<Integer, Color> playerID_colorMap;
 
-    public PlayerModel(TerritoryModel territoryModel, int numPlayers) {
+    private MultiplayerModel() {}
+
+    public Color getPlayerColor(int playerID) {
+        return playerID_colorMap.get(playerID);
+    }
+
+    public Map<Integer, Color> getPlayerID_colorMap() {
+        return new HashMap<>(playerID_colorMap);
+    }
+
+    public void init(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
         this.numPlayers = numPlayers;
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
-        assignTerritoryOwners(playerIDs, territoryModel.TERRITORY_MAP);
+        assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
     }
 
     private List<Integer> generatePlayerIDs() {
@@ -34,8 +48,14 @@ public class PlayerModel {
     }
 
     private void assignPlayerColors(List<Integer> playerIDs) {
+        playerID_colorMap = new HashMap<>();
         for (int i = 0; i < playerIDs.size(); i++)
-            playerID_colorMap.put(playerIDs.get(i), COLORS[i]);
+            playerID_colorMap.put(playerIDs.get(i), intToColor(COLORS[i]));
+    }
+
+    private static Color intToColor(int rgbColor) {
+        int rgbaColor = (rgbColor << 8) | 0xFF;
+        return new Color(rgbaColor);
     }
 
     private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
@@ -48,11 +68,9 @@ public class PlayerModel {
             playerIDsForTerritories.add(playerIDs.get(i % numPlayers));
         Collections.shuffle(playerIDsForTerritories);
 
-        for (int i = 0; i < numTerritories; i++)
+        for (int i = 0; i < numTerritories; i++) {
             territories.get(i).setOwnerID(playerIDsForTerritories.get(i));
-    }
-
-    public int getPlayerColor(int playerID) {
-        return playerID_colorMap.get(playerID);
+            territories.get(i).setNumTroops(1);
+        }
     }
 }

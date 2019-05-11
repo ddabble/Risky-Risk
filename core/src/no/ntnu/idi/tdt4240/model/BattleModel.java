@@ -10,23 +10,26 @@ public class BattleModel {
         int[] winner = new int[2];
         winner[0] = 1337;
         while (winner[0] == 1337) {
+            if (defenderTroops == 0) {
+                winner[0] = attackerID;
+                winner[1] = attackerTroops;
+                return winner;
+            }
             if (attackerTroops >= 3) {
                 attdies = rollDies(new int[3]);
-            }
-            else {
+            } else {
                 attdies = rollDies(new int[attackerTroops]);
             }
             if (defenderTroops >= 2) {
                 defdies = rollDies(new int[2]);
-            }
-            else {
+            } else {
                 defdies = rollDies(new int[defenderTroops]);
             }
             Arrays.sort(defdies);
             Arrays.sort(attdies);
             if (mostDies(attdies, defdies) == 1) {
                 System.out.println("attTroops: " + attackerTroops + " attRoll: " + attdies[attdies.length - 1] +
-                        " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - 1]);
+                                   " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - 1]);
 
                 if (attdies[attdies.length - 1] > defdies[defdies.length - 1]) {
                     defenderTroops--;
@@ -35,8 +38,7 @@ public class BattleModel {
                         winner[1] = attackerTroops;
                         break;
                     }
-                }
-                else if (attdies[attdies.length - 1] <= defdies[defdies.length - 1]) {
+                } else if (attdies[attdies.length - 1] <= defdies[defdies.length - 1]) {
                     attackerTroops--;
                     if (attackerTroops == 0) {
                         winner[0] = defenderID;
@@ -47,7 +49,7 @@ public class BattleModel {
             }
             for (int roll = 1; roll < mostDies(attdies, defdies); roll++) {
                 System.out.println("attTroops: " + attackerTroops + " attRoll: " + attdies[attdies.length - roll] +
-                        " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - roll]);
+                                   " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - roll]);
 
                 if (attdies[attdies.length - roll] > defdies[defdies.length - roll]) {
                     defenderTroops--;
@@ -56,8 +58,7 @@ public class BattleModel {
                         winner[1] = attackerTroops;
                         break;
                     }
-                }
-                else if (attdies[attdies.length - roll] <= defdies[defdies.length - roll]) {
+                } else if (attdies[attdies.length - roll] <= defdies[defdies.length - roll]) {
                     attackerTroops--;
                     if (attackerTroops == 0) {
                         winner[0] = defenderID;
@@ -72,7 +73,7 @@ public class BattleModel {
 
     private static int mostDies(int[] attdies, int[] defdies) {
         //System.out.println("mostDies: " + Math.min(Math.max(attdies.length, defdies.length), 2));
-        return Math.min(Math.max(attdies.length, defdies.length), 2);
+        return Math.min(Math.max(attdies.length, defdies.length), 1);
     }
 
     private static int[] rollDies(int[] dies) {

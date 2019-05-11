@@ -24,7 +24,9 @@ public class AndroidLauncher extends AndroidApplication {
 
 		gpgsClient = new GPGSClient(this, view);
 		game.gpgsClient = gpgsClient;
+		game.init();
 		initialize(game, config);
+
 	}
 
     @Override

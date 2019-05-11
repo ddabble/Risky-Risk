@@ -1,52 +1,58 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.view.SignInView;
+import no.ntnu.idi.tdt4240.observer.MenuObserver;
+import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
-public class MainMenuView extends AbstractView {
-    private Table table;
-    private IGPGSClient gpgsClient;
+public class MainMenuView extends AbstractView implements MenuObserver, Screen {
+    private final RiskyRisk game;
+
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
-    private Label nameField;
+
+    private Table table;
+    private IGPGSClient gpgsClient;
 
     public MainMenuView(RiskyRisk game) {
-        super(game);
-        //background = new Texture("background.png");
-        //camera = new OrthographicCamera();
-        //camera.setToOrtho(false, 800, 480);
+
+        gpgsClient = game.gpgsClient;
+        MenuPresenter.addObserver(this);
+        this.game = game;
+        camera = new OrthographicCamera();
+    }
+
+    @Override
+    public void show() {
+        super.create();
+
+        camera.setToOrtho(false, 800, 480);
+        background = new Texture("background.png");
+
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
         table = new Table();
         table.setDebug(true);
         table.setFillParent(true);
         stage.addActor(table);
 
-        gpgsClient = game.gpgsClient;
-        background = new Texture("background.png");
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-    }
-
-    @Override
-    public void show() {
-
-        Button signOutButton = this.createButton("Sign out");
-        Button checkGamesButton = this.createButton("Check active games");
-        Button startMatchButton = this.createButton("Start new match");
+        Button signOutButton = createButton("Sign out");
+        Button checkGamesButton = createButton("Check active games");
+        Button startMatchButton = createButton("Start new match");
+        Button tutorialButton = createButton("Tutorial");
 
         // Sign out
         signOutButton.addListener(new ClickListener() {
@@ -54,12 +60,12 @@ public class MainMenuView extends AbstractView {
             public void clicked(InputEvent event, float x, float y) {
                 if (gpgsClient != null) {
                     gpgsClient.signOut();
-                    game.setScreen(new SignInView(game));
+                    game.setScreen(RiskyRisk.ScreenEnum.SIGNIN);
                 }
             }
         });
 
-
+        // Start match
         startMatchButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -69,6 +75,7 @@ public class MainMenuView extends AbstractView {
             }
         });
 
+        // Check matches
         checkGamesButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -78,62 +85,41 @@ public class MainMenuView extends AbstractView {
             }
         });
 
+        // Tutorial
+        tutorialButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
+            }
+        });
+
+        table.add(tutorialButton).pad(100);
+        table.row();
         table.add(signOutButton).pad(100);
         table.add(startMatchButton).pad(100);
         table.add(checkGamesButton).pad(100);
         table.row();
-
-        Button tutorialButton = this.createButton("Tutorial");
-        tutorialButton.setPosition(100, 400);
-        tutorialButton.setSize(100, 50);
-
-        /*tutorialButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialView(game));
-            }
-        });
-
-        table.addActor(tutorialButton);*/
     }
 
     @Override
     public void render(float delta) {
 
         if (gpgsClient.matchActive()) {
-            game.setScreen(new GameView(game));
+            game.setScreen(RiskyRisk.ScreenEnum.GAME);
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
-        //stage.getBatch().draw(background, 0, 0);
+        stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
-        stage.act(delta);
+        stage.act();
         stage.draw();
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+        background.dispose();
+        stage.dispose();
+        super.dispose();
     }
 }
