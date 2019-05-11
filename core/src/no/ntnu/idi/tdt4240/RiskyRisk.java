@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
@@ -63,7 +64,18 @@ public class RiskyRisk extends Game {
         // TODO: set number of players from (settings) menu
         SettingsPresenter.INSTANCE.setNumPlayers(8);
 
-        setScreen(ScreenEnum.MAIN_MENU);
+        switch(Gdx.app.getType()) {
+            case Android: // android specific code
+                setScreen(ScreenEnum.SIGNIN);
+                break;
+            case Desktop: // desktop specific code
+                setScreen(ScreenEnum.MAIN_MENU);
+                break;
+            //case WebGl:
+            /// HTML5 specific code
+            default:
+                setScreen(ScreenEnum.SIGNIN);
+        }
     }
 
     public enum ScreenEnum {
