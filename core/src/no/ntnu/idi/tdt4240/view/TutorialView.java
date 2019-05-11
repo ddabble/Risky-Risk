@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -34,6 +35,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private int stage_height;
     private int currentSlideCounter = 0;
 
+    private BitmapFont headerFont;
+    private BitmapFont slideHeaderFont;
+    private BitmapFont slideTextFont;
+
     private TextField header;
     private TextField slideHeader;
     private TextField slideText;
@@ -55,13 +60,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     @Override
     public void create(ArrayList<Map<String, String>> tutorialSlides) {
-        System.out.println("hello");
-        for (int i=0; i<tutorialSlides.size();i++){
-            System.out.println(tutorialSlides.get(i));
-        }
-
         this.tutorialSlides = tutorialSlides;
-
     }
 
     @Override
@@ -83,6 +82,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.stage_width = Gdx.graphics.getWidth();
         this.stage_height = Gdx.graphics.getHeight();
 
+        this.createBitmapFonts();
         this.createButtons(stage);
         this.createTextFields(stage);
 
@@ -185,34 +185,44 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.slideHeaders.add("Slide header 2");
         this.slideHeaders.add("Slide header 3");
 */
-        // Bitmap font
-        BitmapFont textFont = new BitmapFont();
-        TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = textFont;
-        textStyle.fontColor = new Color(10/255f,10/255f,10/255f,1);
+        // Text styles
+        //BitmapFont textFont = new BitmapFont();
+        Color fontColor = new Color(10/255f,10/255f,10/255f,1);
+
+        TextField.TextFieldStyle headerStyle = new TextField.TextFieldStyle();
+        headerStyle.font = this.headerFont;
+        headerStyle.fontColor = fontColor;
+
+        TextField.TextFieldStyle slideHeaderStyle = new TextField.TextFieldStyle();
+        slideHeaderStyle.font = this.slideHeaderFont;
+        slideHeaderStyle.fontColor = fontColor;
+
+        TextField.TextFieldStyle slideTextStyle = new TextField.TextFieldStyle();
+        slideTextStyle.font = this.slideTextFont;
+        slideTextStyle.fontColor = fontColor;
 
         // Text field dimensions
-        int headerWidth = 88;
+        int headerWidth = 200;
         int headerHeight = 50;
 
-        int slideHeaderWidth = 200;
+        int slideHeaderWidth = 400;
         int slideHeaderHeight = 50;
 
-        int tutSlideWidth = 400;
+        int tutSlideWidth = this.stage_width/2;
         int tutSlideHeight = 300;
 
         // Header text
-        this.header = new TextField("Tutorial", textStyle);
+        this.header = new TextField("Tutorial", headerStyle);
         this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/100));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), textStyle);
+        this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), slideHeaderStyle);
         this.slideHeader.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - 3*(slideHeaderHeight + this.stage_height/200));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), textStyle);
+        this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), slideTextStyle);
         this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,(this.stage_height - tutSlideHeight)/2);
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
@@ -243,6 +253,26 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
             this.nextButton.setTouchable(Touchable.enabled);
             this.previousButton.setTouchable(Touchable.enabled);
         }
+    }
+
+    private void createBitmapFonts(){
+        FreeTypeFontGenerator headerGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter headerParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        headerParameter.size = 40;
+        this.headerFont = headerGenerator.generateFont(headerParameter);
+        headerGenerator.dispose();
+
+        FreeTypeFontGenerator slideHeaderGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter slideHeaderParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        slideHeaderParameter.size = 25;
+        this.slideHeaderFont = slideHeaderGenerator.generateFont(slideHeaderParameter);
+        slideHeaderGenerator.dispose();
+
+        FreeTypeFontGenerator slideTextGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter slideTextParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        slideTextParameter.size = 20;
+        this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter); // font size 12
+        slideTextGenerator.dispose(); // don't forget to dispose to avoid memory leaks!
     }
 
 } // End class
