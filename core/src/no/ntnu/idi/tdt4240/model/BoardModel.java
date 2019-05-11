@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Map;
 
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
@@ -19,18 +20,28 @@ public class BoardModel {
     private Texture mapTexture;
     private Pixmap mapPixmap;
 
+    private IGPGSClient client;
+
     private BoardModel() {}
 
     public Texture getMapTexture() {
         return mapTexture;
     }
 
-    public void init() {
+    public void init(IGPGSClient client) {
         territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
+        this.client = client;
+
+        //if we have an active match in the client it means we are playing an online game,
+        //disregard the data loaded from TerritoryModel and instead fill in data from
+        //the match object
+        if(client.matchActive()) {
+            client.getmRiskyTurn().getTerritoryMapData(territoryMap);
+        }
     }
 
     private void prepareMapPixmap(Texture mapTexture) {
