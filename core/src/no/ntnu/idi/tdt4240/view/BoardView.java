@@ -87,6 +87,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
         String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
         mapShader = new ShaderProgram(vertexShader, fragmentShader);
+        if (!mapShader.isCompiled())
+            System.err.println("Error compiling mapShader:\n" + mapShader.getLog());
         ShaderProgram.pedantic = false;
     }
 
