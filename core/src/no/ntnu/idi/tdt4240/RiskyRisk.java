@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240;
 
 import com.badlogic.gdx.Game;
 
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
@@ -30,6 +31,7 @@ public class RiskyRisk extends Game {
         signinView = null;
 
         if (gpgsClient != null) {
+            BoardModel.INSTANCE.init(gpgsClient);
             signinView = new SignInView(this);
         }
     }

@@ -22,7 +22,6 @@ public class BoardPresenter {
     private BoardPresenter() {}
 
     public void init() {
-        BoardModel.INSTANCE.init();
         TroopModel.INSTANCE.init();
 
         for (BoardObserver observer : boardObservers) {
