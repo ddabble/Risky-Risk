@@ -8,12 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public abstract class AbstractView extends ApplicationAdapter {
     private SelectBoxStyle selectStyle;
     private Label.LabelStyle labelStyle;
     private Skin skin;
     private TextButtonStyle textButtonStyle;
+    private TextField.TextFieldStyle textFieldStyle;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, textButtonStyle);
@@ -29,12 +31,18 @@ public abstract class AbstractView extends ApplicationAdapter {
         return new Label(text, labelStyle);
     }
 
+
+    protected TextField createTextField(String text) {
+        return new TextField(text,textFieldStyle);
+    }
+
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
         labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        textFieldStyle = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
 
         textButtonStyle.up = skin.getDrawable("default-round");
         textButtonStyle.down = skin.getDrawable("default-round-down");
