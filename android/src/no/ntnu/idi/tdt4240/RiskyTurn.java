@@ -44,6 +44,8 @@ public class RiskyTurn implements IRiskyTurn {
 
     public void updateData(TerritoryMap map) {
         int index = 0;
+        //this technically only needs to happen for the first player
+        data = new byte[map.getAllTerritories().size()];
         for (Territory territory : map.getAllTerritories()){
             data[index] = (byte)territory.getNumTroops();
             index++;
