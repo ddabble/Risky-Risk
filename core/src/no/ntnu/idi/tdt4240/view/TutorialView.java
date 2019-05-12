@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -70,8 +72,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(233/255f,230/255f,185/255f,1);
+
+        int imageWidth = this.stage_width/2 - this.stage_width/20;
         stage.getBatch().begin();
-        stage.getBatch().draw(this.picture, this.stage_width-450, this.stage_height/2-200,400,300);
+        stage.getBatch().draw(this.picture, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-420,imageWidth,300);
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
@@ -84,6 +88,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         TutorialController.INSTANCE.init();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
         this.picture = new Texture(this.tutorialSlides.get(0).get("image"));
 
 
@@ -223,8 +228,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int slideHeaderWidth = this.stage_width/2;
         int slideHeaderHeight = 50;
 
-        int tutSlideWidth = this.stage_width/2;
+        int tutSlideWidth = this.stage_width/2 - this.stage_width/20;
         int tutSlideHeight = 400;
+
+        this.currentSlideCounter = 0;
 
         // Header text
         this.header = new TextField("Tutorial", headerStyle);
@@ -232,13 +239,13 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = new TextField(this.tutorialSlides.get(0).get("title"), slideHeaderStyle);
-        this.slideHeader.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - 3*slideHeaderHeight + 30);
+        this.slideHeader = new TextField(this.tutorialSlides.get(this.currentSlideCounter).get("title"), slideHeaderStyle);
+        this.slideHeader.setPosition(this.stage_width/40,this.stage_height - 3*slideHeaderHeight + 30);
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = new TextArea(this.tutorialSlides.get(0).get("text"), slideTextStyle);
-        this.slideText.setPosition(this.stage_width/2-tutSlideWidth/2,this.stage_height - (tutSlideHeight+120));
+        this.slideText = new TextArea(this.tutorialSlides.get(this.currentSlideCounter).get("text"), slideTextStyle);
+        this.slideText.setPosition(this.stage_width/40,this.stage_height - (tutSlideHeight+120));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
         // Add actors
