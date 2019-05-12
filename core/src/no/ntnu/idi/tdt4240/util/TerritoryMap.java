@@ -14,46 +14,46 @@ import no.ntnu.idi.tdt4240.data.Continent;
 import no.ntnu.idi.tdt4240.data.Territory;
 
 public class TerritoryMap {
-    private Map<String, Territory> IDmap;
-    private Map<Integer, String> color_IDmap;
+    private Map<String, Territory> ID_territoryMap;
+    private Map<Integer, Territory> color_territoryMap;
 
     // TODO: move to separate class
-    public List<Continent> continents;
+    public Map<String, Continent> continentMap;
 
-    public TerritoryMap(Map<String, Territory> IDmap, Map<Integer, String> color_IDmap) {
-        this.IDmap = IDmap;
-        this.color_IDmap = color_IDmap;
+    public TerritoryMap(Map<String, Territory> ID_territoryMap, Map<Integer, Territory> color_territoryMap) {
+        this.ID_territoryMap = ID_territoryMap;
+        this.color_territoryMap = color_territoryMap;
     }
 
     /**
      * @param ID a territory's lowercase ID
      */
     public Territory getTerritory(String ID) {
-        return IDmap.get(ID);
+        return ID_territoryMap.get(ID);
     }
 
     public Territory getTerritory(int color) {
-        return IDmap.get(getID(color));
+        return color_territoryMap.get(color);
     }
 
     public List<Territory> getAllTerritories() {
-        return new ArrayList<>(IDmap.values());
+        return new ArrayList<>(ID_territoryMap.values());
     }
 
-    public String getID(int color) {
-        return color_IDmap.get(color);
+    public List<Continent> getAllContinents() {
+        return new ArrayList<>(continentMap.values());
     }
 
-    public Map<String, Territory> getIDmap() {
-        return new HashMap<>(IDmap);
+    public Map<String, Territory> getID_territoryMap() {
+        return new HashMap<>(ID_territoryMap);
     }
 
-    public Map<Integer, String> getColor_IDmap() {
-        return new HashMap<>(color_IDmap);
+    public Map<Integer, Territory> getColor_territoryMap() {
+        return new HashMap<>(color_territoryMap);
     }
 
-    public void setColor_IDmap(Map<Integer, String> color_IDmap) {
-        this.color_IDmap = new HashMap<>(color_IDmap);
+    public void setColor_territoryMap(Map<Integer, Territory> color_territoryMap) {
+        this.color_territoryMap = new HashMap<>(color_territoryMap);
     }
 
     public static TerritoryMap parseJsonMapStructure(FileHandle jsonFile) {
@@ -64,14 +64,23 @@ public class TerritoryMap {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        @SuppressWarnings("unchecked")
-        Map<String, Map<String, Map<String, Object>>> continentMap = readJson;
 
-        List<Continent> continents = new ArrayList<>();
-        Map<String, Territory> IDmap = new HashMap<>();
-        Map<Integer, String> color_IDmap = new HashMap<>();
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, Map<String, Object>>> continentStructureMap = (Map<String, Map<String, Map<String, Object>>>)readJson.get("continents");
+        @SuppressWarnings("unchecked")
+        Map<String, Integer> continentBonusMap = (Map<String, Integer>)readJson.get("bonus_troops");
+
+        Map<String, List<Territory>> continentTerritoriesMap = new HashMap<>();
+        TerritoryMap territoryMap = parseJsonMapStructure(continentStructureMap, continentTerritoriesMap);
+        territoryMap.continentMap = getContinentMap(continentBonusMap, continentTerritoriesMap);
+        return territoryMap;
+    }
+
+    private static TerritoryMap parseJsonMapStructure(Map<String, Map<String, Map<String, Object>>> continentStructureMap, Map<String, List<Territory>> continentTerritoriesMap_out) {
+        Map<String, Territory> ID_territoryMap = new HashMap<>();
+        Map<Integer, Territory> color_territoryMap = new HashMap<>();
         Map<String, List<String>> neighborMap = new HashMap<>();
-        for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Map<String, Object>>> continentEntry : continentStructureMap.entrySet()) {
 
             List<Territory> continentTerritories = new ArrayList<>();
             for (Map.Entry<String, Map<String, Object>> territoryEntry : continentEntry.getValue().entrySet()) {
@@ -90,24 +99,35 @@ public class TerritoryMap {
                 territoryID = territoryID.toLowerCase();
 
                 continentTerritories.add(territory);
-                IDmap.put(territoryID, territory);
-                color_IDmap.put(Integer.decode(territoryColor), territoryID);
+                ID_territoryMap.put(territoryID, territory);
+                color_territoryMap.put(Integer.decode(territoryColor), territory);
                 neighborMap.put(territoryID, neighborIDs);
             }
-            continents.add(new Continent(continentEntry.getKey(), continentTerritories));
+            continentTerritoriesMap_out.put(continentEntry.getKey(), continentTerritories);
         }
         // Parse and set territories' neighbors
         for (Map.Entry<String, List<String>> neighborEntry : neighborMap.entrySet()) {
             List<Territory> neighbors = new ArrayList<>();
             for (String neighborID : neighborEntry.getValue())
-                neighbors.add(IDmap.get(neighborID.toLowerCase()));
+                neighbors.add(ID_territoryMap.get(neighborID.toLowerCase()));
 
-            Territory territory = IDmap.get(neighborEntry.getKey().toLowerCase());
+            Territory territory = ID_territoryMap.get(neighborEntry.getKey().toLowerCase());
             territory.setNeighbors(neighbors);
         }
 
-        TerritoryMap territoryMap = new TerritoryMap(IDmap, color_IDmap);
-        territoryMap.continents = continents;
-        return territoryMap;
+        return new TerritoryMap(ID_territoryMap, color_territoryMap);
+    }
+
+    private static Map<String, Continent> getContinentMap(Map<String, Integer> continentBonusMap, Map<String, List<Territory>> continentTerritoriesMap) {
+        Map<String, Continent> continentMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> continentEntry : continentBonusMap.entrySet()) {
+            String name = continentEntry.getKey();
+            List<Territory> territories = continentTerritoriesMap.get(name);
+            int bonusTroops = continentBonusMap.get(name);
+            continentMap.put(name, new Continent(name, territories, bonusTroops));
+        }
+
+        return continentMap;
     }
 }

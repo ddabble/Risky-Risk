@@ -6,9 +6,16 @@ public class Continent {
     public final String name;
     private final List<Territory> territories;
 
-    public Continent(String name, List<Territory> territories) {
+    private final int bonusTroops;
+
+    public Continent(String name, List<Territory> territories, int bonusTroops) {
         this.name = name;
         this.territories = territories;
+        this.bonusTroops = bonusTroops;
+    }
+
+    public int getBonusTroops() {
+        return bonusTroops;
     }
 
     public List<Territory> getTerritories() {

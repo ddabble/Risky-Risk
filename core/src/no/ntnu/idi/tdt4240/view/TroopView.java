@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
+import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
+import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class TroopView extends ApplicationAdapter implements TroopObserver {
@@ -34,7 +35,8 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
     private Territory selectedTerritory;
 
     public TroopView() {
-        BoardController.addObserver(this);
+        BoardPresenter.addObserver(this);
+        PhasePresenter.addObserver(this);
     }
 
     @Override

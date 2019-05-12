@@ -8,6 +8,7 @@ eclipse.project {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services:12.0.1'
     api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 }

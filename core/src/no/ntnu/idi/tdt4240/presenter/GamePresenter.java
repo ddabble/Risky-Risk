@@ -1,24 +1,24 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
-public class GameController {
-    public static final GameController INSTANCE = new GameController();
+public class GamePresenter {
+    public static final GamePresenter INSTANCE = new GamePresenter();
 
     private Collection<GameObserver> observers = new ArrayList<>();
 
-    private GameController() {}
+    private GamePresenter() {}
 
     public void init() {
-        BoardController.INSTANCE.init();
-        PhaseController.INSTANCE.init();
+        BoardPresenter.INSTANCE.init();
+        PhasePresenter.INSTANCE.init();
     }
 
     public void reset() {
-        BoardController.INSTANCE.reset();
+        BoardPresenter.INSTANCE.reset();
     }
 
     /*
