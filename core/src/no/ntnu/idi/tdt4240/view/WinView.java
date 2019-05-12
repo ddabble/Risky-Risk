@@ -72,4 +72,6 @@ public class WinView extends AbstractView implements WinObserver, Screen {
         stage.dispose();
         super.dispose();
     }
+
+
 }
