@@ -243,6 +243,7 @@ public class PhasePresenter {
         for (TroopObserver observer : troopObservers)
             observer.onSelectTerritory(null);
         System.out.println(" - Player"+winner[0]+" won this fight. - ");
+        checkGameOver();
     }
 
 
