@@ -2,34 +2,29 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.TutorialController;
 import no.ntnu.idi.tdt4240.observer.TutorialObserver;
-//import no.ntnu.idi.tdt4240.view.AbstractView;
 
 public class TutorialView extends AbstractView implements TutorialObserver, Screen {
+
     private final RiskyRisk game;
     private Stage stage;
 
@@ -50,10 +45,8 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private Button nextButton;
     private Button mainMenuButton;
 
-    private Texture picture;
+    private Texture slideImage;
 
-    //private ArrayList<String> slideTexts;
-    //private ArrayList<String> slideHeaders;
     private ArrayList<Map<String, String>> tutorialSlides;
 
 
@@ -74,8 +67,9 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         Gdx.gl.glClearColor(233/255f,230/255f,185/255f,1);
 
         int imageWidth = this.stage_width/2 - this.stage_width/20;
+
         stage.getBatch().begin();
-        stage.getBatch().draw(this.picture, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-420,imageWidth,300);
+        stage.getBatch().draw(this.slideImage, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-420,imageWidth,300);
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
@@ -89,8 +83,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        this.picture = new Texture(this.tutorialSlides.get(0).get("image"));
-
+        this.slideImage = new Texture(this.tutorialSlides.get(0).get("image"));
 
         this.stage_width = Gdx.graphics.getWidth();
         this.stage_height = Gdx.graphics.getHeight();
@@ -99,12 +92,11 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.createBitmapFonts();
         this.createButtons(stage);
         this.createTextFields(stage);
-
-
     }
+
     @Override
     public void hide(){
-        this.picture.dispose();
+        this.slideImage.dispose();
         stage.dispose();
         super.dispose();
     }
@@ -131,7 +123,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int btnHeight = 50;
         int btnWidth = 100;
 
-        // Back to menu button
+        // Main menu button
         this.mainMenuButton = this.createButton("Back to main");
         this.mainMenuButton.setPosition(this.stage_width/100, this.stage_height/100);
         this.mainMenuButton.setSize(btnWidth,btnHeight);
@@ -162,7 +154,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
                 updateCurrentSlide(false);
                 slideHeader.setText(tutorialSlides.get(currentSlideCounter).get("title"));
                 slideText.setText(tutorialSlides.get(currentSlideCounter).get("text"));
-                picture = new Texture(tutorialSlides.get(currentSlideCounter).get("image"));
+                slideImage = new Texture(tutorialSlides.get(currentSlideCounter).get("image"));
             }
         });
 
@@ -172,7 +164,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
                 updateCurrentSlide(true);
                 slideHeader.setText(tutorialSlides.get(currentSlideCounter).get("title"));
                 slideText.setText(tutorialSlides.get(currentSlideCounter).get("text"));
-                picture = new Texture(tutorialSlides.get(currentSlideCounter).get("image"));
+                slideImage = new Texture(tutorialSlides.get(currentSlideCounter).get("image"));
             }
         });
 
@@ -186,37 +178,19 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     private void createTextFields(Stage stage){
 
-        // Test array list for slide text
-        /*this.slideTexts = new ArrayList<>();
-        this.slideTexts.add("Slide 1 sejfd sjfdsl seproj sd sodk sdøok sødok sd dsofgsdøfogksd" +
-                "dsfgjsdkfjgls s fgj slkfjlsdkfjg sdfljgslrij  rogjer oøgkoøsdg fgsdoøfgk øe" +
-                "fdkgmsdlfgsø fdsø sdføl ksdføl ksdølf ksødl ksdølf ksd.");
-        this.slideTexts.add("Slide 2 sejfd sjfdsl seproj sd sodk sdøok sødok sd dsofgsdøfogksd" +
-                "sdfgksdøf sfd øosdkø gksdfø ksdølf gsdølf gksdøl." +
-                "dsfgjsdkfjgls s fgj slkfjlsdkfjg sdfljgslrij  rogjer oøgkoøsdg fgsdoøfgk øe");
-        this.slideTexts.add("Slide 3 sejfd sjfdsl seproj sd sodk sdøok sødok sd dsofgsdøfogksd" +
-                "dsfgjsdkfjgls s fgj slkfjlsdkfjg sdfljgslrij  rogjer oøgkoøsdg fgsdoøfgk øe" +
-                "edfn lskdfg sdfk sølfkg søldkfgsdølf ksdølf sdølf kgs " +
-                "sdlf lsdøf kgsdøf ølsdk gsødlf ksølfdøsløsdlfk sdlf øsdfl ksdøfl gksdøf lgk.");
-
-        // Test array list for slide header
-        this.slideHeaders = new ArrayList<>();
-        this.slideHeaders.add("Slide header 1");
-        this.slideHeaders.add("Slide header 2");
-        this.slideHeaders.add("Slide header 3");
-*/
-        // Text styles
-        //BitmapFont textFont = new BitmapFont();
         Color fontColor = new Color(10/255f,10/255f,10/255f,1);
 
+        // Header style
         TextField.TextFieldStyle headerStyle = new TextField.TextFieldStyle();
         headerStyle.font = this.headerFont;
         headerStyle.fontColor = fontColor;
 
+        // Slide header style
         TextField.TextFieldStyle slideHeaderStyle = new TextField.TextFieldStyle();
         slideHeaderStyle.font = this.slideHeaderFont;
         slideHeaderStyle.fontColor = fontColor;
 
+        // Slide text style
         TextField.TextFieldStyle slideTextStyle = new TextField.TextFieldStyle();
         slideTextStyle.font = this.slideTextFont;
         slideTextStyle.fontColor = fontColor;
@@ -293,8 +267,8 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         FreeTypeFontGenerator slideTextGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter slideTextParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         slideTextParameter.size = 20;
-        this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter); // font size 12
-        slideTextGenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+        this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter);
+        slideTextGenerator.dispose();
     }
 
 } // End class
