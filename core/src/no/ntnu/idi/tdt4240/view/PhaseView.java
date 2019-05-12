@@ -62,6 +62,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         region = new TextureRegion(texture, 0, 0, 50, 50);
         spriteArrowHead = new Sprite(texture);
         spriteArrowHead.setScale(0.5f);
+        spriteArrowHead.setColor(0, 0, 0, 0.7f);
         //spriteArrowHead.setSize(25,25); //scale the image down to 50%
         //spriteArrowHead.setOriginCenter();
 
@@ -244,7 +245,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.setColor(0, 0, 0, 0.7f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default
