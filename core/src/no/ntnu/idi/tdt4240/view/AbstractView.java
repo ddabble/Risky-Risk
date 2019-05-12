@@ -38,7 +38,13 @@ public abstract class AbstractView extends ApplicationAdapter {
         return selectBox;
     }
 
+
     protected Label createLabel(String text) {
+        return new Label(text, labelStyle);
+    }
+
+
+    protected Label createLabel(String text, Label.LabelStyle labelStyle) {
         return new Label(text, labelStyle);
     }
 

@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
@@ -41,13 +42,13 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private BitmapFont slideHeaderFont;
     private BitmapFont slideTextFont;
 
-    private TextField.TextFieldStyle headerStyle;
-    private TextField.TextFieldStyle slideHeaderStyle;
-    private TextField.TextFieldStyle slideTextStyle;
+    private Label.LabelStyle headerStyle;
+    private Label.LabelStyle slideHeaderStyle;
+    private Label.LabelStyle slideTextStyle;
 
-    private TextField header;
-    private TextField slideHeader;
-    private TextField slideText;
+    private Label header;
+    private Label slideHeader;
+    private Label slideText;
 
     private TextButton previousButton;
     private TextButton nextButton;
@@ -240,17 +241,19 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.currentSlideCounter = 0;
 
         // Header text
-        this.header = new TextField("Tutorial", this.headerStyle);
+        this.header = this.createLabel("Tutorial", this.headerStyle);
         this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/30));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = new TextField(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
+        this.slideHeader = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
         this.slideHeader.setPosition(this.stage_width/40,this.stage_height - (slideHeaderHeight + 150));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = new TextArea(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
+        this.slideText = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
+        this.slideText.setWrap(true);
+        this.slideText.setAlignment(Align.topLeft);
         this.slideText.setPosition(this.stage_width/40,this.stage_height - (this.tutSlideHeight+ this.slideHeaderHeight + 170));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
@@ -291,17 +294,17 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         Color fontColor = new Color(10/255f,10/255f,10/255f,1);
 
         // Header style
-        this.headerStyle = new TextField.TextFieldStyle();
+        this.headerStyle = new Label.LabelStyle();
         this.headerStyle.font = this.headerFont;
         this.headerStyle.fontColor = fontColor;
 
         // Slide header style
-        this.slideHeaderStyle = new TextField.TextFieldStyle();
+        this.slideHeaderStyle = new Label.LabelStyle();
         this.slideHeaderStyle.font = this.slideHeaderFont;
         this.slideHeaderStyle.fontColor = fontColor;
 
         // Slide text style
-        this.slideTextStyle = new TextField.TextFieldStyle();
+        this.slideTextStyle = new Label.LabelStyle();
         this.slideTextStyle.font = this.slideTextFont;
         this.slideTextStyle.fontColor = fontColor;
     }
