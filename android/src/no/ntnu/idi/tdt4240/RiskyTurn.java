@@ -59,7 +59,7 @@ public class RiskyTurn implements IRiskyTurn {
 
     //this gets a reference to TerritoryMap and it just changes that reference, so no need to return a value ;^)
     public void getTerritoryMapData(TerritoryMap map) {
-        if(data != null) {
+        if(data != null && data.length != 0) {
             int index = 0;
             for (Territory territory : map.getAllTerritories()){
                 territory.setNumTroops(data[index]);
