@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,12 +6,12 @@ import java.util.Collection;
 import no.ntnu.idi.tdt4240.model.TutorialModel;
 import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 
-public class TutorialController {
-    public static final TutorialController INSTANCE = new TutorialController();
+public class TutorialPresenter {
+    public static final TutorialPresenter INSTANCE = new TutorialPresenter();
 
     private Collection<TutorialObserver> tutorialObservers = new ArrayList<>();
 
-    private TutorialController(){}
+    private TutorialPresenter(){}
 
     public void init() {
         TutorialModel.INSTANCE.init();

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.TutorialController;
+import no.ntnu.idi.tdt4240.presenter.TutorialPresenter;
 import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 
 public class TutorialView extends AbstractView implements TutorialObserver, Screen {
@@ -52,7 +52,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     public TutorialView(RiskyRisk game) {
         this.game = game;
-        TutorialController.addObserver(this);
+        TutorialPresenter.addObserver(this);
     }
 
 
@@ -79,7 +79,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     @Override
     public void show(){
         super.create();
-        TutorialController.INSTANCE.init();
+        TutorialPresenter.INSTANCE.init();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
