@@ -8,9 +8,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
@@ -37,16 +40,18 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     @Override
     public void show() {
         super.create();
-
         camera.setToOrtho(false, 800, 480);
+        stage = new Stage(new StretchViewport(800, 480, camera));
         background = new Texture("background.png");
+        background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
 
-        stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();
         table.setDebug(true);
         table.setFillParent(true);
+        table.setX(0);
+        table.setY(0);
         stage.addActor(table);
 
         Button signOutButton = createButton("Sign out");
@@ -111,18 +116,23 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
             }
         });
 
-        table.add(tutorialButton).pad(100);
+        table.add(startMatchButton).width(150).height(50).pad(20);
         table.row();
-        table.add(offlineButton).pad(100);
+        table.add(checkGamesButton).width(150).height(50).pad(20);
+        table.row();
+        table.add(offlineButton).width(150).height(50).pad(20);
+        table.row();
+        table.add(tutorialButton).width(150).height(50).pad(20);
         table.row();
         if(gpgsClient != null && gpgsClient.isSignedIn()) {
-            table.add(signOutButton).pad(100);
+            table.add(signOutButton).width(150).height(50).pad(20);
         } else {
-            table.add(signInButton).pad(100);
+            table.add(signInButton).width(150).height(50).pad(20);
         }
-        table.add(startMatchButton).pad(100);
-        table.add(checkGamesButton).pad(100);
-        table.row();
+
+
+
+        //table.row();
     }
 
     @Override

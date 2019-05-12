@@ -21,6 +21,10 @@ public abstract class AbstractView extends ApplicationAdapter {
         return new TextButton(text, textButtonStyle);
     }
 
+    protected TextButton createButton(String text, TextButtonStyle textButtonStyle) {
+        return new TextButton(text, textButtonStyle);
+    }
+
     protected <T> SelectBox<T> createSelectBox(T[] options) {
         SelectBox<T> selectBox = new SelectBox<>(selectStyle);
         selectBox.setItems(options);
