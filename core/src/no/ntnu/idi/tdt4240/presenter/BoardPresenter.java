@@ -24,9 +24,9 @@ public class BoardPresenter {
 
     public void init() {
         TroopModel.INSTANCE.init();
-        BoardModel.INSTANCE.init();
         TurnModel.INSTANCE.init();
         SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
+        BoardModel.INSTANCE.init();
 
         for (BoardObserver observer : boardObservers) {
             observer.create(BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),

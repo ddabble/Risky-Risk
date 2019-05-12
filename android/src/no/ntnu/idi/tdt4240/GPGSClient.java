@@ -609,7 +609,9 @@ public class GPGSClient implements IGPGSClient {
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
-        mTurnData.setNumberOfPlayers(match.getParticipantIds().size());
+        Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size()+match.getAvailableAutoMatchSlots()));
+        mTurnData.setNumberOfPlayers(match.getParticipantIds().size()+match.getAvailableAutoMatchSlots());
+        mTurnData.persistNumberOfPlayers();
         mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);

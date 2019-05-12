@@ -41,6 +41,13 @@ public class RiskyTurn implements IRiskyTurn {
 
         RiskyTurn riskyTurn = new RiskyTurn();
         riskyTurn.data = byteArray;
+        if(byteArray.length == 1) {
+            Log.d(TAG, "Initial setup data was transfered, this game has " + byteArray[0] + " players");
+            riskyTurn.numberOfPlayers = byteArray[0];
+        } else { // not initial setup, so just read last two bytes
+            riskyTurn.currentPlayer = byteArray[byteArray.length-2];
+            riskyTurn.numberOfPlayers = byteArray[byteArray.length-1];
+        }
         return riskyTurn;
     }
 
@@ -66,6 +73,11 @@ public class RiskyTurn implements IRiskyTurn {
         this.numberOfPlayers = numberOfPlayers;
     }
 
+    public void persistNumberOfPlayers() {
+        data = new byte[1];
+        data[0] = (byte)numberOfPlayers;
+    }
+
     public int getCurrentPlayer() {
         return currentPlayer;
     }
@@ -86,7 +98,7 @@ public class RiskyTurn implements IRiskyTurn {
     }
 
     public boolean isDataInitialized() {
-        return data != null && data.length != 0;
+        return data != null && data.length != 0 && data.length != 1;
     }
 
     public int getTurnCounter() {
