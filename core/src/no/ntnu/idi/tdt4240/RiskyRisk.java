@@ -3,7 +3,6 @@ package no.ntnu.idi.tdt4240;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
-import no.ntnu.idi.tdt4240.controller.TutorialController;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
