@@ -29,6 +29,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton fortifyButton;
     private Label phaseLabel;
     private Label playerLabel;
+    private Label waitingForTurnLabel;
     private Stage stage;
     private OrthographicCamera camera;
 
@@ -70,6 +71,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseLabel.setPosition(0, 200);
         playerLabel = createLabel("");
         playerLabel.setPosition(0, 105);
+        waitingForTurnLabel = createLabel("Match object sent, wait for your turn...");
+        waitingForTurnLabel.setPosition(150,150);
         phaseButton = createButton("");
         phaseButton.setWidth(100);
         phaseButton.addListener(new ClickListener() {
@@ -206,6 +209,13 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         } else {
             shouldDrawArrow = false;
         }
+    }
+
+    @Override
+    public void onWaitingForTurn() {
+        //dummy code, just to give some indication
+        //that the match was actually sent
+        turnButton.remove();
     }
 
     public void onMapMove() {

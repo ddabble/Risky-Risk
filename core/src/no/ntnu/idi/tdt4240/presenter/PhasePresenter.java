@@ -66,6 +66,10 @@ public class PhasePresenter {
         //since its an online match we need to update the state of the
         //match object on the server
         BoardModel.INSTANCE.updateAndSendMatchData();
+        //for now just kick the player back to main menu
+        for(PhaseObserver observer : phaseObservers) {
+            observer.onWaitingForTurn();
+        }
     }
 
     //pass turn to next player in an offline match
