@@ -2,6 +2,8 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -18,6 +20,10 @@ public abstract class AbstractView extends ApplicationAdapter {
     private Skin skin;
     private TextButtonStyle textButtonStyle;
     private TextField.TextFieldStyle textFieldStyle;
+
+    private BitmapFont headerFont;
+    private BitmapFont slideHeaderFont;
+    private BitmapFont slideTextFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);
@@ -60,6 +66,7 @@ public abstract class AbstractView extends ApplicationAdapter {
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
+        createBitmapFonts();
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
         labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -71,6 +78,27 @@ public abstract class AbstractView extends ApplicationAdapter {
 
         selectStyle.font = skin.getFont("default-font");
     }
+
+
+
+    private void createBitmapFonts(){
+        // Creates BitmapFonts for texts
+        headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",40);
+        slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",25);
+        slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
+    }
+    private BitmapFont createBitmapFont(String path, int size){
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = size;
+        BitmapFont result = fontGenerator.generateFont(fontParameter);
+        fontGenerator.dispose();
+        return result;
+    }
+
+
+
+
 
     @Override
     public void dispose() {
