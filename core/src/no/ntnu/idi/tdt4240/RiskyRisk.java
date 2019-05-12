@@ -30,8 +30,19 @@ public class RiskyRisk extends Game {
         gameView = new GameView();
         signinView = null;
 
+        //gpgsClient needs serveral callbacks to be hooked up to properly function
+        //these are added here and inside signinView.
         if (gpgsClient != null) {
+            //create the signinView, this happens here because it requires a gpgsClient
             signinView = new SignInView(this);
+
+            //register a callback for starting the game ui when receiving match data
+            gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
+                @Override
+                public void onGameUIStart() {
+                    setScreen(ScreenEnum.GAME);
+                }
+            });
         }
     }
 

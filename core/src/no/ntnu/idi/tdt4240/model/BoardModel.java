@@ -28,7 +28,7 @@ public class BoardModel {
         return mapTexture;
     }
 
-    public void init(IGPGSClient client) {
+    public void init() {
         territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
@@ -42,6 +42,10 @@ public class BoardModel {
         if(client.matchActive()) {
             client.getmRiskyTurn().getTerritoryMapData(territoryMap);
         }
+    }
+
+    public void setGPGSClient(IGPGSClient client) {
+        this.client = client;
     }
 
     private void prepareMapPixmap(Texture mapTexture) {

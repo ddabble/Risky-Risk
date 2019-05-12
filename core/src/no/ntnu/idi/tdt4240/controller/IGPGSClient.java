@@ -11,6 +11,8 @@ public interface IGPGSClient {
 
     void startSignInIntent();
     void setSignInAttemptHandler(SignInAttemptHandler handler);
+    void setMatchDataReceivedHandler(MatchDataReceivedHandler handler);
+    void setGameUIStartHandler(GameUIStartHandler handler);
     boolean isSignedIn();
     void signOut();
 
@@ -26,6 +28,17 @@ public interface IGPGSClient {
     interface SignInAttemptHandler {
         void onSuccess();
         void onFailure();
+    }
+
+    //for handling incoming match data, might not be needed in new implementation
+    interface MatchDataReceivedHandler {
+        void onMatchDataReceived();
+    }
+
+    //interface used when registering callbacks to handle
+    //starting the game ui when receiving a match object
+    interface GameUIStartHandler {
+        void onGameUIStart();
     }
 }
 

@@ -216,6 +216,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         //dummy code, just to give some indication
         //that the match was actually sent
         turnButton.remove();
+        stage.addActor(waitingForTurnLabel);
     }
 
     public void onMapMove() {
