@@ -73,6 +73,7 @@ public class PhasePresenter {
 
     //handle giving the turn to the next player if its an online match
     private void nextTurnOnlineMatch() {
+        TurnModel.INSTANCE.nextTurn();
         //since its an online match we need to update the state of the
         //match object on the server
         BoardModel.INSTANCE.updateAndSendMatchData();
@@ -87,7 +88,7 @@ public class PhasePresenter {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
         removePhaseButtons();
-        TurnModel.INSTANCE.takeTurn();
+        TurnModel.INSTANCE.nextTurn();
         updateRenderedCurrentPlayer();
         for (PhaseObserver observer : phaseObservers)
             observer.removeTurnButton();
@@ -184,7 +185,7 @@ public class PhasePresenter {
             }
         }
         if (territoriesOwned == 0) {
-            TurnModel.INSTANCE.takeTurn();
+            TurnModel.INSTANCE.nextTurn();
             updateTroopsToPlace();
             updateRenderedCurrentPlayer();
         } else {
