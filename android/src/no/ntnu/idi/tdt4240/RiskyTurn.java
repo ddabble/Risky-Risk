@@ -24,7 +24,7 @@ public class RiskyTurn implements IRiskyTurn {
 
     // This is the byte array we will write out to the TBMP API.
     //the way i do it now i just always store the byte array so i don't have to parse TerritoryMap here
-    //the advantage of doing it this way is that RiskyTurn does not need a reference to TerritoryMap
+    //the advantage of doing it this way is that RiskyTurn does not need a reference to TerritoryMap -Ø
     public byte[] persist() {
         return data;
     }

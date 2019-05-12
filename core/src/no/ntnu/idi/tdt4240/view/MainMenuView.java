@@ -39,7 +39,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     public void show() {
         super.create();
 
-        BoardModel.INSTANCE.init(gpgsClient);
+        BoardModel.INSTANCE.setGPGSClient(gpgsClient);
 
         camera.setToOrtho(false, 800, 480);
         background = new Texture("background.png");

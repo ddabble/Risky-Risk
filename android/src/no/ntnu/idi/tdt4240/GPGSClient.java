@@ -53,6 +53,10 @@ public class GPGSClient implements IGPGSClient {
     private GoogleSignInClient mGoogleSignInClient = null;
     //function for handling a signin attempt
     private SignInAttemptHandler signInAttemptHandler;
+    //function for handling incoming match data
+    private MatchDataReceivedHandler matchDataReceivedHandle;
+    //function for starting up the game ui when we receive a match object
+    private GameUIStartHandler gameUIStartHandler;
 
     // Client used to interact with the TurnBasedMultiplayer system.
     private TurnBasedMultiplayerClient mTurnBasedMultiplayerClient = null;
@@ -318,6 +322,10 @@ public class GPGSClient implements IGPGSClient {
     public void setGameplayUI() {
         isDoingTurn = true;
         setViewVisibility();
+        //give a callback to the game, if one is registered
+        if(gameUIStartHandler != null) {
+            gameUIStartHandler.onGameUIStart();
+        }
     }
 
     // Generic warning/info dialog
@@ -386,6 +394,14 @@ public class GPGSClient implements IGPGSClient {
 
     public void setSignInAttemptHandler(SignInAttemptHandler signInAttemptHandler) {
         this.signInAttemptHandler = signInAttemptHandler;
+    }
+
+    public void setMatchDataReceivedHandler(MatchDataReceivedHandler matchDataReceivedHandler) {
+        this.matchDataReceivedHandle = matchDataReceivedHandler;
+    }
+
+    public void setGameUIStartHandler(GameUIStartHandler gameUIStartHandler) {
+        this.gameUIStartHandler = gameUIStartHandler;
     }
 
     /**
@@ -597,6 +613,9 @@ public class GPGSClient implements IGPGSClient {
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
+        Log.d(TAG, "#############STARTING MATCH#########################");
+        Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
                 mTurnData.persist(), myParticipantId)
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
@@ -667,6 +686,9 @@ public class GPGSClient implements IGPGSClient {
 
         int status = match.getStatus();
         int turnStatus = match.getTurnStatus();
+
+        Log.d(TAG, "########REVEIVED MATCH DATA######################");
+        Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
 
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:
@@ -765,7 +787,6 @@ public class GPGSClient implements IGPGSClient {
         public void onInvitationReceived(@NonNull Invitation invitation) {
             Toast.makeText(
                     mActivity,
-                    //SkeletonActivity.this,
                     "An invitation has arrived from "
                             + invitation.getInviter().getDisplayName(), Toast.LENGTH_SHORT)
                     .show();
@@ -775,7 +796,6 @@ public class GPGSClient implements IGPGSClient {
         public void onInvitationRemoved(@NonNull String invitationId) {
             Toast.makeText(
                     mActivity,
-                    //SkeletonActivity.this,
                     "An invitation was removed.", Toast.LENGTH_SHORT)
                     .show();
         }
@@ -786,7 +806,6 @@ public class GPGSClient implements IGPGSClient {
         public void onTurnBasedMatchReceived(@NonNull TurnBasedMatch turnBasedMatch) {
             Toast.makeText(
                     mActivity,
-                    //SkeletonActivity.this,
                     "A match was updated.", Toast.LENGTH_LONG).show();
         }
 
@@ -794,7 +813,6 @@ public class GPGSClient implements IGPGSClient {
         public void onTurnBasedMatchRemoved(@NonNull String matchId) {
             Toast.makeText(
                     mActivity,
-                    //SkeletonActivity.this,
                     "A match was removed.", Toast.LENGTH_SHORT).show();
         }
     };
