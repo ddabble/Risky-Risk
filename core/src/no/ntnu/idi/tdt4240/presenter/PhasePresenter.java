@@ -109,6 +109,7 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack"))
             AttackModel.INSTANCE.cancelAttack();
         PhaseModel.INSTANCE.nextPhase();
+        deselectedTerritories();
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
             for (PhaseObserver observer : phaseObservers)
                 observer.addTurnButton();
