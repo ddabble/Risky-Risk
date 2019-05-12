@@ -17,6 +17,11 @@ public class OfflineGPGSClient implements IGPGSClient {
     }
 
     @Override
+    public void setMatchNotActive() {
+
+    }
+
+    @Override
     public boolean isDoingTurn() {
         return false;
     }
