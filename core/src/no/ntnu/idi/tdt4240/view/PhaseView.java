@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -142,9 +143,11 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        exitToMainMenuButton = createButton("Exit to Main Menu");
-        exitToMainMenuButton.setWidth(150);
-        exitToMainMenuButton.setPosition(1000, 60);
+        exitToMainMenuButton = createInGameButton("Exit to Main Menu");
+        //exitToMainMenuButton.setWidth(150);
+        exitToMainMenuButton.setWidth(buttonWidth);
+        exitToMainMenuButton.setHeight(buttonHeight);
+        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth()-buttonHeight, 0);
         exitToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
