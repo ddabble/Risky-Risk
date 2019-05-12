@@ -244,7 +244,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0, 0, 0, 0.02f);
+        shapeRenderer.setColor(Color.BLACK);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default
