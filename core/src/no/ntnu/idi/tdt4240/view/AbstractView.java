@@ -139,7 +139,7 @@ public abstract class AbstractView extends ApplicationAdapter {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.size = Gdx.graphics.getHeight()/20;
         fontParameter.borderColor = new Color(0.3f,0.3f, 0.3f , 0.8f);
-        fontParameter.borderWidth = 1.8f;
+        fontParameter.borderWidth = 3f;
         fontParameter.color = Color.WHITE;
         inGamePlayerColorableFont = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
