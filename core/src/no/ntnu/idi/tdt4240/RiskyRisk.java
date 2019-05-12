@@ -11,12 +11,14 @@ import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.view.WinView;
 
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private MainMenuView mainMenuView;
     private TutorialView tutorialView;
+    private WinView winView;
     private GameView gameView;
     private SignInView signinView;
     public IGPGSClient gpgsClient;
@@ -29,6 +31,7 @@ public class RiskyRisk extends Game {
 
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
+        winView = new WinView(this);
         gameView = new GameView(this);
         signinView = null;
 
@@ -70,6 +73,10 @@ public class RiskyRisk extends Game {
             case SIGNIN:
                 setScreen(signinView);
                 break;
+            case WIN:
+                setScreen(winView);
+                break;
+
         }
     }
 
@@ -98,5 +105,6 @@ public class RiskyRisk extends Game {
         TUTORIAL,
         GAME,
         SIGNIN,
+        WIN,
     }
 }
