@@ -64,7 +64,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
     public void updateLeaderboard(HashMap<Integer, Integer> leaderboard) {
         String result = "";
         for (HashMap.Entry<Integer, Integer> entry : leaderboard.entrySet()) {
-            result += "Player" + entry.getKey() + ":     " + entry.getValue() + "\n";
+            result += "Player" + entry.getKey() + ":   " + entry.getValue() + "\n";
             //TODO: use StringBuilder.append() instead of +=
         }
         leaderboardLabel.setText(result);
@@ -76,7 +76,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         //stage.act(); // Updates all actors
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled); //I'm using the Filled ShapeType, but remember you have three of them
         shapeRenderer.setColor(0, 0, 0, 0.2f);
-        shapeRenderer.rect(10,Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/2.2f-10,Gdx.graphics.getWidth()/8f,Gdx.graphics.getHeight()/2.2f); //assuming you have created those x, y, width and height variables
+        shapeRenderer.rect(10,Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/2.2f-10,Gdx.graphics.getWidth()/7.7f,Gdx.graphics.getHeight()/2.2f); //assuming you have created those x, y, width and height variables
         shapeRenderer.end();
 
         stage.draw();
