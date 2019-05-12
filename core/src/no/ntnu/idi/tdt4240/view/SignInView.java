@@ -56,7 +56,7 @@ public class SignInView extends AbstractView implements Screen {
         stage = new Stage(new StretchViewport(800, 480, camera));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
-        table.setDebug(true);
+        //table.setDebug(true);
         table.setFillParent(true);
         stage.addActor(table);
 
