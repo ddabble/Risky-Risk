@@ -37,6 +37,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private BitmapFont slideHeaderFont;
     private BitmapFont slideTextFont;
 
+    private TextField.TextFieldStyle headerStyle;
+    private TextField.TextFieldStyle slideHeaderStyle;
+    private TextField.TextFieldStyle slideTextStyle;
+
     private TextField header;
     private TextField slideHeader;
     private TextField slideText;
@@ -66,11 +70,12 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(233/255f,230/255f,185/255f,1);
 
+        // Render the tutorial slide image
         int imageWidth = this.stage_width/2 - this.stage_width/20;
-
         stage.getBatch().begin();
         stage.getBatch().draw(this.slideImage, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-420,imageWidth,300);
         stage.getBatch().end();
+
         stage.act(delta);
         stage.draw();
 
@@ -88,8 +93,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.stage_width = Gdx.graphics.getWidth();
         this.stage_height = Gdx.graphics.getHeight();
 
-
-        this.createBitmapFonts();
         this.createButtons(stage);
         this.createTextFields(stage);
     }
@@ -115,6 +118,18 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     @Override
     public void dispose() {
+    }
+
+    private void updateCurrentSlide(boolean increment){
+        // Updates and controls the value of updateCurrentSlide
+
+        if(increment && this.currentSlideCounter < this.tutorialSlides.size()-1){
+            this.currentSlideCounter += 1;
+        }
+        else if(!increment && this.currentSlideCounter > 0){
+            this.currentSlideCounter -= 1;
+        }
+        this.updateButtonState();
     }
 
     private void createButtons(Stage stage){
@@ -175,25 +190,26 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     } // End createButtons()
 
+    private void updateButtonState(){
+        // Disables the buttons when at the beginning/end of the slides
+
+        if(this.currentSlideCounter == this.tutorialSlides.size()-1){
+            this.nextButton.setTouchable(Touchable.disabled);
+        }
+        else if(this.currentSlideCounter == 0){
+            this.previousButton.setTouchable(Touchable.disabled);
+        }
+        else{
+            this.nextButton.setTouchable(Touchable.enabled);
+            this.previousButton.setTouchable(Touchable.enabled);
+        }
+    }
+
 
     private void createTextFields(Stage stage){
 
-        Color fontColor = new Color(10/255f,10/255f,10/255f,1);
-
-        // Header style
-        TextField.TextFieldStyle headerStyle = new TextField.TextFieldStyle();
-        headerStyle.font = this.headerFont;
-        headerStyle.fontColor = fontColor;
-
-        // Slide header style
-        TextField.TextFieldStyle slideHeaderStyle = new TextField.TextFieldStyle();
-        slideHeaderStyle.font = this.slideHeaderFont;
-        slideHeaderStyle.fontColor = fontColor;
-
-        // Slide text style
-        TextField.TextFieldStyle slideTextStyle = new TextField.TextFieldStyle();
-        slideTextStyle.font = this.slideTextFont;
-        slideTextStyle.fontColor = fontColor;
+        this.createBitmapFonts();
+        this.createTextStyles();
 
         // Text field dimensions
         int headerWidth = 200;
@@ -208,17 +224,17 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.currentSlideCounter = 0;
 
         // Header text
-        this.header = new TextField("Tutorial", headerStyle);
+        this.header = new TextField("Tutorial", this.headerStyle);
         this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/100));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = new TextField(this.tutorialSlides.get(this.currentSlideCounter).get("title"), slideHeaderStyle);
+        this.slideHeader = new TextField(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
         this.slideHeader.setPosition(this.stage_width/40,this.stage_height - 3*slideHeaderHeight + 30);
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = new TextArea(this.tutorialSlides.get(this.currentSlideCounter).get("text"), slideTextStyle);
+        this.slideText = new TextArea(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
         this.slideText.setPosition(this.stage_width/40,this.stage_height - (tutSlideHeight+120));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
@@ -228,47 +244,50 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         stage.addActor(slideText);
     }
 
-    private void updateCurrentSlide(boolean increment){
-        if(increment && this.currentSlideCounter < this.tutorialSlides.size()-1){
-            this.currentSlideCounter += 1;
-        }
-        else if(!increment && this.currentSlideCounter > 0){
-            this.currentSlideCounter -= 1;
-        }
-        this.updateButtonState();
-    }
-
-    private void updateButtonState(){
-        if(this.currentSlideCounter == this.tutorialSlides.size()-1){
-            this.nextButton.setTouchable(Touchable.disabled);
-        }
-        else if(this.currentSlideCounter == 0){
-            this.previousButton.setTouchable(Touchable.disabled);
-        }
-        else{
-            this.nextButton.setTouchable(Touchable.enabled);
-            this.previousButton.setTouchable(Touchable.enabled);
-        }
-    }
-
     private void createBitmapFonts(){
+        // Creates BitmapFonts for the text fields
+
+        // Header font
         FreeTypeFontGenerator headerGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter headerParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         headerParameter.size = 40;
         this.headerFont = headerGenerator.generateFont(headerParameter);
         headerGenerator.dispose();
 
+        // Slide header font
         FreeTypeFontGenerator slideHeaderGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter slideHeaderParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         slideHeaderParameter.size = 25;
         this.slideHeaderFont = slideHeaderGenerator.generateFont(slideHeaderParameter);
         slideHeaderGenerator.dispose();
 
+        // Slide text font
         FreeTypeFontGenerator slideTextGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter slideTextParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         slideTextParameter.size = 20;
         this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter);
         slideTextGenerator.dispose();
+    }
+
+    private void createTextStyles(){
+        // Creates text styles for the text fields
+
+        Color fontColor = new Color(10/255f,10/255f,10/255f,1);
+
+        // Header style
+        this.headerStyle = new TextField.TextFieldStyle();
+        this.headerStyle.font = this.headerFont;
+        this.headerStyle.fontColor = fontColor;
+
+        // Slide header style
+        this.slideHeaderStyle = new TextField.TextFieldStyle();
+        this.slideHeaderStyle.font = this.slideHeaderFont;
+        this.slideHeaderStyle.fontColor = fontColor;
+
+        // Slide text style
+        this.slideTextStyle = new TextField.TextFieldStyle();
+        this.slideTextStyle.font = this.slideTextFont;
+        this.slideTextStyle.fontColor = fontColor;
     }
 
 } // End class

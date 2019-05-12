@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class TutorialSlide {
+    // TutorialSlide is a utility class for fetching the tutorial text from a json file
+
     private ArrayList<Map<String, String>> tutorialSlides;
 
     public TutorialSlide(ArrayList<Map<String, String>> tutorialSlides){
@@ -29,6 +31,8 @@ public class TutorialSlide {
 
         for(int i=0; i< slides.size(); i++){
             tutorialSlides.add(slides.get(Integer.toString(i+1)));
+
+            // ' * ' is used in the json file to mark a new line
             tutorialSlides.get(i).put("text", tutorialSlides.get(i).get("text").replace(" * ","\n"));
         }
         TutorialSlide tutorialSlide = new TutorialSlide(tutorialSlides);

@@ -9,6 +9,9 @@ import no.ntnu.idi.tdt4240.util.TutorialSlide;
 
 
 public class TutorialModel {
+    // TutorialModel uses the utility class TutorialSlide to get the tutorial text from a json file
+    //  and makes it available from the getTutorialSlides() method
+
     public static TutorialModel INSTANCE;
 
     public final TutorialSlide TUTORIAL_SLIDES;
