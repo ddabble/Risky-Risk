@@ -222,6 +222,11 @@ public class PhasePresenter {
         System.out.println(" - Player"+winner[0]+" won this fight. - ");
     }
 
+
+    public void exitToMainMenuButtonClicked(){
+        // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
+        GamePresenter.INSTANCE.exitToMainMenu();
+    }
     /**
      * Exits the game if game is over
      */
