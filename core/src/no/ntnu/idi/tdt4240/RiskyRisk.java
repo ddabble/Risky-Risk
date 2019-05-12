@@ -37,6 +37,8 @@ public class RiskyRisk extends Game {
             signinView = new SignInView(this);
 
             //register a callback for starting the game ui when receiving match data
+            //TODO: this is currently not used, instead we jsut check matchActive() in main
+            //menu every frame
             gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
                 @Override
                 public void onGameUIStart() {
