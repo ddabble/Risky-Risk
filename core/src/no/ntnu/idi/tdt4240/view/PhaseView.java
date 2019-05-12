@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -267,13 +268,16 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     private void drawLine(Vector2 start, Vector2 end) {
         Gdx.gl.glLineWidth(4);
-
+        Gdx.gl.glEnable(GL20.GL_BLEND); //make it work when debug mode is off
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); //make it work when debug mode is off
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 0.7f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
+
+        Gdx.gl.glDisable(GL20.GL_BLEND); //make it work when debug mode is off
         Gdx.gl.glLineWidth(1); //set back to default
     }
 
