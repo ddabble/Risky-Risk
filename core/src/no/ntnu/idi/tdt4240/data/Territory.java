@@ -26,7 +26,7 @@ public class Territory {
     }
 
     public Vector2 getTroopCircleVector() {
-        return new Vector2(troopCircleVector);
+        return troopCircleVector.cpy();
     }
 
     public List<Territory> getNeighbors() {
