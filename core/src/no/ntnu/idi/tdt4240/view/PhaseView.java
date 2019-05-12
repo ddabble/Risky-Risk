@@ -84,7 +84,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseLabel.setColor(Color.DARK_GRAY);
         phaseLabel.setAlignment(Align.center);
 
-        playerLabel = createInGameLabel("");
+        playerLabel = createPlayerColorableLabel("");
         playerLabel.setPosition(buttonWidth/2, 3*buttonHeight + 80);
         playerLabel.setAlignment(Align.center);
 
@@ -214,9 +214,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     public void onNextPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID);
         //playerLabel.setStyle(new Label.LabelStyle(inGameLabelFont, playerColor));
-        inGameLabelFont.setColor(playerColor);
+        inGamePlayerColorableFont.setColor(playerColor);
 
-        playerLabel.setStyle(new Label.LabelStyle(inGameLabelFont, playerColor));
+        playerLabel.setStyle(new Label.LabelStyle(inGamePlayerColorableFont, playerColor));
     }
 
     @Override

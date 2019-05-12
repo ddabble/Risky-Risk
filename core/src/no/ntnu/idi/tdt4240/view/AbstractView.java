@@ -26,6 +26,7 @@ public abstract class AbstractView extends ApplicationAdapter {
     private BitmapFont slideTextFont;
     private BitmapFont inGameLabelButtonFont;
     BitmapFont inGameLabelFont;
+    BitmapFont inGamePlayerColorableFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);
@@ -76,6 +77,14 @@ public abstract class AbstractView extends ApplicationAdapter {
 
         return new Label(text, inGameLabelStyle);
     }
+    protected Label createPlayerColorableLabel(String text) {
+        Label label = this.createLabel(text);
+        Label.LabelStyle inGameLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        inGameLabelStyle.font = inGamePlayerColorableFont;
+        label.setStyle(inGameLabelStyle);
+
+        return new Label(text, inGameLabelStyle);
+    }
 
 
     protected Label createLabel(String text, Label.LabelStyle labelStyle) {
@@ -112,19 +121,22 @@ public abstract class AbstractView extends ApplicationAdapter {
         slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",25);
         slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
         inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/25);
+        inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight()/22);
         // inGame label font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.size = Gdx.graphics.getHeight()/22;
-        //fontParameter.color = new Color(0.3f,0.3f, 0.3f , 0.8f);
+        fontParameter.borderColor = new Color(0.3f,0.3f, 0.3f , 0.8f);
+        fontParameter.borderWidth = 1.5f;
         fontParameter.color = Color.WHITE;
-        inGameLabelFont = fontGenerator.generateFont(fontParameter);
+        inGamePlayerColorableFont = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
     }
     private BitmapFont createBitmapFont(String path, int size){
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.size = size;
+        fontParameter.color = Color.WHITE;
         BitmapFont result = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
         return result;
