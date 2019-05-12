@@ -254,6 +254,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         // draw arrow head at end vector
 
         spriteBatch.enableBlending();
+        spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
         //spriteBatch.draw(region, end.x, end.y);
         //rotate head
