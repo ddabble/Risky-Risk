@@ -76,7 +76,7 @@ public class RiskyRisk extends Game {
         SettingsPresenter.INSTANCE.init();
 
         // TODO: set number of players from (settings) menu
-        SettingsPresenter.INSTANCE.setNumPlayers(8);
+        //SettingsPresenter.INSTANCE.setNumPlayers(8);
 
         switch(Gdx.app.getType()) {
             case Android: // android specific code

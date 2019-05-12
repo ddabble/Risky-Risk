@@ -609,12 +609,17 @@ public class GPGSClient implements IGPGSClient {
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
+        Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size()+match.getAvailableAutoMatchSlots()));
+        mTurnData.setNumberOfPlayers(match.getParticipantIds().size()+match.getAvailableAutoMatchSlots());
+        mTurnData.persistNumberOfPlayers();
         mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
         Log.d(TAG, "#############STARTING MATCH#########################");
-        Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+        if(mTurnData.persist() != null) {
+            Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+        }
 
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
                 mTurnData.persist(), myParticipantId)
@@ -688,7 +693,10 @@ public class GPGSClient implements IGPGSClient {
         int turnStatus = match.getTurnStatus();
 
         Log.d(TAG, "########REVEIVED MATCH DATA######################");
-        Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
+        if(match.getData() != null) {
+            Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
+            Log.d(TAG, "Match data has length " + match.getData().length);
+        }
 
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:

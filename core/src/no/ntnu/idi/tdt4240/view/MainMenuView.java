@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.model.BoardModel;
+import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
@@ -40,6 +41,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         super.create();
 
         BoardModel.INSTANCE.setGPGSClient(gpgsClient);
+        TurnModel.INSTANCE.setGPGSClient(gpgsClient);
 
         camera.setToOrtho(false, 800, 480);
         background = new Texture("background.png");
