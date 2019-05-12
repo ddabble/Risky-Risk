@@ -688,7 +688,9 @@ public class GPGSClient implements IGPGSClient {
         int turnStatus = match.getTurnStatus();
 
         Log.d(TAG, "########REVEIVED MATCH DATA######################");
-        Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
+        if(match.getData() != null) {
+            Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
+        }
 
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:
