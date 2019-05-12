@@ -21,7 +21,7 @@ public class TurnModel {
             currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();
         }
         catch (NullPointerException e){
-            numberOfPlayers = 8;
+            numberOfPlayers = 2;
             currentPlayerID = 0;
         }
 

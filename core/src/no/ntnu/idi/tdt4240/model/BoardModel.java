@@ -73,7 +73,7 @@ public class BoardModel {
             return client.getmRiskyTurn().getNumberOfPlayers();
         }
         catch(NullPointerException e){
-            return 8;
+            return 2;
         }
     }
 
