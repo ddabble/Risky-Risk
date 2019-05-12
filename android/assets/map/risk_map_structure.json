@@ -186,7 +186,7 @@
             "As9": {
                 "color": "0x005C00",
                 "coords": [730, 394],
-                "neighbors": ["As5", "As10", "NA4", "NA7", "Af2", "Af4", "Eu4"]
+                "neighbors": ["As5", "As10", "NA4", "NA7", "Af2", "Af4", "Eu4", "EU7"]
             },
             "As10": {
                 "color": "0x004700",

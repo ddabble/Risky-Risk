@@ -1,7 +1,9 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,18 +18,25 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import javax.swing.GroupLayout;
+import javax.xml.soap.Text;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
+    private int buttonWidth;
+    private int buttonHeight;
     private TextButton phaseButton;
     private TextButton cancelButton;
     private TextButton attackButton;
     private TextButton turnButton;
     private TextButton fortifyButton;
+    private TextButton exitToMainMenuButton;
     private Label phaseLabel;
     private Label playerLabel;
     private Label waitingForTurnLabel;
@@ -55,7 +64,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void create() {
         super.create();
-
+        buttonWidth = (int)Math.round(Gdx.graphics.getWidth()/6.3f);
+        buttonHeight = Gdx.graphics.getHeight()/13;
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
 
@@ -69,27 +79,42 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         //spriteArrowHead.setOriginCenter();
 
         // Actors
-        phaseLabel = createLabel("");
-        phaseLabel.setPosition(0, 200);
-        playerLabel = createLabel("");
-        playerLabel.setPosition(0, 105);
+        phaseLabel = createInGameLabel("");
+        //noinspection IntegerDivisionInFloatingPointContext
+        phaseLabel.setPosition(Gdx.graphics.getWidth()/2, buttonHeight);
+        phaseLabel.setWidth(0);
+        phaseLabel.setColor(Color.DARK_GRAY);
+        phaseLabel.setAlignment(Align.center);
+
+        playerLabel = createPlayerColorableLabel("");
+        //playerLabel.setPosition(buttonWidth/2, 3*buttonHeight + 80);
+        playerLabel.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()- Gdx.graphics.getHeight()/20);
+        playerLabel.setAlignment(Align.center);
+
+        defineAllButtons();
+
         waitingForTurnLabel = createLabel("Match object sent, wait for your turn...");
         waitingForTurnLabel.setPosition(150,150);
-        
-        defineAllButtons(); 
-      
+
         stage.addActor(phaseLabel);
         stage.addActor(playerLabel);
         stage.addActor(phaseButton);
+        stage.addActor(exitToMainMenuButton);
+    }
+
+    private TextButton defineButton(String text, int x, int y){
+        TextButton b = createInGameButton(text);
+        b.setWidth(buttonWidth);
+        b.setHeight(buttonHeight);
+        b.setPosition(x, y);
+        return b;
     }
 
     /**
      * Define button for later use, but do not show them
      */
     private void defineAllButtons(){
-        attackButton = createButton("Attack");
-        attackButton.setWidth(100);
-        attackButton.setPosition(0, 60);
+        attackButton = defineButton("Attack", 0, 2*buttonHeight + 20);
         attackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -97,9 +122,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        fortifyButton = createButton("Move 1 Troop");
-        fortifyButton.setWidth(100);
-        fortifyButton.setPosition(0, 60);
+
+        fortifyButton = defineButton("Move 1 troop", 0, 2*buttonHeight + 20);
         fortifyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -107,9 +131,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        cancelButton = createButton("Cancel Move");
-        cancelButton.setWidth(100);
-        cancelButton.setPosition(0, 30);
+        cancelButton = defineButton("Cancel", 0, buttonHeight + 10);
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -117,9 +139,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        turnButton = createButton("End Turn");
-        turnButton.setWidth(100);
-        turnButton.setPosition(0, 0);
+        turnButton = defineButton("End turn", 0,0);
         turnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -127,12 +147,21 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        phaseButton = createButton("");
-        phaseButton.setWidth(100);
+        phaseButton = defineButton("",0,0);
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 PhasePresenter.INSTANCE.nextPhaseButtonClicked();
+            }
+        });
+        exitToMainMenuButton = createInGameButton("Exit to Main Menu");
+        exitToMainMenuButton.setWidth((int)Math.round(buttonWidth*1.5));
+        exitToMainMenuButton.setHeight(buttonHeight);
+        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth()-exitToMainMenuButton.getWidth(), 0);
+        exitToMainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhasePresenter.INSTANCE.exitToMainMenuButtonClicked();
             }
         });
     }
@@ -189,8 +218,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void onNextPlayer(int playerID, Color playerColor) {
-        playerLabel.setText("Player" + playerID);
-        playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
+        playerLabel.setText("Player" + playerID +"'s turn");
+        inGamePlayerColorableFont.setColor(playerColor);
+
+        playerLabel.setStyle(new Label.LabelStyle(inGamePlayerColorableFont, playerColor));
     }
 
     @Override
@@ -217,9 +248,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         stage.addActor(waitingForTurnLabel);
     }
 
-    public void onMapMove() {
-    }
-
     @Override
     public void render() {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -237,6 +265,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         // draw arrow head at end vector
 
         spriteBatch.enableBlending();
+        spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
         //spriteBatch.draw(region, end.x, end.y);
         //rotate head
@@ -249,13 +278,16 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     private void drawLine(Vector2 start, Vector2 end) {
         Gdx.gl.glLineWidth(4);
-
+        Gdx.gl.glEnable(GL20.GL_BLEND); //make it work when debug mode is off
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); //make it work when debug mode is off
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 0.7f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
+
+        Gdx.gl.glDisable(GL20.GL_BLEND); //make it work when debug mode is off
         Gdx.gl.glLineWidth(1); //set back to default
     }
 

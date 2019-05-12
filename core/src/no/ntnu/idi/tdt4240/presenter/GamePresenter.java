@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
+import no.ntnu.idi.tdt4240.observer.WinObserver;
 
 public class GamePresenter {
     public static final GamePresenter INSTANCE = new GamePresenter();
@@ -34,7 +36,11 @@ public class GamePresenter {
             return true;
         return false;
     }
-
+    public void exitToWinScreen(){
+        for (GameObserver observer: observers){
+            observer.exitToWinScreen();
+        }
+    }
     public void exitToMainMenu(){
         for (GameObserver observer: observers){
             observer.exitToMainMenu();

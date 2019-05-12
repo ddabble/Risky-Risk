@@ -11,12 +11,14 @@ import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.view.WinView;
 
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private MainMenuView mainMenuView;
     private TutorialView tutorialView;
+    private WinView winView;
     private GameView gameView;
     private SignInView signinView;
     public IGPGSClient gpgsClient;
@@ -26,8 +28,10 @@ public class RiskyRisk extends Game {
 
     // Init needs to be called after we set the games GPGS client
     public void init () {
+
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
+        winView = new WinView(this);
         gameView = new GameView(this);
         signinView = null;
 
@@ -51,6 +55,8 @@ public class RiskyRisk extends Game {
 
     public void setScreen(ScreenEnum screen) {
         // TODO: add other screens
+
+
         switch (screen) {
             case MAIN_MENU:
                 setScreen(mainMenuView);
@@ -67,6 +73,10 @@ public class RiskyRisk extends Game {
             case SIGNIN:
                 setScreen(signinView);
                 break;
+            case WIN:
+                setScreen(winView);
+                break;
+
         }
     }
 
@@ -80,7 +90,7 @@ public class RiskyRisk extends Game {
 
         switch(Gdx.app.getType()) {
             case Android: // android specific code
-                setScreen(ScreenEnum.SIGNIN);
+                setScreen(ScreenEnum.MAIN_MENU);
                 break;
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);
@@ -95,5 +105,6 @@ public class RiskyRisk extends Game {
         TUTORIAL,
         GAME,
         SIGNIN,
+        WIN,
     }
 }
