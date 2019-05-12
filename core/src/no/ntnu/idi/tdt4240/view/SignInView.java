@@ -26,8 +26,6 @@ public class SignInView extends AbstractView implements Screen {
     public SignInView(RiskyRisk game) {
         this.game = game;
 
-        isSignedIn = false;
-
         //GPGSTest
         gpgsClient = game.gpgsClient;
         //set the sign in attempt handler to handle what happens if signin fails or succeeds
@@ -50,6 +48,8 @@ public class SignInView extends AbstractView implements Screen {
     @Override
     public void show() {
         super.create();
+
+        isSignedIn = false;
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
