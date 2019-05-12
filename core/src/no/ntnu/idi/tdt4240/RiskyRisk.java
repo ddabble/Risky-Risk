@@ -71,8 +71,6 @@ public class RiskyRisk extends Game {
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
-            //case WebGl:
-            /// HTML5 specific code
             default:
                 setScreen(ScreenEnum.SIGNIN);
         }
