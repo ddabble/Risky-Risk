@@ -53,6 +53,10 @@ public class BoardModel {
         this.client = client;
     }
 
+    public IGPGSClient getClient() {
+        return client;
+    }
+
     private void prepareMapPixmap(Texture mapTexture) {
         if (mapPixmap != null)
             return;
