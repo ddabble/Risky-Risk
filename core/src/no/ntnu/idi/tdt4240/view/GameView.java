@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,6 +17,8 @@ public class GameView implements GameObserver, Screen {
     private final RiskyRisk game;
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
+    private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
+
     private Music gameThemeMusic;
 
     private final PhaseView phaseView;
@@ -43,9 +46,9 @@ public class GameView implements GameObserver, Screen {
         GamePresenter.INSTANCE.init();
         setInputProcessors();
 
-        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
         gameThemeMusic.setLooping(true);
         gameThemeMusic.play();
+        Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
     }
 
     private void setInputProcessors() {
