@@ -66,7 +66,7 @@ public class RiskyRisk extends Game {
 
         switch(Gdx.app.getType()) {
             case Android: // android specific code
-                setScreen(ScreenEnum.SIGNIN);
+                setScreen(ScreenEnum.MAIN_MENU);
                 break;
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);

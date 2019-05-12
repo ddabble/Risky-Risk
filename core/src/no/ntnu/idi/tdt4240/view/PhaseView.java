@@ -23,6 +23,8 @@ import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
+    private int buttonWidth;
+    private int buttonHeight;
     private TextButton phaseButton;
     private TextButton cancelButton;
     private TextButton attackButton;
@@ -54,7 +56,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void create() {
         super.create();
-
+        buttonWidth = Gdx.graphics.getWidth()/7;
+        buttonHeight = Gdx.graphics.getHeight()/14;
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
 
@@ -69,9 +72,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
         // Actors
         phaseLabel = createLabel("");
-        phaseLabel.setPosition(0, 200);
+        phaseLabel.setPosition(0, 3*buttonHeight + 120);
         playerLabel = createLabel("");
-        playerLabel.setPosition(0, 105);
+        playerLabel.setPosition(0, 3*buttonHeight + 90);
 
         defineAllButtons();
 
@@ -85,8 +88,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
      */
     private void defineAllButtons(){
         attackButton = createButton("Attack");
-        attackButton.setWidth(100);
-        attackButton.setPosition(0, 60);
+        attackButton.setWidth(buttonWidth);
+        attackButton.setHeight(buttonHeight);
+        attackButton.setPosition(0, 2*buttonHeight + 60);
         attackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -95,8 +99,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
 
         fortifyButton = createButton("Move 1 Troop");
-        fortifyButton.setWidth(100);
-        fortifyButton.setPosition(0, 60);
+        fortifyButton.setWidth(buttonWidth);
+        fortifyButton.setHeight(buttonHeight);
+        fortifyButton.setPosition(0, 2*buttonHeight + 60);
         fortifyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -105,8 +110,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
 
         cancelButton = createButton("Cancel Move");
-        cancelButton.setWidth(100);
-        cancelButton.setPosition(0, 30);
+        cancelButton.setWidth(buttonWidth);
+        cancelButton.setHeight(buttonHeight);
+        cancelButton.setPosition(0, buttonHeight + 30);
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -115,8 +121,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
 
         turnButton = createButton("End Turn");
-        turnButton.setWidth(100);
-        turnButton.setPosition(0, 0);
+        turnButton.setWidth(buttonWidth);
+        turnButton.setHeight(buttonHeight);
         turnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -125,7 +131,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
 
         phaseButton = createButton("");
-        phaseButton.setWidth(100);
+        phaseButton.setWidth(buttonWidth);
+        phaseButton.setHeight(buttonHeight);
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
