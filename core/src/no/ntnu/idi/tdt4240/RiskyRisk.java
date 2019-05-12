@@ -25,11 +25,11 @@ public class RiskyRisk extends Game {
 
     // Init needs to be called after we set the games GPGS client
     public void init () {
+
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
         gameView = new GameView(this);
         signinView = null;
-
         if (gpgsClient != null) {
             signinView = new SignInView(this);
         }
@@ -37,6 +37,8 @@ public class RiskyRisk extends Game {
 
     public void setScreen(ScreenEnum screen) {
         // TODO: add other screens
+
+
         switch (screen) {
             case MAIN_MENU:
                 setScreen(mainMenuView);

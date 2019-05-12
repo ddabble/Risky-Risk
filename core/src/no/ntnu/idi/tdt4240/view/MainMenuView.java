@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,11 +22,10 @@ import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
 public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private final RiskyRisk game;
-
+    private Music mainMenuTheme;
     private OrthographicCamera camera;
     private Texture background;
     private Stage stage;
-
     private Table table;
     private IGPGSClient gpgsClient;
 
@@ -35,6 +35,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         MenuPresenter.addObserver(this);
         this.game = game;
         camera = new OrthographicCamera();
+
     }
 
     @Override
@@ -44,7 +45,6 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         stage = new Stage(new StretchViewport(800, 480, camera));
         background = new Texture("background.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
-
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();
@@ -66,6 +66,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         offlineButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                mainMenuTheme.dispose();
                 game.setScreen(RiskyRisk.ScreenEnum.GAME);
             }
         });
@@ -129,7 +130,9 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         } else {
             table.add(signInButton).width(150).height(50).pad(20);
         }
-
+        mainMenuTheme = Gdx.audio.newMusic(Gdx.files.internal("menutheme.mp3"));
+        mainMenuTheme.setLooping(true);
+        mainMenuTheme.play();
 
 
         //table.row();
