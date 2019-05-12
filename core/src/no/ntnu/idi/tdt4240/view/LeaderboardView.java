@@ -1,8 +1,12 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.HashMap;
@@ -13,6 +17,7 @@ import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 public class LeaderboardView extends AbstractView implements LeaderboardObserver {
     private Stage stage;
     private Label leaderboardLabel;
+    private ShapeRenderer shapeRenderer;
 
     public LeaderboardView(){
         PhasePresenter.addObserver(this);
@@ -23,11 +28,14 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
 
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
+        shapeRenderer = new ShapeRenderer();
 
 
         // Actors
-        leaderboardLabel = createLabel("");
-        leaderboardLabel.setPosition(0, 400);
+        leaderboardLabel = createLeaderboardLabel("");
+        leaderboardLabel.setAlignment(Align.topLeft);
+        leaderboardLabel.setPosition(25, Gdx.graphics.getHeight() - 20);
+
 
         //the phasepresenter has to update Leaderboard at the start;
 
@@ -66,6 +74,11 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
     public void render() {
         // Draw and update
         //stage.act(); // Updates all actors
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled); //I'm using the Filled ShapeType, but remember you have three of them
+        shapeRenderer.setColor(0, 0, 0, 0.2f);
+        shapeRenderer.rect(10,Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/2.2f-10,Gdx.graphics.getWidth()/8f,Gdx.graphics.getHeight()/2.2f); //assuming you have created those x, y, width and height variables
+        shapeRenderer.end();
+
         stage.draw();
     }
 
@@ -74,4 +87,5 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         stage.dispose();
         super.dispose();
     }
+
 }

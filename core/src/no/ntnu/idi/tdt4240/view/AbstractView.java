@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,8 +26,9 @@ public abstract class AbstractView extends ApplicationAdapter {
     private BitmapFont slideHeaderFont;
     private BitmapFont slideTextFont;
     private BitmapFont inGameLabelButtonFont;
-    BitmapFont inGameLabelFont;
+    private BitmapFont inGameLabelFont;
     BitmapFont inGamePlayerColorableFont;
+    private BitmapFont leaderboardFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);
@@ -67,6 +69,14 @@ public abstract class AbstractView extends ApplicationAdapter {
 
     protected Label createLabel(String text) {
         return new Label(text, labelStyle);
+    }
+    protected Label createLeaderboardLabel(String text) {
+        Label label = this.createLabel(text);
+        Label.LabelStyle leaderboardLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        leaderboardLabelStyle.font = leaderboardFont;
+        label.setStyle(leaderboardLabelStyle);
+
+        return new Label(text, leaderboardLabelStyle);
     }
 
     protected Label createInGameLabel(String text) {
@@ -122,6 +132,8 @@ public abstract class AbstractView extends ApplicationAdapter {
         slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
         inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/25);
         inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight()/22);
+        leaderboardFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight()/30);
+
         // inGame label font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
