@@ -10,11 +10,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -145,10 +142,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         // Button sizes
         int btnHeight = 100;
         int btnWidth = 350;
-
-        //TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        //buttonStyle.font = this.slideTextFont;
-        //buttonStyle.fontColor = new Color(0,0,0,1);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = this.slideTextFont;

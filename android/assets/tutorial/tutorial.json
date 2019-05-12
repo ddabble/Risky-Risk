@@ -27,12 +27,12 @@
   "6": {
     "title": "To attack",
     "image": "tutorial/images/tutorial5.jpg",
-    "text": "First choose the territory you're attacking and the one you're attacking from. Then roll the dice against the opponent who occupies the opposing territory. Before rolling, both you and your opponent must announce the number of dice you intend to roll."
+    "text": "First choose the territory you’re attacking and the one you’re attacking from. Then roll the dice against the opponent who occupies the opposing territory."
   },
   "7": {
     "title": "To attack",
     "image": "tutorial/images/tutorial5.jpg",
-    "text": "You, the attacker, will roll 1,2 or 3 dice: You must have at least one more army in your territory than the number of dice you roll. * The defender will roll either 1 or 2 white dice: To roll 2 dice, he or she must have at least 2 armies on the territory under attack."
+    "text": "You, the attacker, will roll 1,2 or 3 dice, and must have at least one more army in your territory than the number of dice you roll. The game always chooses the maximum number of dice for you.  The defender will roll either 1 or 2 white dice: To roll 2 dice, he or she must have at least 2 armies on the territory under attack."
   },
   "8": {
     "title": "To Decide a Battle",
