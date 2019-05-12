@@ -59,7 +59,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     public void create() {
         super.create();
         buttonWidth = Gdx.graphics.getWidth()/7;
-        buttonHeight = Gdx.graphics.getHeight()/14;
+        buttonHeight = Gdx.graphics.getHeight()/13;
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
 
@@ -90,10 +90,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
      * Define button for later use, but do not show them
      */
     private void defineAllButtons(){
-        attackButton = createButton("Attack");
+        attackButton = createInGameButton("Attack");
         attackButton.setWidth(buttonWidth);
         attackButton.setHeight(buttonHeight);
-        attackButton.setPosition(0, 2*buttonHeight + 60);
+        attackButton.setPosition(0, 2*buttonHeight + 20);
         attackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -101,10 +101,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        fortifyButton = createButton("Move 1 Troop");
+        fortifyButton = createInGameButton("Move 1 Troop");
         fortifyButton.setWidth(buttonWidth);
         fortifyButton.setHeight(buttonHeight);
-        fortifyButton.setPosition(0, 2*buttonHeight + 60);
+        fortifyButton.setPosition(0, 2*buttonHeight + 20);
         fortifyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -112,10 +112,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        cancelButton = createButton("Cancel Move");
+        cancelButton = createInGameButton("Cancel Move");
         cancelButton.setWidth(buttonWidth);
         cancelButton.setHeight(buttonHeight);
-        cancelButton.setPosition(0, buttonHeight + 30);
+        cancelButton.setPosition(0, buttonHeight + 10);
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -123,7 +123,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        turnButton = createButton("End Turn");
+        turnButton = createInGameButton("End Turn");
         turnButton.setWidth(buttonWidth);
         turnButton.setHeight(buttonHeight);
         turnButton.addListener(new ClickListener() {
@@ -133,7 +133,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        phaseButton = createButton("");
+        phaseButton = createInGameButton("");
         phaseButton.setWidth(buttonWidth);
         phaseButton.setHeight(buttonHeight);
         phaseButton.addListener(new ClickListener() {
@@ -145,9 +145,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
         exitToMainMenuButton = createInGameButton("Exit to Main Menu");
         //exitToMainMenuButton.setWidth(150);
-        exitToMainMenuButton.setWidth(buttonWidth);
+        exitToMainMenuButton.setWidth((int)Math.round(buttonWidth*1.5));
         exitToMainMenuButton.setHeight(buttonHeight);
-        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth()-buttonHeight, 0);
+        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth()-exitToMainMenuButton.getWidth(), 0);
         exitToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
