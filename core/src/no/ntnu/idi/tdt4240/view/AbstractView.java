@@ -2,6 +2,7 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 
 public abstract class AbstractView extends ApplicationAdapter {
     private SelectBoxStyle selectStyle;
@@ -18,7 +20,16 @@ public abstract class AbstractView extends ApplicationAdapter {
     private TextField.TextFieldStyle textFieldStyle;
 
     protected TextButton createButton(String text) {
-        return new TextButton(text, textButtonStyle);
+        return new TextButton(text, this.textButtonStyle);
+    }
+    protected TextButton createTextButton(String text, Label.LabelStyle labelStyle, Color fontColor) {
+        TextButton textButton = new TextButton(text, this.textButtonStyle);
+        this.textButtonStyle.fontColor = fontColor;
+        Label label = this.createLabel(text);
+        label.setStyle(labelStyle);
+        label.setAlignment(Align.center);
+        textButton.setLabel(label);
+        return textButton;
     }
 
     protected <T> SelectBox<T> createSelectBox(T[] options) {

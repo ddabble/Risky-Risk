@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -31,7 +33,9 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     private int stage_width;
     private int stage_height;
-    private int currentSlideCounter = 0;
+    private int currentSlideCounter;
+    private int tutSlideHeight;
+    private int slideHeaderHeight;
 
     private BitmapFont headerFont;
     private BitmapFont slideHeaderFont;
@@ -45,9 +49,9 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private TextField slideHeader;
     private TextField slideText;
 
-    private Button previousButton;
-    private Button nextButton;
-    private Button mainMenuButton;
+    private TextButton previousButton;
+    private TextButton nextButton;
+    private TextButton mainMenuButton;
 
     private Texture slideImage;
 
@@ -72,8 +76,9 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
         // Render the tutorial slide image
         int imageWidth = this.stage_width/2 - this.stage_width/20;
+        int imageHeight =  2 * imageWidth / 3;
         stage.getBatch().begin();
-        stage.getBatch().draw(this.slideImage, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-420,imageWidth,300);
+        stage.getBatch().draw(this.slideImage, this.stage_width-(imageWidth + this.stage_width/40), this.stage_height-(imageHeight+150),imageWidth,imageHeight);
         stage.getBatch().end();
 
         stage.act(delta);
@@ -93,6 +98,8 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.stage_width = Gdx.graphics.getWidth();
         this.stage_height = Gdx.graphics.getHeight();
 
+        this.createBitmapFonts();
+        this.createTextStyles();
         this.createButtons(stage);
         this.createTextFields(stage);
     }
@@ -135,23 +142,33 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private void createButtons(Stage stage){
 
         // Button sizes
-        int btnHeight = 50;
-        int btnWidth = 100;
+        int btnHeight = 100;
+        int btnWidth = 350;
+
+        //TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        //buttonStyle.font = this.slideTextFont;
+        //buttonStyle.fontColor = new Color(0,0,0,1);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = this.slideTextFont;
+        Color fontColor = new Color(Color.BLACK);
+
+
 
         // Main menu button
-        this.mainMenuButton = this.createButton("Back to main");
-        this.mainMenuButton.setPosition(this.stage_width/100, this.stage_height/100);
+        this.mainMenuButton = this.createTextButton("Back to main", labelStyle, fontColor);
+        this.mainMenuButton.setPosition(this.stage_width/100, this.stage_height/50);
         this.mainMenuButton.setSize(btnWidth,btnHeight);
 
         // Previous button
-        this.previousButton = this.createButton("Previous");
-        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width/100), this.stage_height/100);
+        this.previousButton = this.createTextButton("Previous",  labelStyle, fontColor);
+        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width/100), this.stage_height/50);
         this.previousButton.setSize(btnWidth,btnHeight);
         this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
-        this.nextButton = this.createButton("Next");
-        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width/100), this.stage_height/100);
+        this.nextButton = this.createTextButton("Next",  labelStyle, fontColor);
+        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width/100), this.stage_height/50);
         this.nextButton.setSize(btnWidth,btnHeight);
 
 
@@ -208,34 +225,33 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     private void createTextFields(Stage stage){
 
-        this.createBitmapFonts();
-        this.createTextStyles();
+
 
         // Text field dimensions
-        int headerWidth = 200;
+        int headerWidth = 350;
         int headerHeight = 50;
 
         int slideHeaderWidth = this.stage_width/2;
-        int slideHeaderHeight = 50;
+        this.slideHeaderHeight = 50;
 
         int tutSlideWidth = this.stage_width/2 - this.stage_width/20;
-        int tutSlideHeight = 400;
+        this.tutSlideHeight = 2* this.stage_height/3;
 
         this.currentSlideCounter = 0;
 
         // Header text
         this.header = new TextField("Tutorial", this.headerStyle);
-        this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/100));
+        this.header.setPosition(this.stage_width/2-headerWidth/2,this.stage_height - (headerHeight + this.stage_height/30));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
         this.slideHeader = new TextField(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
-        this.slideHeader.setPosition(this.stage_width/40,this.stage_height - 3*slideHeaderHeight + 30);
+        this.slideHeader.setPosition(this.stage_width/40,this.stage_height - (slideHeaderHeight + 150));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
         this.slideText = new TextArea(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
-        this.slideText.setPosition(this.stage_width/40,this.stage_height - (tutSlideHeight+120));
+        this.slideText.setPosition(this.stage_width/40,this.stage_height - (this.tutSlideHeight+ this.slideHeaderHeight + 170));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
         // Add actors
@@ -250,21 +266,21 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         // Header font
         FreeTypeFontGenerator headerGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter headerParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        headerParameter.size = 40;
+        headerParameter.size = 80;
         this.headerFont = headerGenerator.generateFont(headerParameter);
         headerGenerator.dispose();
 
         // Slide header font
         FreeTypeFontGenerator slideHeaderGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter slideHeaderParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        slideHeaderParameter.size = 25;
+        slideHeaderParameter.size = 60;
         this.slideHeaderFont = slideHeaderGenerator.generateFont(slideHeaderParameter);
         slideHeaderGenerator.dispose();
 
         // Slide text font
         FreeTypeFontGenerator slideTextGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter slideTextParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        slideTextParameter.size = 20;
+        slideTextParameter.size = 45;
         this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter);
         slideTextGenerator.dispose();
     }
