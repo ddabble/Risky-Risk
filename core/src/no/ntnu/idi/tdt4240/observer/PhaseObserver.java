@@ -33,4 +33,8 @@ public interface PhaseObserver {
     void updatePhase(String currentPhase, String nextPhase);
 
     void onSelectedTerritoriesChange(Territory start, Territory end);
+
+    //called when the match state has been sent to the server and
+    //the local player has to wait until its their turn
+    void onWaitingForTurn();
 }
