@@ -78,6 +78,8 @@ public class PhasePresenter {
             updatePhase(observer);
         TroopModel.INSTANCE.onSelectTerritory(null);
         deselectedTerritories();
+
+        checkGameOver();
     }
 
     public void nextPhaseButtonClicked() {
@@ -219,6 +221,17 @@ public class PhasePresenter {
             observer.onSelectTerritory(null);
         System.out.println(" - Player"+winner[0]+" won this fight. - ");
     }
+
+    /**
+     * Exits the game if game is over
+     */
+    void checkGameOver(){
+        // Check if game is over (one player owns all territories)
+        if (GamePresenter.INSTANCE.isGameOver()){
+            GamePresenter.INSTANCE.exitToMainMenu();
+        }
+    }
+
 
     /**
      * Updates leaderboard according to the state of the game
