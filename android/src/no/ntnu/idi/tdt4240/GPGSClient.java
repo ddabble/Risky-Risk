@@ -614,7 +614,9 @@ public class GPGSClient implements IGPGSClient {
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
         Log.d(TAG, "#############STARTING MATCH#########################");
-        Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+        if(mTurnData.persist() != null) {
+            Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+        }
 
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
                 mTurnData.persist(), myParticipantId)
