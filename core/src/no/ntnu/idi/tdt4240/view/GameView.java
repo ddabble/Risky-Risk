@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
@@ -15,8 +14,7 @@ import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
 public class GameView implements GameObserver, Screen {
     private final RiskyRisk game;
-    public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
-    public static final float VIEWPORT_HEIGHT = 601;
+    private static final float WORLD_WIDTH = 100;
     private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
 
     private Music gameThemeMusic;
@@ -26,7 +24,7 @@ public class GameView implements GameObserver, Screen {
     private final TroopView troopView;
     private final LeaderboardView leaderboardView;
 
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
 
     public GameView(RiskyRisk game) {
         this.game = game; // need this for exiting back to main menu
@@ -35,13 +33,13 @@ public class GameView implements GameObserver, Screen {
 
         phaseView = new PhaseView(camera);
         boardView = new BoardView(camera);
-        troopView = new TroopView();
+        troopView = new TroopView(boardView, camera);
         leaderboardView = new LeaderboardView();
     }
 
     @Override
     public void show() {
-        camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
         GamePresenter.INSTANCE.init();
         setInputProcessors();
@@ -102,12 +100,24 @@ public class GameView implements GameObserver, Screen {
     }
 
     @Override
-    public void exitToMainMenu(){
+    public void exitToMainMenu() {
         game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
     }
 
     @Override
-    public void exitToWinScreen(){
+    public void exitToWinScreen() {
         game.setScreen(RiskyRisk.ScreenEnum.WIN);
+    }
+
+    public static float getWorldWidth() {
+        return WORLD_WIDTH;
+    }
+
+    /**
+     * Requires LibGDX to be initialized to work.
+     */
+    public static float getWorldHeight() {
+        final float aspectRatio = (float)Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        return WORLD_WIDTH * aspectRatio;
     }
 }

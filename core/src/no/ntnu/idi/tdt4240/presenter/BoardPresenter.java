@@ -36,6 +36,11 @@ public class BoardPresenter {
             observer.create(TerritoryModel.getTerritoryMap(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
     }
 
+    public void onMapMoved() {
+        for (TroopObserver observer : troopObservers)
+            observer.onMapMoved();
+    }
+
     public void onBoardClicked(Vector2 mapPos) {
         Territory clickedTerritory = BoardModel.INSTANCE.getTerritory(mapPos);
         TroopModel.INSTANCE.onSelectTerritory(clickedTerritory);
