@@ -105,4 +105,9 @@ public class GameView implements GameObserver, Screen {
     public void exitToMainMenu(){
         game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
     }
+
+    @Override
+    public void exitToWinScreen(){
+        game.setScreen(RiskyRisk.ScreenEnum.WIN);
+    }
 }

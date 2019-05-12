@@ -10,6 +10,7 @@ import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
+import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
@@ -22,8 +23,10 @@ public class BoardPresenter {
     private BoardPresenter() {}
 
     public void init() {
-        BoardModel.INSTANCE.init();
         TroopModel.INSTANCE.init();
+        TurnModel.INSTANCE.init();
+        SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
+        BoardModel.INSTANCE.init();
 
         for (BoardObserver observer : boardObservers) {
             observer.create(BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
