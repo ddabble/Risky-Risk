@@ -48,7 +48,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();
-        table.setDebug(true);
+        //table.setDebug(true);
         table.setFillParent(true);
         table.setX(0);
         table.setY(0);
