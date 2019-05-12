@@ -64,6 +64,10 @@ public class BoardModel {
         mapPixmap = textureData.consumePixmap();
     }
 
+    public int getNumberOfPlayers() {
+        return client.getmRiskyTurn().getNumberOfPlayers();
+    }
+
     //used to check if this board is held online
     //or only localy. This determines how it should be
     //passed to the next player

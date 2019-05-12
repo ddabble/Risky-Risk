@@ -14,4 +14,5 @@ public interface IRiskyTurn {
     int getNumberOfPlayers();
     void setNumberOfPlayers(int numberOfPlayers);
     int getCurrentPlayer();
+    void persistNumberOfPlayers();
 }
