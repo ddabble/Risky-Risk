@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
@@ -20,6 +21,8 @@ public class BoardModel {
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
+
+    private IGPGSClient client;
 
     private BoardModel() {}
 
@@ -33,6 +36,18 @@ public class BoardModel {
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
+        this.client = client;
+
+        //if we have an active match in the client it means we are playing an online game,
+        //disregard the data loaded from TerritoryModel and instead fill in data from
+        //the match object
+        if(client.matchActive()) {
+            client.getmRiskyTurn().getTerritoryMapData(territoryMap);
+        }
+    }
+
+    public void setGPGSClient(IGPGSClient client) {
+        this.client = client;
     }
 
     private void prepareMapPixmap(Texture mapTexture) {
@@ -44,6 +59,21 @@ public class BoardModel {
             textureData.prepare();
 
         mapPixmap = textureData.consumePixmap();
+    }
+
+    //used to check if this board is held online
+    //or only localy. This determines how it should be
+    //passed to the next player
+    public boolean isOnlineMatch() {
+        return client.matchActive();
+    }
+
+    //this function is used to tell the board
+    //that it should update its online match state
+    //i.e the data in riskyTurn and send it to the server
+    public void updateAndSendMatchData() {
+        client.getmRiskyTurn().updateData(territoryMap);
+        client.onDoneClicked();
     }
 
     /**
