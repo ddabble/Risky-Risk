@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -63,6 +64,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         region = new TextureRegion(texture, 0, 0, 50, 50);
         spriteArrowHead = new Sprite(texture);
         spriteArrowHead.setScale(0.5f);
+        spriteArrowHead.setColor(0, 0, 0, 0.7f);
         //spriteArrowHead.setSize(25,25); //scale the image down to 50%
         //spriteArrowHead.setOriginCenter();
 
@@ -73,71 +75,48 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         playerLabel.setPosition(0, 105);
         waitingForTurnLabel = createLabel("Match object sent, wait for your turn...");
         waitingForTurnLabel.setPosition(150,150);
-        phaseButton = createButton("");
-        phaseButton.setWidth(100);
-        phaseButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                PhasePresenter.INSTANCE.nextPhaseButtonClicked();
-            }
-        });
-
+        
+        defineAllButtons(); 
+      
         stage.addActor(phaseLabel);
         stage.addActor(playerLabel);
         stage.addActor(phaseButton);
     }
 
-    @Override
-    public void addFortifyButton() {
-        if (!stage.getActors().contains(fortifyButton, false)) {
-            fortifyButton = createButton("Move 1 Troop");
-            fortifyButton.setWidth(100);
-            fortifyButton.setPosition(0, 60);
-            fortifyButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    PhasePresenter.INSTANCE.fortifyButtonClicked();
-                }
-            });
-            stage.addActor(fortifyButton);
-        }
-    }
+    /**
+     * Define button for later use, but do not show them
+     */
+    private void defineAllButtons(){
+        attackButton = createButton("Attack");
+        attackButton.setWidth(100);
+        attackButton.setPosition(0, 60);
+        attackButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhasePresenter.INSTANCE.attackButtonClicked();
+            }
+        });
 
-    @Override
-    public void addCancelButton() {
-        if (!stage.getActors().contains(cancelButton, false)) {
-            cancelButton = createButton("Cancel Move");
-            cancelButton.setWidth(100);
-            cancelButton.setPosition(0, 30);
-            cancelButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    PhasePresenter.INSTANCE.cancelButtonClicked();
-                }
-            });
-            stage.addActor(cancelButton);
-        }
-    }
+        fortifyButton = createButton("Move 1 Troop");
+        fortifyButton.setWidth(100);
+        fortifyButton.setPosition(0, 60);
+        fortifyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhasePresenter.INSTANCE.fortifyButtonClicked();
+            }
+        });
 
-    @Override
-    public void addAttackButton() {
-        if (!stage.getActors().contains(attackButton, false)) {
-            attackButton = createButton("Attack");
-            attackButton.setWidth(100);
-            attackButton.setPosition(0, 60);
-            attackButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    PhasePresenter.INSTANCE.attackButtonClicked();
-                }
-            });
-            stage.addActor(attackButton);
-        }
-    }
+        cancelButton = createButton("Cancel Move");
+        cancelButton.setWidth(100);
+        cancelButton.setPosition(0, 30);
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhasePresenter.INSTANCE.cancelButtonClicked();
+            }
+        });
 
-    @Override
-    public void addTurnButton() {
-        phaseButton.remove();
         turnButton = createButton("End Turn");
         turnButton.setWidth(100);
         turnButton.setPosition(0, 0);
@@ -147,12 +126,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
                 PhasePresenter.INSTANCE.nextTurnButtonClicked();
             }
         });
-        stage.addActor(turnButton);
-    }
 
-    @Override
-    public void removeTurnButton() {
-        turnButton.remove();
         phaseButton = createButton("");
         phaseButton.setWidth(100);
         phaseButton.addListener(new ClickListener() {
@@ -161,25 +135,50 @@ public class PhaseView extends AbstractView implements PhaseObserver {
                 PhasePresenter.INSTANCE.nextPhaseButtonClicked();
             }
         });
-        stage.addActor(phaseButton);
+    }
+
+    public void addActor(Actor actor){
+        if (!stage.getActors().contains(actor, false))
+            stage.addActor(actor);
+    }
+    public void removeActor(Actor actor){
+        if (stage.getActors().contains(actor, false))
+            actor.remove();
     }
 
     @Override
-    public void removeFortifyButton() {
-        if (stage.getActors().contains(fortifyButton, false))
-            fortifyButton.remove();
+    public void addFortifyButton() {
+        addActor(fortifyButton);
     }
 
     @Override
-    public void removeCancelButton() {
-        if (stage.getActors().contains(cancelButton, false))
-            cancelButton.remove();
+    public void addCancelButton() {
+        addActor(cancelButton);
     }
 
     @Override
-    public void removeAttackButton() {
-        if (stage.getActors().contains(attackButton, false))
-            attackButton.remove();
+    public void addAttackButton() {
+        addActor(attackButton);
+    }
+
+    @Override
+    public void addTurnButton() { //TODO: change to better name
+        removeActor(phaseButton);
+        addActor(turnButton);
+    }
+
+
+    @Override
+    public void removeTurnButton() { //TODO: change to better name
+        removeActor(turnButton);
+        addActor(phaseButton);
+    }
+
+    @Override
+    public void removePhaseButtons() {
+        removeActor(attackButton);
+        removeActor(cancelButton);
+        removeActor(fortifyButton);
     }
 
     @Override
@@ -189,13 +188,13 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void updateRenderedCurrentPlayer(int playerID, Color playerColor) {
+    public void onNextPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID);
         playerLabel.setStyle(new Label.LabelStyle(new BitmapFont(), playerColor));
     }
 
     @Override
-    public void updatePhase(String curPhase, String nextPhase) {
+    public void onNextPhase(String curPhase, String nextPhase) {
         phaseLabel.setText("Current Phase: " + curPhase);
         phaseButton.setText(nextPhase);
     }
@@ -210,7 +209,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             shouldDrawArrow = false;
         }
     }
-
     @Override
     public void onWaitingForTurn() {
         //dummy code, just to give some indication
@@ -255,7 +253,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0, 0, 0, 0.02f);
+        shapeRenderer.setColor(0, 0, 0, 0.7f);
         shapeRenderer.line(start, end);
         shapeRenderer.end();
         Gdx.gl.glLineWidth(1); //set back to default

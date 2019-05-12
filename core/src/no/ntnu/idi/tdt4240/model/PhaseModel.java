@@ -9,7 +9,7 @@ public class PhaseModel {
     public static final PhaseModel INSTANCE = new PhaseModel();
 
     private PhaseState phase;
-    // TODO: enums for phases instead of string names
+    public enum Phase {Place, Attack, Fortify};
 
     private PhaseModel() {
         // Initial phase state
@@ -28,10 +28,8 @@ public class PhaseModel {
     // Phases
     public interface PhaseState {
         String getName();
-
+        Phase getEnum();
         PhaseState next();
-
-        // TODO: write actual implementation
         void territoryClicked(Territory territory);
     }
 
@@ -39,6 +37,11 @@ public class PhaseModel {
         @Override
         public String getName() {
             return "Place";
+        }
+
+        @Override
+        public Phase getEnum() {
+            return Phase.Place;
         }
 
         @Override
@@ -57,7 +60,10 @@ public class PhaseModel {
         public String getName() {
             return "Attack";
         }
-
+        @Override
+        public Phase getEnum() {
+            return Phase.Attack;
+        }
         @Override
         public PhaseState next() {
             return new FortifyPhase();
@@ -83,6 +89,10 @@ public class PhaseModel {
         private void start() { //called when the phase is started
 
             System.out.println("Started fortify phase");
+        }
+        @Override
+        public Phase getEnum() {
+            return Phase.Fortify;
         }
 
         @Override

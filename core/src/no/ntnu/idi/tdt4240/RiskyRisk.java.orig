@@ -3,7 +3,11 @@ package no.ntnu.idi.tdt4240;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
-import no.ntnu.idi.tdt4240.model.BoardModel;
+<<<<<<< HEAD
+import no.ntnu.idi.tdt4240.controller.SettingsController;
+import no.ntnu.idi.tdt4240.controller.TutorialController;
+=======
+>>>>>>> f00c82028e4b6522ed940bf79e87ff747261c151
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
@@ -28,24 +32,11 @@ public class RiskyRisk extends Game {
     public void init () {
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
-        gameView = new GameView(this);
+        gameView = new GameView();
         signinView = null;
 
-        //gpgsClient needs serveral callbacks to be hooked up to properly function
-        //these are added here and inside signinView.
         if (gpgsClient != null) {
-            //create the signinView, this happens here because it requires a gpgsClient
             signinView = new SignInView(this);
-
-            //register a callback for starting the game ui when receiving match data
-            //TODO: this is currently not used, instead we jsut check matchActive() in main
-            //menu every frame
-            gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
-                @Override
-                public void onGameUIStart() {
-                    //setScreen(ScreenEnum.GAME);
-                }
-            });
         }
     }
 
@@ -85,6 +76,8 @@ public class RiskyRisk extends Game {
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
+            //case WebGl:
+            /// HTML5 specific code
             default:
                 setScreen(ScreenEnum.SIGNIN);
         }
