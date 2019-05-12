@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
 public class GameView implements GameObserver, Screen {
+    private final RiskyRisk game;
     public static final float VIEWPORT_WIDTH = 1227; // TODO: temporary viewport size
     public static final float VIEWPORT_HEIGHT = 601;
 
@@ -21,7 +23,8 @@ public class GameView implements GameObserver, Screen {
 
     private OrthographicCamera camera;
 
-    public GameView() {
+    public GameView(RiskyRisk game) {
+        this.game = game; // need this for exiting back to main menu
         GamePresenter.addObserver(this);
 
         camera = new OrthographicCamera();
@@ -89,5 +92,10 @@ public class GameView implements GameObserver, Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public void exitToMainMenu(){
+        game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
     }
 }

@@ -2,7 +2,12 @@ package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GamePresenter {
@@ -17,21 +22,28 @@ public class GamePresenter {
         PhasePresenter.INSTANCE.init();
     }
 
+    public boolean isGameOver(){
+        HashMap<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
+        int countPlayerWithTerritories = 0;
+        for (HashMap.Entry entry : leaderboard.entrySet()){
+            if ((int)entry.getValue() > 0){
+                countPlayerWithTerritories++;
+            }
+        }
+        if (countPlayerWithTerritories <= 1)
+            return true;
+        return false;
+    }
+
+    public void exitToMainMenu(){
+        for (GameObserver observer: observers){
+            observer.exitToMainMenu();
+        }
+    }
+
     public void reset() {
         BoardPresenter.INSTANCE.reset();
     }
-
-    /*
-    public void setNumberOfPlayers(int num) {
-        model.gameSettings.setNumberOfPlayers(num);
-        view.setNumberOfPlayers(model.gameSettings.getNumberOfPlayers());
-    }
-
-    public int getNumberOfPlayers() {return model.gameSettings.getNumberOfPlayers();}
-
-    // The role of the controller is to translate inputs into changes and relay this back
-    // Below is the translation of clicks to model changes
-    */
 
     public static void addObserver(GameObserver observer) {
         INSTANCE.observers.add(observer);
