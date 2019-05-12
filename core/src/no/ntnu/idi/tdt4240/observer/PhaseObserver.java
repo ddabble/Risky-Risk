@@ -20,17 +20,13 @@ public interface PhaseObserver {
 
     void removeTurnButton();
 
-    void removeFortifyButton();
-
-    void removeCancelButton();
-
-    void removeAttackButton();
+    void removePhaseButtons();
 
     void updateRenderedVariables(String phase, int troopsToPlace);
 
-    void updateRenderedCurrentPlayer(int playerID, Color playerColor);
+    void onNextPlayer(int playerID, Color playerColor);
 
-    void updatePhase(String currentPhase, String nextPhase);
+    void onNextPhase(String currentPhase, String nextPhase);
 
     void onSelectedTerritoriesChange(Territory start, Territory end);
 }
