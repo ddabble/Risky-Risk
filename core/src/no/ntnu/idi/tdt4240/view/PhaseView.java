@@ -28,6 +28,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private TextButton attackButton;
     private TextButton turnButton;
     private TextButton fortifyButton;
+    private TextButton exitToMainMenuButton;
     private Label phaseLabel;
     private Label playerLabel;
     private Stage stage;
@@ -78,6 +79,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         stage.addActor(phaseLabel);
         stage.addActor(playerLabel);
         stage.addActor(phaseButton);
+        stage.addActor(exitToMainMenuButton);
     }
 
     /**
@@ -130,6 +132,16 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 PhasePresenter.INSTANCE.nextPhaseButtonClicked();
+            }
+        });
+
+        exitToMainMenuButton = createButton("Exit to Main Menu");
+        exitToMainMenuButton.setWidth(150);
+        exitToMainMenuButton.setPosition(1000, 60);
+        exitToMainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                PhasePresenter.INSTANCE.exitToMainMenuButtonClicked();
             }
         });
     }
