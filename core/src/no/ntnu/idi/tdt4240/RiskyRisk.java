@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
@@ -30,8 +31,21 @@ public class RiskyRisk extends Game {
         gameView = new GameView(this);
         signinView = null;
 
+        //gpgsClient needs serveral callbacks to be hooked up to properly function
+        //these are added here and inside signinView.
         if (gpgsClient != null) {
+            //create the signinView, this happens here because it requires a gpgsClient
             signinView = new SignInView(this);
+
+            //register a callback for starting the game ui when receiving match data
+            //TODO: this is currently not used, instead we jsut check matchActive() in main
+            //menu every frame
+            gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
+                @Override
+                public void onGameUIStart() {
+                    //setScreen(ScreenEnum.GAME);
+                }
+            });
         }
     }
 

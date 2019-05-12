@@ -1,21 +1,5 @@
 package no.ntnu.idi.tdt4240;
 
-/*
- * Copyright (C) 2013 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import android.util.Log;
 
 import org.json.JSONException;
@@ -25,39 +9,24 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-/**
- * Basic turn data. It's just a blank data string and a turn number counter.
- *
- * @author wolff
- */
 public class RiskyTurn implements IRiskyTurn {
 
     public static final String TAG = "EBTurn";
 
-    public String data = "";
+    public byte[] data;
     public int turnCounter;
 
     public RiskyTurn() {
     }
 
     // This is the byte array we will write out to the TBMP API.
+    //the way i do it now i just always store the byte array so i don't have to parse TerritoryMap here
+    //the advantage of doing it this way is that RiskyTurn does not need a reference to TerritoryMap -Ø
     public byte[] persist() {
-        JSONObject retVal = new JSONObject();
-
-        try {
-            retVal.put("data", data);
-            retVal.put("turnCounter", turnCounter);
-
-        } catch (JSONException e) {
-            Log.e("SkeletonTurn", "There was an issue writing JSON!", e);
-        }
-
-        String st = retVal.toString();
-
-        Log.d(TAG, "==== PERSISTING\n" + st);
-
-        return st.getBytes(Charset.forName("UTF-8"));
+        return data;
     }
 
     // Creates a new instance of SkeletonTurn.
@@ -68,37 +37,33 @@ public class RiskyTurn implements IRiskyTurn {
             return new RiskyTurn();
         }
 
-        String st = null;
-        try {
-            st = new String(byteArray, "UTF-8");
-        } catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
-            return null;
-        }
-
-        Log.d(TAG, "====UNPERSIST \n" + st);
-
-        RiskyTurn retVal = new RiskyTurn();
-
-        try {
-            JSONObject obj = new JSONObject(st);
-
-            if (obj.has("data")) {
-                retVal.data = obj.getString("data");
-            }
-            if (obj.has("turnCounter")) {
-                retVal.turnCounter = obj.getInt("turnCounter");
-            }
-
-        } catch (JSONException e) {
-            Log.e("SkeletonTurn", "There was an issue parsing JSON!", e);
-        }
-
-        return retVal;
+        RiskyTurn riskyTurn = new RiskyTurn();
+        riskyTurn.data = byteArray;
+        return riskyTurn;
     }
 
-    public String getTurnData() {
-        return data;
+    public void updateData(TerritoryMap map) {
+        int index = 0;
+        //this technically only needs to happen for the first player
+        data = new byte[map.getAllTerritories().size()];
+        for (Territory territory : map.getAllTerritories()){
+            data[index] = (byte)territory.getNumTroops();
+            index++;
+        }
+    }
+
+    //is this even used -Ø
+   // public String getTurnData() {
+   //     return data;
+    //}
+
+    //this gets a reference to TerritoryMap and it just changes that reference, so no need to return a value ;^)
+    public void getTerritoryMapData(TerritoryMap map) {
+        int index = 0;
+        for (Territory territory : map.getAllTerritories()){
+            territory.setNumTroops(data[index]);
+            index++;
+        }
     }
 
     public int getTurnCounter() {

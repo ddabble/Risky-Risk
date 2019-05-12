@@ -14,6 +14,7 @@ import no.ntnu.idi.tdt4240.data.Continent;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.model.BattleModel;
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.PhaseModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
@@ -63,6 +64,26 @@ public class PhasePresenter {
     }
 
     public void nextTurnButtonClicked() {
+        if(BoardModel.INSTANCE.isOnlineMatch()) {
+            nextTurnOnlineMatch();
+        } else {
+            nextTurnOfflineMatch();
+        }
+    }
+
+    //handle giving the turn to the next player if its an online match
+    private void nextTurnOnlineMatch() {
+        //since its an online match we need to update the state of the
+        //match object on the server
+        BoardModel.INSTANCE.updateAndSendMatchData();
+        //for now just kick the player back to main menu
+        for(PhaseObserver observer : phaseObservers) {
+            observer.onWaitingForTurn();
+        }
+    }
+
+    //pass turn to next player in an offline match
+    private void nextTurnOfflineMatch() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
         removePhaseButtons();
