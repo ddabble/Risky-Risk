@@ -24,9 +24,24 @@ public abstract class AbstractView extends ApplicationAdapter {
     private BitmapFont headerFont;
     private BitmapFont slideHeaderFont;
     private BitmapFont slideTextFont;
+    private BitmapFont inGameLabelButtonFont;
+    private BitmapFont inGameLabelFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);
+    }
+
+    protected TextButton createInGameButton(String text){
+        //in game buttons
+        TextButton textButton = new TextButton(text, this.textButtonStyle);
+        //this.textButtonStyle.fontColor = Color.BLACK;
+        Label label = this.createLabel(text);
+        Label.LabelStyle inGameButtonLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));;
+        inGameButtonLabelStyle.font = inGameLabelButtonFont;
+        label.setStyle(inGameButtonLabelStyle);
+        label.setAlignment(Align.center);
+        textButton.setLabel(label);
+        return textButton;
     }
     protected TextButton createTextButton(String text, Label.LabelStyle labelStyle, Color fontColor) {
         TextButton textButton = new TextButton(text, this.textButtonStyle);
@@ -66,7 +81,9 @@ public abstract class AbstractView extends ApplicationAdapter {
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal("button/uiskin.json"));
+
         createBitmapFonts();
+
         textButtonStyle = new TextButtonStyle(skin.get(TextButtonStyle.class));
         selectStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
         labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -86,6 +103,9 @@ public abstract class AbstractView extends ApplicationAdapter {
         headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",40);
         slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",25);
         slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
+        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/20);
+        inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/10);
+
     }
     private BitmapFont createBitmapFont(String path, int size){
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
