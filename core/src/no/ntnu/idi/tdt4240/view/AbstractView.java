@@ -125,9 +125,9 @@ public abstract class AbstractView extends ApplicationAdapter {
         // inGame label font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = Gdx.graphics.getHeight()/22;
+        fontParameter.size = Gdx.graphics.getHeight()/20;
         fontParameter.borderColor = new Color(0.3f,0.3f, 0.3f , 0.8f);
-        fontParameter.borderWidth = 1.5f;
+        fontParameter.borderWidth = 1.8f;
         fontParameter.color = Color.WHITE;
         inGamePlayerColorableFont = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
