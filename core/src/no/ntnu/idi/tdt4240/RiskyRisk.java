@@ -31,7 +31,6 @@ public class RiskyRisk extends Game {
         signinView = null;
 
         if (gpgsClient != null) {
-            BoardModel.INSTANCE.init(gpgsClient);
             signinView = new SignInView(this);
         }
     }
