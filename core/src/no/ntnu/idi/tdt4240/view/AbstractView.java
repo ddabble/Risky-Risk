@@ -103,7 +103,7 @@ public abstract class AbstractView extends ApplicationAdapter {
         headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",40);
         slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",25);
         slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
-        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/20);
+        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/25);
         inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/10);
 
     }
