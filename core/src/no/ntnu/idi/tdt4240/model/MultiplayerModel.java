@@ -12,6 +12,7 @@ import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
+import sun.rmi.runtime.Log;
 
 public class MultiplayerModel {
     public static final MultiplayerModel INSTANCE = new MultiplayerModel();
@@ -37,10 +38,11 @@ public class MultiplayerModel {
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
         this.numPlayers = numPlayers;
+        System.out.println("Number of players in MultiplayerModel: " + numPlayers);
+        System.out.println("Number of players in gpgsclinet: " + BoardModel.INSTANCE.getNumberOfPlayers());
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
-        System.out.println("INITTITITTdddddddddddddd");
         initLeaderboard();
     }
 

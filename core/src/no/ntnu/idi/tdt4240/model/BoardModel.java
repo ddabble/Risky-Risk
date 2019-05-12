@@ -36,13 +36,16 @@ public class BoardModel {
         prepareMapPixmap(mapTexture);
         mapTexture.dispose();
         mapTexture = createColorLookupTexture();
-        this.client = client;
 
         //if we have an active match in the client it means we are playing an online game,
         //disregard the data loaded from TerritoryModel and instead fill in data from
         //the match object
         if(client.matchActive()) {
-            client.getmRiskyTurn().getTerritoryMapData(territoryMap);
+            if(client.getmRiskyTurn().isDataInitialized()) {
+                client.getmRiskyTurn().getTerritoryMapData(territoryMap);
+            } else  { //init data
+                client.getmRiskyTurn().updateData(territoryMap, 0);
+            }
         }
     }
 
@@ -61,6 +64,10 @@ public class BoardModel {
         mapPixmap = textureData.consumePixmap();
     }
 
+    public int getNumberOfPlayers() {
+        return client.getmRiskyTurn().getNumberOfPlayers();
+    }
+
     //used to check if this board is held online
     //or only localy. This determines how it should be
     //passed to the next player
@@ -72,7 +79,8 @@ public class BoardModel {
     //that it should update its online match state
     //i.e the data in riskyTurn and send it to the server
     public void updateAndSendMatchData() {
-        client.getmRiskyTurn().updateData(territoryMap);
+
+        client.getmRiskyTurn().updateData(territoryMap, TurnModel.INSTANCE.getCurrentPlayerID());
         client.onDoneClicked();
     }
 

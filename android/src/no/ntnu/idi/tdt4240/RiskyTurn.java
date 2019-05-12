@@ -18,6 +18,8 @@ public class RiskyTurn implements IRiskyTurn {
 
     public byte[] data;
     public int turnCounter;
+    public int numberOfPlayers;
+    public int currentPlayer;
 
     public RiskyTurn() {
     }
@@ -29,7 +31,7 @@ public class RiskyTurn implements IRiskyTurn {
         return data;
     }
 
-    // Creates a new instance of SkeletonTurn.
+    // Creates a new instance of RiskyTurn.
     static public RiskyTurn unpersist(byte[] byteArray) {
 
         if (byteArray == null) {
@@ -39,17 +41,50 @@ public class RiskyTurn implements IRiskyTurn {
 
         RiskyTurn riskyTurn = new RiskyTurn();
         riskyTurn.data = byteArray;
+        if(byteArray.length == 1) {
+            Log.d(TAG, "Initial setup data was transfered, this game has " + byteArray[0] + " players");
+            riskyTurn.numberOfPlayers = byteArray[0];
+            riskyTurn.currentPlayer = 0;
+        } else { // not initial setup, so just read last two bytes
+            riskyTurn.currentPlayer = byteArray[byteArray.length-2];
+            riskyTurn.numberOfPlayers = byteArray[byteArray.length-1];
+        }
+        System.out.println("Byte array received looks like this:");
+        for(int i = 0; i < byteArray.length; i++) {
+            System.out.print(byteArray[i] + ", ");
+        }
         return riskyTurn;
     }
 
-    public void updateData(TerritoryMap map) {
+    public void updateData(TerritoryMap map, int currentPlayer) {
         int index = 0;
         //this technically only needs to happen for the first player
-        data = new byte[map.getAllTerritories().size()];
+        data = new byte[map.getAllTerritories().size()*2+2];
         for (Territory territory : map.getAllTerritories()){
             data[index] = (byte)territory.getNumTroops();
-            index++;
+            data[index+1] = (byte)territory.getOwnerID();
+            index+=2;
         }
+        //store whos turn it is and how many people are playing
+        data[map.getAllTerritories().size()*2] = (byte)currentPlayer;
+        data[map.getAllTerritories().size()*2+1] = (byte)numberOfPlayers;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public void persistNumberOfPlayers() {
+        data = new byte[1];
+        data[0] = (byte)numberOfPlayers;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
     }
 
     //is this even used -Ø
@@ -62,8 +97,13 @@ public class RiskyTurn implements IRiskyTurn {
         int index = 0;
         for (Territory territory : map.getAllTerritories()){
             territory.setNumTroops(data[index]);
-            index++;
+            territory.setOwnerID(data[index+1]);
+            index+=2;
         }
+    }
+
+    public boolean isDataInitialized() {
+        return data != null && data.length != 0 && data.length != 1;
     }
 
     public int getTurnCounter() {
