@@ -4,6 +4,7 @@ public interface IGPGSClient {
 
     // Check if a match is active so we can enter game view
     boolean matchActive();
+    void setMatchNotActive();
     void pauseGame();
     boolean isDoingTurn();
 

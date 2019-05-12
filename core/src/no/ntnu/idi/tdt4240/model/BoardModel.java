@@ -53,6 +53,10 @@ public class BoardModel {
         this.client = client;
     }
 
+    public IGPGSClient getClient() {
+        return client;
+    }
+
     private void prepareMapPixmap(Texture mapTexture) {
         if (mapPixmap != null)
             return;
@@ -65,7 +69,12 @@ public class BoardModel {
     }
 
     public int getNumberOfPlayers() {
-        return client.getmRiskyTurn().getNumberOfPlayers();
+        try{
+            return client.getmRiskyTurn().getNumberOfPlayers();
+        }
+        catch(NullPointerException e){
+            return 8;
+        }
     }
 
     //used to check if this board is held online

@@ -100,8 +100,6 @@ public class PhasePresenter {
             updatePhase(observer);
         TroopModel.INSTANCE.onSelectTerritory(null);
         deselectedTerritories();
-
-        checkGameOver();
     }
 
     public void nextPhaseButtonClicked() {
@@ -109,6 +107,7 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Attack"))
             AttackModel.INSTANCE.cancelAttack();
         PhaseModel.INSTANCE.nextPhase();
+        deselectedTerritories();
         if (PhaseModel.INSTANCE.getPhase().getName().equals("Fortify")) {
             for (PhaseObserver observer : phaseObservers)
                 observer.addTurnButton();
@@ -242,15 +241,23 @@ public class PhasePresenter {
         for (TroopObserver observer : troopObservers)
             observer.onSelectTerritory(null);
         System.out.println(" - Player"+winner[0]+" won this fight. - ");
+        checkGameOver();
     }
 
+
+    public void exitToMainMenuButtonClicked(){
+        // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
+        BoardModel.INSTANCE.getClient().setMatchNotActive(); //extremely hacky, board should not be handing out the client, instead the
+        //client should be its own singleton model
+        GamePresenter.INSTANCE.exitToMainMenu();
+    }
     /**
      * Exits the game if game is over
      */
     void checkGameOver(){
         // Check if game is over (one player owns all territories)
         if (GamePresenter.INSTANCE.isGameOver()){
-            GamePresenter.INSTANCE.exitToMainMenu();
+            GamePresenter.INSTANCE.exitToWinScreen();
         }
     }
 

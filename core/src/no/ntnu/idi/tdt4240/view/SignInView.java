@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
@@ -20,12 +21,13 @@ public class SignInView extends AbstractView implements Screen {
     private final RiskyRisk game;
     private Stage stage;
     private Table table;
+    private OrthographicCamera camera;
     private IGPGSClient gpgsClient;
     private boolean isSignedIn = false;
 
     public SignInView(RiskyRisk game) {
         this.game = game;
-
+        camera = new OrthographicCamera();
         //GPGSTest
         gpgsClient = game.gpgsClient;
         //set the sign in attempt handler to handle what happens if signin fails or succeeds
@@ -50,11 +52,11 @@ public class SignInView extends AbstractView implements Screen {
         super.create();
 
         isSignedIn = false;
-
-        stage = new Stage(new ScreenViewport());
+        camera.setToOrtho(false, 800, 480);
+        stage = new Stage(new StretchViewport(800, 480, camera));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
-        table.setDebug(true);
+        //table.setDebug(true);
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -62,7 +64,7 @@ public class SignInView extends AbstractView implements Screen {
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
-            Button signInButton = this.createButton("Connect to google play");
+            Button signInButton = this.createButton("Sign in to Google Play");
 
             signInButton.addListener(new ClickListener() {
                 @Override
@@ -72,7 +74,7 @@ public class SignInView extends AbstractView implements Screen {
                     }
                 }
             });
-            table.add(signInButton).pad(100);
+            table.add(signInButton).width(350).height(150).pad(100);
             table.row();
         }
     }
