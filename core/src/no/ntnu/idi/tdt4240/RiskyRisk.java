@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
+import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
@@ -10,12 +11,14 @@ import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.view.WinView;
 
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private MainMenuView mainMenuView;
     private TutorialView tutorialView;
+    private WinView winView;
     private GameView gameView;
     private SignInView signinView;
     public IGPGSClient gpgsClient;
@@ -28,10 +31,25 @@ public class RiskyRisk extends Game {
 
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
+        winView = new WinView(this);
         gameView = new GameView(this);
         signinView = null;
+
+        //gpgsClient needs serveral callbacks to be hooked up to properly function
+        //these are added here and inside signinView.
         if (gpgsClient != null) {
+            //create the signinView, this happens here because it requires a gpgsClient
             signinView = new SignInView(this);
+
+            //register a callback for starting the game ui when receiving match data
+            //TODO: this is currently not used, instead we jsut check matchActive() in main
+            //menu every frame
+            gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
+                @Override
+                public void onGameUIStart() {
+                    //setScreen(ScreenEnum.GAME);
+                }
+            });
         }
     }
 
@@ -55,6 +73,10 @@ public class RiskyRisk extends Game {
             case SIGNIN:
                 setScreen(signinView);
                 break;
+            case WIN:
+                setScreen(winView);
+                break;
+
         }
     }
 
@@ -64,7 +86,7 @@ public class RiskyRisk extends Game {
         SettingsPresenter.INSTANCE.init();
 
         // TODO: set number of players from (settings) menu
-        SettingsPresenter.INSTANCE.setNumPlayers(8);
+        //SettingsPresenter.INSTANCE.setNumPlayers(8);
 
         switch(Gdx.app.getType()) {
             case Android: // android specific code
@@ -83,5 +105,6 @@ public class RiskyRisk extends Game {
         TUTORIAL,
         GAME,
         SIGNIN,
+        WIN,
     }
 }
