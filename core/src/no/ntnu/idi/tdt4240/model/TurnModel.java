@@ -1,5 +1,7 @@
 package no.ntnu.idi.tdt4240.model;
 
+import org.omg.CORBA.SystemException;
+
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
 public class TurnModel {
@@ -14,8 +16,15 @@ public class TurnModel {
     }
 
     public void init(){
-        numberOfPlayers = client.getmRiskyTurn().getNumberOfPlayers();
-        currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();
+        try{
+            numberOfPlayers = client.getmRiskyTurn().getNumberOfPlayers();
+            currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();
+        }
+        catch (NullPointerException e){
+            numberOfPlayers = 8;
+            currentPlayerID = 0;
+        }
+
     }
 
     public void setGPGSClient(IGPGSClient client) {
