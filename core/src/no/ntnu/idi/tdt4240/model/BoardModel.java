@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.math.Vector2;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
@@ -75,16 +77,59 @@ public class BoardModel {
     }
 
     /**
+     * On desktop:
      * Has a max limit of 255 different territories, because {@link #indexToColor(byte)} works bytewise.
+     * <p>
+     * On Android:
+     * Has a max limit of 224 different territories, because of the OpenGL ES 3.0 specification.
      */
     private Texture createColorLookupTexture() {
-        // Makes `Pixmap.drawPixel()` directly set the pixel, instead of drawing the new color on top of the old one
-        mapPixmap.setBlending(Pixmap.Blending.None);
+        abstract class PixmapProcessor implements Runnable {
+            final int processorIndex;
 
-        for (int y = 0; y < mapPixmap.getHeight(); y++) {
-            for (int x = 0; x < mapPixmap.getWidth(); x++) {
-                int pixel = mapPixmap.getPixel(x, y);
+            PixmapProcessor(int processorIndex) {
+                this.processorIndex = processorIndex;
+            }
+        }
+
+        List<Thread> threads = new ArrayList<>();
+        IntBuffer pixelBuffer = mapPixmap.getPixels().asIntBuffer();
+        final int numPixels = pixelBuffer.remaining();
+        final int numProcessors = Runtime.getRuntime().availableProcessors();
+        for (int i = 0; i < numProcessors; i++) {
+            Thread thread = new Thread(new PixmapProcessor(i) {
+                @Override
+                public void run() {
+                    int startI = processorIndex * numPixels / numProcessors;
+                    int endI = (processorIndex + 1) * numPixels / numProcessors;
+                    processPixelsInRange(startI, endI, pixelBuffer, territoryMap);
+                }
+            });
+            thread.start();
+            threads.add(thread);
+        }
+
+        // Wait for threads to finish processing
+        try {
+            for (Thread thread : threads)
+                thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        updateColorTerritoryMap();
+        return new Texture(mapPixmap);
+    }
+
+    private static void processPixelsInRange(int startI, int endI, IntBuffer buf, TerritoryMap territoryMap) {
+        for (int i = startI; i < endI; i++) {
+                int pixel = buf.get(i);
                 int pixelAlpha = pixel & 0x000000FF;
+
+                // If transparent, skip pixel
+                if (pixelAlpha == 0)
+                    continue;
+
                 // (Unsigned) bit shift one byte to the right to discard the alpha value
                 int pixelColor = pixel >>> 8;
 
@@ -99,12 +144,8 @@ public class BoardModel {
                 if (territory != null)
                     pixelColor = indexToColor(territory.colorIndex);
                 int newPixel = (pixelColor << 8) | pixelAlpha;
-                mapPixmap.drawPixel(x, y, newPixel);
-            }
+                buf.put(i, newPixel);
         }
-        updateColorTerritoryMap();
-
-        return new Texture(mapPixmap);
     }
 
     private static int indexToColor(byte index) {
@@ -112,12 +153,12 @@ public class BoardModel {
     }
 
     private void updateColorTerritoryMap() {
-        Map<Integer, String> color_IDmap = territoryMap.getColor_IDmap();
-        for (int color : new ArrayList<>(color_IDmap.keySet())) {
-            String ID = color_IDmap.remove(color);
-            color_IDmap.put(indexToColor(territoryMap.getTerritory(ID).colorIndex), ID);
+        Map<Integer, Territory> color_territoryMap = territoryMap.getColor_territoryMap();
+        for (int color : new ArrayList<>(color_territoryMap.keySet())) {
+            Territory territory = color_territoryMap.remove(color);
+            color_territoryMap.put(indexToColor(territory.colorIndex), territory);
         }
-        territoryMap.setColor_IDmap(color_IDmap);
+        territoryMap.setColor_territoryMap(color_territoryMap);
     }
 
     public Territory getTerritory(Vector2 mapPos) {

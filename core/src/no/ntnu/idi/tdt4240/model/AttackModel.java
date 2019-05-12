@@ -54,5 +54,7 @@ public class AttackModel {
 
     public void cancelAttack() {
         attack.clear();
+        fromTerritory = null;
+        toTerritory = null;
     }
 }
