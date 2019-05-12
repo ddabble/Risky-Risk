@@ -100,8 +100,6 @@ public class PhasePresenter {
             updatePhase(observer);
         TroopModel.INSTANCE.onSelectTerritory(null);
         deselectedTerritories();
-
-        checkGameOver();
     }
 
     public void nextPhaseButtonClicked() {
@@ -257,7 +255,7 @@ public class PhasePresenter {
     void checkGameOver(){
         // Check if game is over (one player owns all territories)
         if (GamePresenter.INSTANCE.isGameOver()){
-            GamePresenter.INSTANCE.exitToMainMenu();
+            GamePresenter.INSTANCE.exitToWinScreen();
         }
     }
 
