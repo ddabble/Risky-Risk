@@ -502,6 +502,10 @@ public class GPGSClient implements IGPGSClient {
                 + message);
     }
 
+    public void setMatchNotActive() {
+        matchActive = false;
+    }
+
     // This function is what gets called when you return from either the Play
     // Games built-in inbox, or else the create game built-in interface.
     //@Override
