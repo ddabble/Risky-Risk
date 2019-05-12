@@ -55,6 +55,21 @@ public class BoardModel {
         mapPixmap = textureData.consumePixmap();
     }
 
+    //used to check if this board is held online
+    //or only localy. This determines how it should be
+    //passed to the next player
+    public boolean isOnlineMatch() {
+        return client.matchActive();
+    }
+
+    //this function is used to tell the board
+    //that it should update its online match state
+    //i.e the data in riskyTurn and send it to the server
+    public void updateAndSendMatchData() {
+        client.getmRiskyTurn().updateData(territoryMap);
+        client.onDoneClicked();
+    }
+
     /**
      * Has a max limit of 255 different territories, because {@link #indexToColor(byte)} works bytewise.
      */

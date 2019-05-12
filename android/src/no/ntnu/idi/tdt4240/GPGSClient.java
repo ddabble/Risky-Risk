@@ -277,12 +277,15 @@ public class GPGSClient implements IGPGSClient {
 
     // Upload your new gamestate, then take a turn, and pass it on to the next
     // player.
-    public void onDoneClicked(String data) {
+    public void onDoneClicked() {
 
         String nextParticipantId = getNextParticipantId();
         // Create the next turn
         mTurnData.turnCounter += 1;
-        mTurnData.data = null; //changed from string to null as mTurnData no longer uses string to hold data
+
+        //We update the turn object from the PhasePresenter (which call the BoardModel, which updates RiskyTurn)
+        //so we dont have to do it here
+        //mTurnData.data = null; //changed from string to null as mTurnData no longer uses string to hold data
 
         mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
                 mTurnData.persist(), nextParticipantId)
