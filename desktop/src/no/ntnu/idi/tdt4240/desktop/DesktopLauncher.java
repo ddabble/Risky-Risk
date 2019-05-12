@@ -9,7 +9,8 @@ import no.ntnu.idi.tdt4240.desktop.controller.OfflineGPGSClient;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1227; // TODO: temporary window size
+        // Size of `risk_game_map.png`, for simplicity:
+        config.width = 1227;
         config.height = 601;
         RiskyRisk game = new RiskyRisk();
         game.gpgsClient = new OfflineGPGSClient();

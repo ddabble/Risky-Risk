@@ -41,7 +41,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Label playerLabel;
     private Label waitingForTurnLabel;
     private Stage stage;
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
 
     private Vector2 lineFrom;
     private Vector2 lineTo;
@@ -269,7 +269,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         spriteBatch.begin();
         //spriteBatch.draw(region, end.x, end.y);
         //rotate head
-        float angle = new Vector2(end).sub(start).angle();
+        float angle = end.cpy().sub(start).angle();
         spriteArrowHead.setRotation(angle - 90f);
         spriteArrowHead.setOriginBasedPosition(end.x, end.y); // center the sprite at (x, y)
         spriteArrowHead.draw(spriteBatch);
