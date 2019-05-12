@@ -40,7 +40,7 @@ public class RiskyRisk extends Game {
             gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
                 @Override
                 public void onGameUIStart() {
-                    setScreen(ScreenEnum.GAME);
+                    //setScreen(ScreenEnum.GAME);
                 }
             });
         }
