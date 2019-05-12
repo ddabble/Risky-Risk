@@ -62,7 +62,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void create() {
         super.create();
-        buttonWidth = Gdx.graphics.getWidth()/7;
+        buttonWidth = (int)Math.round(Gdx.graphics.getWidth()/6.3f);
         buttonHeight = Gdx.graphics.getHeight()/13;
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
@@ -125,7 +125,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        cancelButton = defineButton("Cancel move", 0, buttonHeight + 10);
+        cancelButton = defineButton("Cancel", 0, buttonHeight + 10);
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
