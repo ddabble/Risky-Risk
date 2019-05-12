@@ -18,6 +18,8 @@ public class RiskyTurn implements IRiskyTurn {
 
     public byte[] data;
     public int turnCounter;
+    public int numberOfPlayers;
+    public int currentPlayer;
 
     public RiskyTurn() {
     }
@@ -29,7 +31,7 @@ public class RiskyTurn implements IRiskyTurn {
         return data;
     }
 
-    // Creates a new instance of SkeletonTurn.
+    // Creates a new instance of RiskyTurn.
     static public RiskyTurn unpersist(byte[] byteArray) {
 
         if (byteArray == null) {
@@ -42,14 +44,30 @@ public class RiskyTurn implements IRiskyTurn {
         return riskyTurn;
     }
 
-    public void updateData(TerritoryMap map) {
+    public void updateData(TerritoryMap map, int currentPlayer) {
         int index = 0;
         //this technically only needs to happen for the first player
-        data = new byte[map.getAllTerritories().size()];
+        data = new byte[map.getAllTerritories().size()*2+2];
         for (Territory territory : map.getAllTerritories()){
             data[index] = (byte)territory.getNumTroops();
-            index++;
+            data[index+1] = (byte)territory.getOwnerID();
+            index+=2;
         }
+        //store whos turn it is and how many people are playing
+        data[map.getAllTerritories().size()*2] = (byte)currentPlayer;
+        data[map.getAllTerritories().size()*2+1] = (byte)numberOfPlayers;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
     }
 
     //is this even used -Ø
@@ -59,15 +77,16 @@ public class RiskyTurn implements IRiskyTurn {
 
     //this gets a reference to TerritoryMap and it just changes that reference, so no need to return a value ;^)
     public void getTerritoryMapData(TerritoryMap map) {
-        if(data != null && data.length != 0) {
-            int index = 0;
-            for (Territory territory : map.getAllTerritories()){
-                territory.setNumTroops(data[index]);
-                index++;
-            }
-        } else {
-            updateData(map);
+        int index = 0;
+        for (Territory territory : map.getAllTerritories()){
+            territory.setNumTroops(data[index]);
+            territory.setOwnerID(data[index+1]);
+            index+=2;
         }
+    }
+
+    public boolean isDataInitialized() {
+        return data != null && data.length != 0;
     }
 
     public int getTurnCounter() {
