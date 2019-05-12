@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
@@ -18,6 +20,7 @@ public class MultiplayerModel {
 
     private int numPlayers;
     private Map<Integer, Color> playerID_colorMap;
+    private HashMap<Integer, Integer> playerID_numTerritories; // same as leaderboard
 
     private MultiplayerModel() {}
 
@@ -37,6 +40,8 @@ public class MultiplayerModel {
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
+        System.out.println("INITTITITTdddddddddddddd");
+        initLeaderboard();
     }
 
     private List<Integer> generatePlayerIDs() {
@@ -74,4 +79,27 @@ public class MultiplayerModel {
             territories.get(i).setNumTroops(1);
         }
     }
+
+    public void initLeaderboard(){
+        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
+        int[] numOfTerritories = new int[numPlayers];
+
+        for (Territory t : territories)
+            numOfTerritories[t.getOwnerID()] += 1;
+
+        HashMap<Integer, Integer> leaderboard = new HashMap<>();
+        for (int i = 0; i < numPlayers; i++){
+            leaderboard.put(i, numOfTerritories[i]);
+        }
+        setLeaderboard(leaderboard);
+    }
+
+    public HashMap<Integer, Integer> getLeaderboard() {
+        return playerID_numTerritories;
+    }
+
+    public void setLeaderboard(HashMap<Integer, Integer> playerID_numTerritories) {
+        this.playerID_numTerritories = playerID_numTerritories;
+    }
+
 }

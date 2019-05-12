@@ -27,7 +27,7 @@ public class RiskyRisk extends Game {
     public void init () {
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
-        gameView = new GameView();
+        gameView = new GameView(this);
         signinView = null;
 
         if (gpgsClient != null) {
@@ -71,8 +71,6 @@ public class RiskyRisk extends Game {
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
-            //case WebGl:
-            /// HTML5 specific code
             default:
                 setScreen(ScreenEnum.SIGNIN);
         }
