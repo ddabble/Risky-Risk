@@ -44,9 +44,14 @@ public class RiskyTurn implements IRiskyTurn {
         if(byteArray.length == 1) {
             Log.d(TAG, "Initial setup data was transfered, this game has " + byteArray[0] + " players");
             riskyTurn.numberOfPlayers = byteArray[0];
+            riskyTurn.currentPlayer = 0;
         } else { // not initial setup, so just read last two bytes
             riskyTurn.currentPlayer = byteArray[byteArray.length-2];
             riskyTurn.numberOfPlayers = byteArray[byteArray.length-1];
+        }
+        System.out.println("Byte array received looks like this:");
+        for(int i = 0; i < byteArray.length; i++) {
+            System.out.print(byteArray[i] + ", ");
         }
         return riskyTurn;
     }
