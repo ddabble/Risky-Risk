@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.MenuController;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
+import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
 public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private final RiskyRisk game;
@@ -22,9 +23,13 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private Texture background;
     private Stage stage;
 
-    public MainMenuView(RiskyRisk game) {
-        MenuController.addObserver(this);
+    private Table table;
+    private IGPGSClient gpgsClient;
 
+    public MainMenuView(RiskyRisk game) {
+
+        gpgsClient = game.gpgsClient;
+        MenuPresenter.addObserver(this);
         this.game = game;
         camera = new OrthographicCamera();
     }
@@ -39,24 +44,66 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        // Back Button
-        Button multiplayerButton = createButton("Play");
-        multiplayerButton.setPosition(100, 200);
-        multiplayerButton.setSize(100, 50);
+        table = new Table();
+        table.setDebug(true);
+        table.setFillParent(true);
+        stage.addActor(table);
 
-        multiplayerButton.addListener(new ClickListener() {
+        Button signOutButton = createButton("Sign out");
+        Button signInButton = createButton("Sign in");
+        Button checkGamesButton = createButton("Check active games");
+        Button startMatchButton = createButton("Start new match");
+        Button tutorialButton = createButton("Tutorial");
+
+        Button offlineButton = createButton("Offline Game");
+
+        // Sign out
+        offlineButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO: Should be MultiplayerView, GameView is only temporary to easier see the board being rendered
-//                game.setScreen(new MultiplayerView(game));
                 game.setScreen(RiskyRisk.ScreenEnum.GAME);
             }
         });
 
-        Button tutorialButton = createButton("Tutorial");
-        tutorialButton.setPosition(100, 400);
-        tutorialButton.setSize(100, 50);
+        // Sign out
+        signOutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.signOut();
+                    game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
+                }
+            }
+        });
 
+        //sign in
+        signInButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(RiskyRisk.ScreenEnum.SIGNIN);
+            }
+        });
+
+        // Start match
+        startMatchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.onStartMatchClicked();
+                }
+            }
+        });
+
+        // Check matches
+        checkGamesButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (gpgsClient != null) {
+                    gpgsClient.onCheckGamesClicked();
+                }
+            }
+        });
+
+        // Tutorial
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -64,12 +111,27 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
             }
         });
 
-        stage.addActor(multiplayerButton);
-        stage.addActor(tutorialButton);
+        table.add(tutorialButton).pad(100);
+        table.row();
+        table.add(offlineButton).pad(100);
+        table.row();
+        if(gpgsClient != null && gpgsClient.isSignedIn()) {
+            table.add(signOutButton).pad(100);
+        } else {
+            table.add(signInButton).pad(100);
+        }
+        table.add(startMatchButton).pad(100);
+        table.add(checkGamesButton).pad(100);
+        table.row();
     }
 
     @Override
     public void render(float delta) {
+
+        if (gpgsClient != null && gpgsClient.matchActive()) {
+            game.setScreen(RiskyRisk.ScreenEnum.GAME);
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);

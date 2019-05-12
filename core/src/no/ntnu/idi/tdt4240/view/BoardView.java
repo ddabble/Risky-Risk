@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,9 +18,9 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.controller.BoardController;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
+import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
@@ -34,7 +35,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
     public BoardView(OrthographicCamera camera) {
-        BoardController.addObserver(this);
+        BoardPresenter.addObserver(this);
         this.camera = camera;
     }
 
@@ -42,7 +43,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
     @Override
-    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
+    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 
@@ -65,7 +66,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     return false;
 
                 Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
-                BoardController.INSTANCE.onBoardClicked(mapPos);
+                BoardPresenter.INSTANCE.onBoardClicked(mapPos);
                 return true;
             }
         });
@@ -86,14 +87,21 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         String vertexShader = parsedShaders.get(GL20.GL_VERTEX_SHADER);
         String fragmentShader = parsedShaders.get(GL20.GL_FRAGMENT_SHADER);
         mapShader = new ShaderProgram(vertexShader, fragmentShader);
+        if (!mapShader.isCompiled())
+            System.err.println("Error compiling mapShader:\n" + mapShader.getLog());
         ShaderProgram.pedantic = false;
     }
 
-    private void initColorLookupArray(List<Territory> territories, Map<Integer, Integer> playerID_colorMap) {
+    private void initColorLookupArray(List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
         for (Territory territory : territories) {
-            int playerColor = playerID_colorMap.get(territory.getOwnerID());
-            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor << 8);
+            Color playerColor = playerID_colorMap.get(territory.getOwnerID());
+            PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, playerColor);
         }
+    }
+
+    @Override
+    public void onTerritoryChangeColor(Territory territory, Color color) {
+        PLAYER_COLOR_LOOKUP.setColor(territory.colorIndex, color);
     }
 
     @Override
