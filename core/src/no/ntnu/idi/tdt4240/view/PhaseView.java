@@ -170,24 +170,11 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         addActor(phaseButton);
     }
 
-    private void removeFortifyButton() {
-        removeActor(fortifyButton);
-    }
-
-    private void removeCancelButton() {
-        removeActor(cancelButton);
-    }
-
-    private void removeAttackButton() {
-        removeActor(attackButton);
-    }
-
-
     @Override
     public void removePhaseButtons() {
-        removeAttackButton();
-        removeCancelButton();
-        removeFortifyButton();
+        removeActor(attackButton);
+        removeActor(cancelButton);
+        removeActor(fortifyButton);
     }
 
     @Override

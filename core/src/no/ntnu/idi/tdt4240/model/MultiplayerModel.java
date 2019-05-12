@@ -20,7 +20,7 @@ public class MultiplayerModel {
 
     private int numPlayers;
     private Map<Integer, Color> playerID_colorMap;
-    private Set<Integer> lostPlayers = new HashSet<>();
+    private HashMap<Integer, Integer> playerID_numTerritories; // same as leaderboard
 
     private MultiplayerModel() {}
 
@@ -40,6 +40,8 @@ public class MultiplayerModel {
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
+        System.out.println("INITTITITTdddddddddddddd");
+        initLeaderboard();
     }
 
     private List<Integer> generatePlayerIDs() {
@@ -78,11 +80,26 @@ public class MultiplayerModel {
         }
     }
 
-    public void addLostPlayer(int playerID){
-        lostPlayers.add(playerID);
+    public void initLeaderboard(){
+        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
+        int[] numOfTerritories = new int[numPlayers];
+
+        for (Territory t : territories)
+            numOfTerritories[t.getOwnerID()] += 1;
+
+        HashMap<Integer, Integer> leaderboard = new HashMap<>();
+        for (int i = 0; i < numPlayers; i++){
+            leaderboard.put(i, numOfTerritories[i]);
+        }
+        setLeaderboard(leaderboard);
     }
 
-    public Set<Integer> getLostPlayers(){
-        return lostPlayers;
+    public HashMap<Integer, Integer> getLeaderboard() {
+        return playerID_numTerritories;
     }
+
+    public void setLeaderboard(HashMap<Integer, Integer> playerID_numTerritories) {
+        this.playerID_numTerritories = playerID_numTerritories;
+    }
+
 }
