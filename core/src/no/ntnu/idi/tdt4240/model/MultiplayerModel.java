@@ -40,7 +40,6 @@ public class MultiplayerModel {
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
-        System.out.println("INITTITITTdddddddddddddd");
         initLeaderboard();
     }
 
