@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.presenter;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -22,18 +23,18 @@ public class BoardPresenter {
 
     private BoardPresenter() {}
 
-    public void init() {
+    public void init(OrthographicCamera camera) {
         TroopModel.INSTANCE.init();
         TurnModel.INSTANCE.init();
         SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
         BoardModel.INSTANCE.init();
 
         for (BoardObserver observer : boardObservers) {
-            observer.create(BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
+            observer.create(camera, BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
                             MultiplayerModel.INSTANCE.getPlayerID_colorMap());
         }
         for (TroopObserver observer : troopObservers)
-            observer.create(TerritoryModel.getTerritoryMap(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
+            observer.create(camera, TerritoryModel.getTerritoryMap(), TroopModel.INSTANCE.getCircleTexture(), TroopModel.INSTANCE.getCircleSelectTexture());
     }
 
     public void onBoardClicked(Vector2 mapPos) {

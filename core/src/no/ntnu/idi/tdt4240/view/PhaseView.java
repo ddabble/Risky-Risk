@@ -28,7 +28,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private static final float ARROW_HEAD_SIZE_MAP_RATIO = 1 / 30f;
 
     private final BoardView boardView;
-    private final OrthographicCamera camera;
+
+    private OrthographicCamera camera;
 
     private int buttonWidth;
     private int buttonHeight;
@@ -50,10 +51,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Texture texture;
     private Sprite spriteArrowHead;
 
-    public PhaseView(BoardView boardView, OrthographicCamera camera) {
+    public PhaseView(BoardView boardView) {
         PhasePresenter.addObserver(this);
         this.boardView = boardView;
-        this.camera = camera;
     }
 
     @Override
@@ -62,8 +62,10 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void create() {
+    public void create(OrthographicCamera camera) {
         super.create();
+        this.camera = camera;
+
         buttonWidth = Math.round(Gdx.graphics.getWidth() / 6.3f);
         buttonHeight = Gdx.graphics.getHeight() / 13;
         // For drawing and input handling

@@ -24,24 +24,25 @@ public class GameView implements GameObserver, Screen {
     private final TroopView troopView;
     private final LeaderboardView leaderboardView;
 
-    private final OrthographicCamera camera;
+    private OrthographicCamera camera;
 
     public GameView(RiskyRisk game) {
         this.game = game; // need this for exiting back to main menu
         GamePresenter.addObserver(this);
-        camera = new OrthographicCamera();
 
-        boardView = new BoardView(camera);
-        troopView = new TroopView(boardView, camera);
-        phaseView = new PhaseView(boardView, camera);
+        boardView = new BoardView();
+        troopView = new TroopView(boardView);
+        phaseView = new PhaseView(boardView);
         leaderboardView = new LeaderboardView();
     }
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
+
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        GamePresenter.INSTANCE.init();
+        GamePresenter.INSTANCE.init(camera);
         setInputProcessors();
 
         gameThemeMusic.setLooping(true);

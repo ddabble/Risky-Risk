@@ -31,8 +31,7 @@ import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 public class BoardView extends ApplicationAdapter implements BoardObserver {
     private static final float CAMERA_MIN_ZOOM = 0.1f;
 
-    private final OrthographicCamera camera;
-
+    private OrthographicCamera camera;
     private SpriteBatch batch;
     private Sprite mapSprite;
 
@@ -40,9 +39,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
 
-    public BoardView(OrthographicCamera camera) {
+    public BoardView() {
         BoardPresenter.addObserver(this);
-        this.camera = camera;
     }
 
     public Vector2 troopCirclePosToWorldPos(Vector2 troopCirclePos) {
@@ -67,7 +65,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
      * Must be called after {@link no.ntnu.idi.tdt4240.model.BoardModel} has been initialized.
      */
     @Override
-    public void create(Texture mapTexture, List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
+    public void create(OrthographicCamera camera, Texture mapTexture, List<Territory> territories, Map<Integer, Color> playerID_colorMap) {
+        this.camera = camera;
         initShader();
         batch = new SpriteBatch(1, mapShader); // this sprite batch will only be used for 1 sprite: the map
 

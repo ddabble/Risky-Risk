@@ -1,5 +1,7 @@
 package no.ntnu.idi.tdt4240.presenter;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,12 +36,12 @@ public class PhasePresenter {
 
     private PhasePresenter() {}
 
-    public void init() {
+    public void init(OrthographicCamera camera) {
         PhaseModel.INSTANCE.init();
         AttackModel.INSTANCE.init();
 
         for (PhaseObserver observer : phaseObservers) {
-            observer.create();
+            observer.create(camera);
             updatePhase(observer);
         }
 

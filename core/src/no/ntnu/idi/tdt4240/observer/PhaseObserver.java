@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.observer;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import no.ntnu.idi.tdt4240.data.Territory;
@@ -9,7 +10,7 @@ import no.ntnu.idi.tdt4240.util.PhaseEnum;
 public interface PhaseObserver {
     Stage getStage();
 
-    void create();
+    void create(OrthographicCamera camera);
 
     void addFortifyButton();
 

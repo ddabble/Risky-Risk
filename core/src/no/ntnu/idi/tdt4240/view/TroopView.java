@@ -30,8 +30,8 @@ public class TroopView extends AbstractView implements TroopObserver {
     private static final Color TEXT_COLOR_DARK = new Color(Color.DARK_GRAY);
 
     private final BoardView boardView;
-    private final OrthographicCamera camera;
 
+    private OrthographicCamera camera;
     private SpriteBatch batch;
     private Map<Territory, Sprite> circleSpriteMap;
 
@@ -43,11 +43,10 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     private Territory selectedTerritory;
 
-    public TroopView(BoardView boardView, OrthographicCamera camera) {
+    public TroopView(BoardView boardView) {
         BoardPresenter.addObserver(this);
         PhasePresenter.addObserver(this);
         this.boardView = boardView;
-        this.camera = camera;
     }
 
     @Override
@@ -85,8 +84,9 @@ public class TroopView extends AbstractView implements TroopObserver {
     }
 
     @Override
-    public void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
+    public void create(OrthographicCamera camera, TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
         super.create();
+        this.camera = camera;
         batch = new SpriteBatch();
 
         List<Territory> territories = territoryMap.getAllTerritories();

@@ -1,5 +1,7 @@
 package no.ntnu.idi.tdt4240.presenter;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -14,9 +16,9 @@ public class GamePresenter {
 
     private GamePresenter() {}
 
-    public void init() {
-        BoardPresenter.INSTANCE.init();
-        PhasePresenter.INSTANCE.init();
+    public void init(OrthographicCamera camera) {
+        BoardPresenter.INSTANCE.init(camera);
+        PhasePresenter.INSTANCE.init(camera);
     }
 
     public boolean isGameOver() {
