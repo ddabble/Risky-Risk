@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 
@@ -24,7 +26,7 @@ import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
-public class TroopView extends ApplicationAdapter implements TroopObserver {
+public class TroopView extends AbstractView implements TroopObserver {
     private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 40f;
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
 
@@ -118,10 +120,8 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
         for (Territory territory : territories) {
             TextField textField = new TextField(String.valueOf(territory.getNumTroops()), textStyle);
             Vector2 circlePos = boardView.screenPosRelativeToMap(territory.getTroopCircleVector());
+            textField.setPosition(circlePos.x-(textField.getWidth()/2), circlePos.y-(textField.getHeight()/2), Align.center);
             textField.setAlignment(Align.center);
-            float scale = getTextScale();
-//            textField.setSize(textField.getWidth() * scale, textField.getHeight() * scale);
-            textField.setPosition(circlePos.x, circlePos.y, Align.center);
 
             circleTextMap.put(territory, textField);
             textField_territoryMap.put(textField, territory);
@@ -129,9 +129,6 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
         }
     }
 
-    private float getTextScale() {
-        return GameView.getWorldWidth() / Gdx.graphics.getWidth();
-    }
 
     @Override
     public void render() {
@@ -143,11 +140,13 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
         if (selectedTerritory != null)
             circleSelectSprite.draw(batch);
 
-//        for (TextField textField : circleTextMap.values())
-//            textField.draw(batch, 0);
 
         batch.end();
-
+        for (Map.Entry<Actor, Territory> map : textField_territoryMap.entrySet()){
+            Vector2 worldPos = map.getValue().getTroopCircleVector();
+            Vector3 screenPos = camera.project(new Vector3(worldPos.x,worldPos.y,0));
+            map.getKey().setPosition(screenPos.x - (map.getKey().getWidth()/2), screenPos.y - (map.getKey().getHeight()/2));
+        }
         stage.draw();
     }
 

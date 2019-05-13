@@ -12,6 +12,7 @@ import java.util.Map;
 
 import no.ntnu.idi.tdt4240.data.Continent;
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.view.GameView;
 
 public class TerritoryMap {
     private Map<String, Territory> ID_territoryMap;

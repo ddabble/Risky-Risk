@@ -13,8 +13,9 @@ import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
 public class GameView implements GameObserver, Screen {
+    public  static OrthographicCamera camera;
     private final RiskyRisk game;
-    private static final float WORLD_WIDTH = 100;
+    private static  float WORLD_HEIGHT = 100;
     private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
 
     private Music gameThemeMusic;
@@ -23,8 +24,6 @@ public class GameView implements GameObserver, Screen {
     private final BoardView boardView;
     private final TroopView troopView;
     private final LeaderboardView leaderboardView;
-
-    private final OrthographicCamera camera;
 
     public GameView(RiskyRisk game) {
         this.game = game; // need this for exiting back to main menu
@@ -39,6 +38,7 @@ public class GameView implements GameObserver, Screen {
 
     @Override
     public void show() {
+        WORLD_HEIGHT = 601;
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
         GamePresenter.INSTANCE.init();
@@ -110,14 +110,13 @@ public class GameView implements GameObserver, Screen {
     }
 
     public static float getWorldWidth() {
-        return WORLD_WIDTH;
+        return WORLD_HEIGHT * (float)Gdx.graphics.getWidth()/Gdx.graphics.getHeight();
     }
 
     /**
      * Requires LibGDX to be initialized to work.
      */
     public static float getWorldHeight() {
-        final float aspectRatio = (float)Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        return WORLD_WIDTH * aspectRatio;
+        return WORLD_HEIGHT;
     }
 }
