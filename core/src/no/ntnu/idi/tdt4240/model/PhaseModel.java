@@ -9,7 +9,8 @@ public class PhaseModel {
     public static final PhaseModel INSTANCE = new PhaseModel();
 
     private PhaseState phase;
-    public enum Phase {Place, Attack, Fortify};
+
+    public enum Phase {Place, Attack, Fortify}
 
     private PhaseModel() {
         // Initial phase state
@@ -28,8 +29,11 @@ public class PhaseModel {
     // Phases
     public interface PhaseState {
         String getName();
+
         Phase getEnum();
+
         PhaseState next();
+
         void territoryClicked(Territory territory);
     }
 
@@ -60,10 +64,12 @@ public class PhaseModel {
         public String getName() {
             return "Attack";
         }
+
         @Override
         public Phase getEnum() {
             return Phase.Attack;
         }
+
         @Override
         public PhaseState next() {
             return new FortifyPhase();
@@ -90,6 +96,7 @@ public class PhaseModel {
 
             System.out.println("Started fortify phase");
         }
+
         @Override
         public Phase getEnum() {
             return Phase.Fortify;

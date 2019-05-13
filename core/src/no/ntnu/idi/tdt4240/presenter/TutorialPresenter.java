@@ -11,16 +11,16 @@ public class TutorialPresenter {
 
     private Collection<TutorialObserver> tutorialObservers = new ArrayList<>();
 
-    private TutorialPresenter(){}
+    private TutorialPresenter() {}
 
     public void init() {
         TutorialModel.INSTANCE.init();
-        for (TutorialObserver observer : this.tutorialObservers){
+        for (TutorialObserver observer : this.tutorialObservers) {
             observer.create(TutorialModel.INSTANCE.getTutorialSlides());
         }
     }
 
-    public static void addObserver(TutorialObserver tutorialObserver){
+    public static void addObserver(TutorialObserver tutorialObserver) {
         INSTANCE.tutorialObservers.add(tutorialObserver);
     }
 }

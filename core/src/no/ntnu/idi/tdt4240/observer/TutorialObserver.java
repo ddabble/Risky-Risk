@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface TutorialObserver {
 
-        void create(ArrayList<Map<String, String>> tutorialSlides);
+    void create(ArrayList<Map<String, String>> tutorialSlides);
 }

@@ -52,7 +52,7 @@ public class BattleModel {
             else {
                 for (int roll = 1; roll < mostDies(attdies, defdies) + 1; roll++) {
                     System.out.println("attTroops: " + attackerTroops + " attRoll: " + attdies[attdies.length - roll] +
-                            " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - roll]);
+                                       " defTroops: " + defenderTroops + " defRoll: " + defdies[defdies.length - roll]);
 
                     if (attdies[attdies.length - roll] > defdies[defdies.length - roll]) {
                         defenderTroops--;

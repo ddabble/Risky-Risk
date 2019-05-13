@@ -1,4 +1,5 @@
 package no.ntnu.idi.tdt4240.util;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,13 +12,13 @@ public class TutorialSlide {
 
     private ArrayList<Map<String, String>> tutorialSlides;
 
-    public TutorialSlide(ArrayList<Map<String, String>> tutorialSlides){
+    public TutorialSlide(ArrayList<Map<String, String>> tutorialSlides) {
         this.tutorialSlides = tutorialSlides;
     }
 
-    public ArrayList<Map<String, String>> getTutorialSlides(){ return this.tutorialSlides;}
+    public ArrayList<Map<String, String>> getTutorialSlides() { return this.tutorialSlides;}
 
-    public static TutorialSlide parseJsonTutorialSlides(FileHandle jsonFile){
+    public static TutorialSlide parseJsonTutorialSlides(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
         Map readJson;
         try {
@@ -29,11 +30,11 @@ public class TutorialSlide {
         Map<String, Map<String, String>> slides = readJson;
         ArrayList<Map<String, String>> tutorialSlides = new ArrayList<>();
 
-        for(int i=0; i< slides.size(); i++){
-            tutorialSlides.add(slides.get(Integer.toString(i+1)));
+        for (int i = 0; i < slides.size(); i++) {
+            tutorialSlides.add(slides.get(Integer.toString(i + 1)));
 
             // ' * ' is used in the json file to mark a new line
-            tutorialSlides.get(i).put("text", tutorialSlides.get(i).get("text").replace(" * ","\n"));
+            tutorialSlides.get(i).put("text", tutorialSlides.get(i).get("text").replace(" * ", "\n"));
         }
         TutorialSlide tutorialSlide = new TutorialSlide(tutorialSlides);
         return tutorialSlide;

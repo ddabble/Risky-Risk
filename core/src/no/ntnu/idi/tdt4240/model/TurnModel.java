@@ -1,7 +1,5 @@
 package no.ntnu.idi.tdt4240.model;
 
-import org.omg.CORBA.SystemException;
-
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
 public class TurnModel {
@@ -15,12 +13,11 @@ public class TurnModel {
     private TurnModel() {
     }
 
-    public void init(){
-        try{
+    public void init() {
+        try {
             numberOfPlayers = client.getmRiskyTurn().getNumberOfPlayers();
             currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             numberOfPlayers = 2;
             currentPlayerID = 0;
         }
@@ -33,7 +30,7 @@ public class TurnModel {
 
     public void nextTurn() {
         currentPlayerID++;
-        currentPlayerID%=numberOfPlayers;
+        currentPlayerID %= numberOfPlayers;
     }
 
     public void setCurrentPlayer(int playerID) {
@@ -41,7 +38,7 @@ public class TurnModel {
     }
 
     public int getNumberOfPlayers() {
-        if(client != null) {
+        if (client != null) {
             return numberOfPlayers;
         } else {
             return 6;

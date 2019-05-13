@@ -2,10 +2,9 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
@@ -34,7 +33,7 @@ public abstract class AbstractView extends ApplicationAdapter {
         return new TextButton(text, this.textButtonStyle);
     }
 
-    protected TextButton createInGameButton(String text){
+    protected TextButton createInGameButton(String text) {
         //in game buttons
         TextButton textButton = new TextButton(text, this.textButtonStyle);
         //this.textButtonStyle.fontColor = Color.BLACK;
@@ -46,6 +45,7 @@ public abstract class AbstractView extends ApplicationAdapter {
         textButton.setLabel(label);
         return textButton;
     }
+
     protected TextButton createTextButton(String text, Label.LabelStyle labelStyle, Color fontColor) {
         TextButton textButton = new TextButton(text, this.textButtonStyle);
         this.textButtonStyle.fontColor = fontColor;
@@ -70,6 +70,7 @@ public abstract class AbstractView extends ApplicationAdapter {
     protected Label createLabel(String text) {
         return new Label(text, labelStyle);
     }
+
     protected Label createLeaderboardLabel(String text) {
         Label label = this.createLabel(text);
         Label.LabelStyle leaderboardLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -87,6 +88,7 @@ public abstract class AbstractView extends ApplicationAdapter {
 
         return new Label(text, inGameLabelStyle);
     }
+
     protected Label createPlayerColorableLabel(String text) {
         Label label = this.createLabel(text);
         Label.LabelStyle inGameLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -102,7 +104,7 @@ public abstract class AbstractView extends ApplicationAdapter {
     }
 
     protected TextField createTextField(String text) {
-        return new TextField(text,textFieldStyle);
+        return new TextField(text, textFieldStyle);
     }
 
     @Override
@@ -124,27 +126,27 @@ public abstract class AbstractView extends ApplicationAdapter {
     }
 
 
-
-    private void createBitmapFonts(){
+    private void createBitmapFonts() {
         // Creates BitmapFonts for texts
-        headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",40);
-        slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf",25);
-        slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf",20);
-        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight()/25);
-        inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight()/22);
-        leaderboardFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight()/30);
+        headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", 40);
+        slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", 25);
+        slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", 20);
+        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight() / 25);
+        inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 22);
+        leaderboardFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 30);
 
         // inGame label font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = Gdx.graphics.getHeight()/20;
-        fontParameter.borderColor = new Color(0.3f,0.3f, 0.3f , 0.8f);
+        fontParameter.size = Gdx.graphics.getHeight() / 20;
+        fontParameter.borderColor = new Color(0.3f, 0.3f, 0.3f, 0.8f);
         fontParameter.borderWidth = 3f;
         fontParameter.color = Color.WHITE;
         inGamePlayerColorableFont = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
     }
-    private BitmapFont createBitmapFont(String path, int size){
+
+    private BitmapFont createBitmapFont(String path, int size) {
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.size = size;
@@ -153,9 +155,6 @@ public abstract class AbstractView extends ApplicationAdapter {
         fontGenerator.dispose();
         return result;
     }
-
-
-
 
 
     @Override

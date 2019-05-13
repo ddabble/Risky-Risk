@@ -1,7 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,9 +19,10 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
     private Label leaderboardLabel;
     private ShapeRenderer shapeRenderer;
 
-    public LeaderboardView(){
+    public LeaderboardView() {
         PhasePresenter.addObserver(this);
     }
+
     @Override
     public void create(HashMap<Integer, Integer> leaderboard) {
         super.create();
@@ -47,11 +47,12 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
      * Define button for later use, but do not show them
      */
 
-    public void addActor(Actor actor){
+    public void addActor(Actor actor) {
         if (!stage.getActors().contains(actor, false))
             stage.addActor(actor);
     }
-    public void removeActor(Actor actor){
+
+    public void removeActor(Actor actor) {
         if (stage.getActors().contains(actor, false))
             actor.remove();
     }
@@ -59,6 +60,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
 
     /**
      * Updates the leaderboard with playerID and number of territories.
+     *
      * @param leaderboard Map<Integer playerID, Integer numOfTerritories>
      */
     @Override
@@ -79,7 +81,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled); //I'm using the Filled ShapeType, but remember you have three of them
         shapeRenderer.setColor(0, 0, 0, 0.2f);
-        shapeRenderer.rect(10,Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/2.2f-10,Gdx.graphics.getWidth()/7.7f,Gdx.graphics.getHeight()/2.2f); //assuming you have created those x, y, width and height variables
+        shapeRenderer.rect(10, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 2.2f - 10, Gdx.graphics.getWidth() / 7.7f, Gdx.graphics.getHeight() / 2.2f); //assuming you have created those x, y, width and height variables
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         stage.draw();

@@ -1,13 +1,10 @@
 package no.ntnu.idi.tdt4240.presenter;
 
-import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Continent;
@@ -50,7 +47,7 @@ public class PhasePresenter {
         updateRenderedCurrentPlayer();
 
         // Update leaderboard
-        onNumOfTerritoryChange(0,0);
+        onNumOfTerritoryChange(0, 0);
     }
 
     private void updatePhase(PhaseObserver observer) {
@@ -71,7 +68,7 @@ public class PhasePresenter {
     }
 
     public void nextTurnButtonClicked() {
-        if(BoardModel.INSTANCE.isOnlineMatch()) {
+        if (BoardModel.INSTANCE.isOnlineMatch()) {
             nextTurnOnlineMatch();
         } else {
             nextTurnOfflineMatch();
@@ -85,7 +82,7 @@ public class PhasePresenter {
         //match object on the server
         BoardModel.INSTANCE.updateAndSendMatchData();
         //for now just kick the player back to main menu
-        for(PhaseObserver observer : phaseObservers) {
+        for (PhaseObserver observer : phaseObservers) {
             observer.onWaitingForTurn();
         }
     }
@@ -123,7 +120,8 @@ public class PhasePresenter {
             updatePhase(observer);
         TroopModel.INSTANCE.onSelectTerritory(null);
     }
-    private void deselectedTerritories(){
+
+    private void deselectedTerritories() {
         for (PhaseObserver observer : phaseObservers)
             observer.onSelectedTerritoriesChange(null, null);
     }
@@ -143,7 +141,7 @@ public class PhasePresenter {
         // update rendered current player label and color
         for (PhaseObserver observer : phaseObservers) {
             observer.onNextPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
-                                                 MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
         }
     }
 
@@ -172,7 +170,8 @@ public class PhasePresenter {
         }
 
     }
-    private void removePhaseButtons(){
+
+    private void removePhaseButtons() {
         for (PhaseObserver observer : phaseObservers) {
             observer.removePhaseButtons();
         }
@@ -230,8 +229,8 @@ public class PhasePresenter {
 
         // update leaderboard
         // if the attacker won the fight.
-        if (AttackModel.INSTANCE.getToTerritory().getOwnerID() == AttackModel.INSTANCE.getFromTerritory().getOwnerID()){
-            onNumOfTerritoryChange(winner[0],1);
+        if (AttackModel.INSTANCE.getToTerritory().getOwnerID() == AttackModel.INSTANCE.getFromTerritory().getOwnerID()) {
+            onNumOfTerritoryChange(winner[0], 1);
             onNumOfTerritoryChange(defenderID, -1);
         }
 
@@ -247,23 +246,24 @@ public class PhasePresenter {
             observer.onSelectedTerritoriesChange(null, null);
         for (TroopObserver observer : troopObservers)
             observer.onSelectTerritory(null);
-        System.out.println(" - Player"+winner[0]+" won this fight. - ");
+        System.out.println(" - Player" + winner[0] + " won this fight. - ");
         checkGameOver();
     }
 
 
-    public void exitToMainMenuButtonClicked(){
+    public void exitToMainMenuButtonClicked() {
         // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
         BoardModel.INSTANCE.getClient().setMatchNotActive(); //extremely hacky, board should not be handing out the client, instead the
         //client should be its own singleton model
         GamePresenter.INSTANCE.exitToMainMenu();
     }
+
     /**
      * Exits the game if game is over
      */
-    void checkGameOver(){
+    void checkGameOver() {
         // Check if game is over (one player owns all territories)
-        if (GamePresenter.INSTANCE.isGameOver()){
+        if (GamePresenter.INSTANCE.isGameOver()) {
             GamePresenter.INSTANCE.exitToWinScreen();
         }
     }
@@ -273,17 +273,18 @@ public class PhasePresenter {
      * Updates leaderboard according to the state of the game
      * This approach updates only the player of the territories changed.
      * This affects the performance less than counting the territory map as a whole
+     *
      * @param playerID
      * @param diff how many territories this player has gained or lost
      */
-    private void onNumOfTerritoryChange(int playerID, int diff){
+    private void onNumOfTerritoryChange(int playerID, int diff) {
         //get players
         HashMap<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
         int currentNumOfTerritories = leaderboard.get(playerID);
         leaderboard.put(playerID, currentNumOfTerritories + diff);
         MultiplayerModel.INSTANCE.setLeaderboard(leaderboard);
 
-        for(LeaderboardObserver observer: leaderboardObservers)
+        for (LeaderboardObserver observer : leaderboardObservers)
             observer.updateLeaderboard(leaderboard);
     }
 
@@ -348,9 +349,11 @@ public class PhasePresenter {
     public static void addObserver(PhaseObserver observer) {
         INSTANCE.phaseObservers.add(observer);
     }
+
     public static void addObserver(TroopObserver observer) {
         INSTANCE.troopObservers.add(observer);
     }
+
     public static void addObserver(LeaderboardObserver observer) {
         INSTANCE.leaderboardObservers.add(observer);
     }

@@ -3,14 +3,13 @@ package no.ntnu.idi.tdt4240;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
-import no.ntnu.idi.tdt4240.model.BoardModel;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.view.WinView;
 
 
@@ -27,7 +26,7 @@ public class RiskyRisk extends Game {
     }
 
     // Init needs to be called after we set the games GPGS client
-    public void init () {
+    public void init() {
 
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);
@@ -88,7 +87,7 @@ public class RiskyRisk extends Game {
         // TODO: set number of players from (settings) menu
         //SettingsPresenter.INSTANCE.setNumPlayers(8);
 
-        switch(Gdx.app.getType()) {
+        switch (Gdx.app.getType()) {
             case Android: // android specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;

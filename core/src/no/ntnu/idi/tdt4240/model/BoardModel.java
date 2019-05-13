@@ -40,10 +40,10 @@ public class BoardModel {
         //if we have an active match in the client it means we are playing an online game,
         //disregard the data loaded from TerritoryModel and instead fill in data from
         //the match object
-        if(client.matchActive()) {
-            if(client.getmRiskyTurn().isDataInitialized()) {
+        if (client.matchActive()) {
+            if (client.getmRiskyTurn().isDataInitialized()) {
                 client.getmRiskyTurn().getTerritoryMapData(territoryMap);
-            } else  { //init data
+            } else { //init data
                 client.getmRiskyTurn().updateData(territoryMap, 0);
             }
         }
@@ -69,10 +69,9 @@ public class BoardModel {
     }
 
     public int getNumberOfPlayers() {
-        try{
+        try {
             return client.getmRiskyTurn().getNumberOfPlayers();
-        }
-        catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return 2;
         }
     }
@@ -140,28 +139,28 @@ public class BoardModel {
 
     private static void processPixelsInRange(int startI, int endI, IntBuffer buf, TerritoryMap territoryMap) {
         for (int i = startI; i < endI; i++) {
-                int pixel = buf.get(i);
-                int pixelAlpha = pixel & 0x000000FF;
+            int pixel = buf.get(i);
+            int pixelAlpha = pixel & 0x000000FF;
 
-                // If transparent, skip pixel
-                if (pixelAlpha == 0)
-                    continue;
+            // If transparent, skip pixel
+            if (pixelAlpha == 0)
+                continue;
 
-                // (Unsigned) bit shift one byte to the right to discard the alpha value
-                int pixelColor = pixel >>> 8;
+            // (Unsigned) bit shift one byte to the right to discard the alpha value
+            int pixelColor = pixel >>> 8;
 
-                if (pixelAlpha > 0 && pixelAlpha < 0x80)
-                    // If almost transparent, set to opaque
-                    pixelAlpha = 0xFF;
-                else if (pixelAlpha >= 0x80 && pixelAlpha < 0xFF)
-                    // Else - if almost opaque, set to transparent
-                    pixelAlpha = 0;
+            if (pixelAlpha > 0 && pixelAlpha < 0x80)
+                // If almost transparent, set to opaque
+                pixelAlpha = 0xFF;
+            else if (pixelAlpha >= 0x80 && pixelAlpha < 0xFF)
+                // Else - if almost opaque, set to transparent
+                pixelAlpha = 0;
 
-                Territory territory = territoryMap.getTerritory(pixelColor);
-                if (territory != null)
-                    pixelColor = indexToColor(territory.colorIndex);
-                int newPixel = (pixelColor << 8) | pixelAlpha;
-                buf.put(i, newPixel);
+            Territory territory = territoryMap.getTerritory(pixelColor);
+            if (territory != null)
+                pixelColor = indexToColor(territory.colorIndex);
+            int newPixel = (pixelColor << 8) | pixelAlpha;
+            buf.put(i, newPixel);
         }
     }
 

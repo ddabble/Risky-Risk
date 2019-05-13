@@ -4,17 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
 
 public class SignInView extends AbstractView implements Screen {
@@ -40,6 +38,7 @@ public class SignInView extends AbstractView implements Screen {
                 //game.setScreen(new MainMenuView(game));
                 isSignedIn = true;
             }
+
             @Override
             public void onFailure() {
                 //failed to sign in, please try again );
@@ -47,6 +46,7 @@ public class SignInView extends AbstractView implements Screen {
             }
         });
     }
+
     @Override
     public void show() {
         super.create();
@@ -87,7 +87,7 @@ public class SignInView extends AbstractView implements Screen {
         stage.act(delta);
         stage.draw();
 
-        if(isSignedIn) {
+        if (isSignedIn) {
             game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
         }
     }

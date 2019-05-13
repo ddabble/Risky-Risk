@@ -1,12 +1,10 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -67,8 +65,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void create() {
         super.create();
-        buttonWidth = (int)Math.round(Gdx.graphics.getWidth()/6.3f);
-        buttonHeight = Gdx.graphics.getHeight()/13;
+        buttonWidth = Math.round(Gdx.graphics.getWidth() / 6.3f);
+        buttonHeight = Gdx.graphics.getHeight() / 13;
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
 
@@ -84,20 +82,20 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         // Actors
         phaseLabel = createInGameLabel("");
         //noinspection IntegerDivisionInFloatingPointContext
-        phaseLabel.setPosition(Gdx.graphics.getWidth()/2, buttonHeight);
+        phaseLabel.setPosition(Gdx.graphics.getWidth() / 2, buttonHeight);
         phaseLabel.setWidth(0);
         phaseLabel.setColor(Color.DARK_GRAY);
         phaseLabel.setAlignment(Align.center);
 
         playerLabel = createPlayerColorableLabel("");
         //playerLabel.setPosition(buttonWidth/2, 3*buttonHeight + 80);
-        playerLabel.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()- Gdx.graphics.getHeight()/20);
+        playerLabel.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 20f);
         playerLabel.setAlignment(Align.center);
 
         defineAllButtons();
 
         waitingForTurnLabel = createLabel("Match object sent, wait for your turn...");
-        waitingForTurnLabel.setPosition(150,150);
+        waitingForTurnLabel.setPosition(150, 150);
 
         stage.addActor(phaseLabel);
         stage.addActor(playerLabel);
@@ -105,7 +103,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         stage.addActor(exitToMainMenuButton);
     }
 
-    private TextButton defineButton(String text, int x, int y){
+    private TextButton defineButton(String text, int x, int y) {
         TextButton b = createInGameButton(text);
         b.setWidth(buttonWidth);
         b.setHeight(buttonHeight);
@@ -116,8 +114,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     /**
      * Define button for later use, but do not show them
      */
-    private void defineAllButtons(){
-        attackButton = defineButton("Attack", 0, 2*buttonHeight + 20);
+    private void defineAllButtons() {
+        attackButton = defineButton("Attack", 0, 2 * buttonHeight + 20);
         attackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -126,7 +124,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
 
 
-        fortifyButton = defineButton("Move 1 troop", 0, 2*buttonHeight + 20);
+        fortifyButton = defineButton("Move 1 troop", 0, 2 * buttonHeight + 20);
         fortifyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -142,7 +140,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        turnButton = defineButton("End turn", 0,0);
+        turnButton = defineButton("End turn", 0, 0);
         turnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -150,7 +148,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-        phaseButton = defineButton("",0,0);
+        phaseButton = defineButton("", 0, 0);
         phaseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -158,9 +156,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
         exitToMainMenuButton = createInGameButton("Exit to Main Menu");
-        exitToMainMenuButton.setWidth((int)Math.round(buttonWidth*1.5));
+        exitToMainMenuButton.setWidth((int)Math.round(buttonWidth * 1.5));
         exitToMainMenuButton.setHeight(buttonHeight);
-        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth()-exitToMainMenuButton.getWidth(), 0);
+        exitToMainMenuButton.setPosition(Gdx.graphics.getWidth() - exitToMainMenuButton.getWidth(), 0);
         exitToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -169,11 +167,12 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
     }
 
-    public void addActor(Actor actor){
+    public void addActor(Actor actor) {
         if (!stage.getActors().contains(actor, false))
             stage.addActor(actor);
     }
-    public void removeActor(Actor actor){
+
+    public void removeActor(Actor actor) {
         if (stage.getActors().contains(actor, false))
             actor.remove();
     }
@@ -226,7 +225,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void onNextPlayer(int playerID, Color playerColor) {
-        playerLabel.setText("Player" + playerID +"'s turn");
+        playerLabel.setText("Player" + playerID + "'s turn");
         inGamePlayerColorableFont.setColor(playerColor);
 
         playerLabel.setStyle(new Label.LabelStyle(inGamePlayerColorableFont, playerColor));
@@ -248,6 +247,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             shouldDrawArrow = false;
         }
     }
+
     @Override
     public void onWaitingForTurn() {
         //dummy code, just to give some indication

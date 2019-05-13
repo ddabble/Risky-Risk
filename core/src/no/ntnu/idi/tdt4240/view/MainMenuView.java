@@ -9,14 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
@@ -130,7 +128,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         table.row();
         table.add(tutorialButton).width(150).height(50).pad(20);
         table.row();
-        if(gpgsClient != null && gpgsClient.isSignedIn()) {
+        if (gpgsClient != null && gpgsClient.isSignedIn()) {
             table.add(signOutButton).width(150).height(50).pad(20);
         } else {
             table.add(signInButton).width(150).height(50).pad(20);

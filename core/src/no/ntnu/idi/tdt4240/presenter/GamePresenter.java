@@ -2,15 +2,10 @@ package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
-import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
-import no.ntnu.idi.tdt4240.observer.WinObserver;
 
 public class GamePresenter {
     public static final GamePresenter INSTANCE = new GamePresenter();
@@ -24,11 +19,11 @@ public class GamePresenter {
         PhasePresenter.INSTANCE.init();
     }
 
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         HashMap<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
         int countPlayerWithTerritories = 0;
-        for (HashMap.Entry entry : leaderboard.entrySet()){
-            if ((int)entry.getValue() > 0){
+        for (HashMap.Entry entry : leaderboard.entrySet()) {
+            if ((int)entry.getValue() > 0) {
                 countPlayerWithTerritories++;
             }
         }
@@ -36,13 +31,15 @@ public class GamePresenter {
             return true;
         return false;
     }
-    public void exitToWinScreen(){
-        for (GameObserver observer: observers){
+
+    public void exitToWinScreen() {
+        for (GameObserver observer : observers) {
             observer.exitToWinScreen();
         }
     }
-    public void exitToMainMenu(){
-        for (GameObserver observer: observers){
+
+    public void exitToMainMenu() {
+        for (GameObserver observer : observers) {
             observer.exitToMainMenu();
         }
     }
