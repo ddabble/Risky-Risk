@@ -161,6 +161,15 @@ public abstract class AbstractView extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        troopNumFont.dispose();
+        leaderboardFont.dispose();
+        inGamePlayerColorableFont.dispose();
+        inGameLabelFont.dispose();
+        inGameLabelButtonFont.dispose();
+        slideTextFont.dispose();
+        slideHeaderFont.dispose();
+        headerFont.dispose();
+
         skin.dispose();
     }
 }

@@ -68,8 +68,9 @@ public class WinView extends AbstractView implements WinObserver, Screen {
 
     @Override
     public void hide() {
-        background.dispose();
+        table.clear();
         stage.dispose();
+        background.dispose();
         super.dispose();
     }
 

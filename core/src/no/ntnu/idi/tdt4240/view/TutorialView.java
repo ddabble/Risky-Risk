@@ -103,30 +103,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.createTextFields(stage);
     }
 
-    @Override
-    public void hide() {
-        this.slideImage.dispose();
-        stage.dispose();
-        super.dispose();
-    }
-
-    @Override
-    public void resize(int i, int i1) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-
-    @Override
-    public void dispose() {
-    }
-
     private void updateCurrentSlide(boolean increment) {
         // Updates and controls the value of updateCurrentSlide
 
@@ -299,4 +275,15 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.slideTextStyle.fontColor = fontColor;
     }
 
+    @Override
+    public void hide() {
+        slideImage.dispose();
+        stage.dispose();
+
+        slideTextFont.dispose();
+        slideHeaderFont.dispose();
+        headerFont.dispose();
+
+        super.dispose();
+    }
 } // End class

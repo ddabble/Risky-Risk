@@ -65,12 +65,12 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
      */
     @Override
     public void updateLeaderboard(HashMap<Integer, Integer> leaderboard) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (HashMap.Entry<Integer, Integer> entry : leaderboard.entrySet()) {
-            result += "Player" + entry.getKey() + ":   " + entry.getValue() + "\n";
-            //TODO: use StringBuilder.append() instead of +=
+            result.append("Player").append(entry.getKey()).append(":   ")
+                  .append(entry.getValue()).append("\n");
         }
-        leaderboardLabel.setText(result);
+        leaderboardLabel.setText(result.toString());
     }
 
     @Override

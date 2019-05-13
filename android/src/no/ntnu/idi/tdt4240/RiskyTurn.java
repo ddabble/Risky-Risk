@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 import no.ntnu.idi.tdt4240.data.Territory;
@@ -50,9 +51,7 @@ public class RiskyTurn implements IRiskyTurn {
             riskyTurn.numberOfPlayers = byteArray[byteArray.length-1];
         }
         System.out.println("Byte array received looks like this:");
-        for(int i = 0; i < byteArray.length; i++) {
-            System.out.print(byteArray[i] + ", ");
-        }
+        System.out.println(Arrays.toString(byteArray));
         return riskyTurn;
     }
 

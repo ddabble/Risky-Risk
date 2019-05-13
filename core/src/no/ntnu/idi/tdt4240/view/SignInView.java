@@ -109,7 +109,9 @@ public class SignInView extends AbstractView implements Screen {
 
     @Override
     public void hide() {
-
+        table.clear();
+        stage.dispose();
+        super.dispose();
     }
 
     @Override

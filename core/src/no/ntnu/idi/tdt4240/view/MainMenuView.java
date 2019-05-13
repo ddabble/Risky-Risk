@@ -158,8 +158,9 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
 
     @Override
     public void hide() {
-        background.dispose();
+        table.clear();
         stage.dispose();
+        background.dispose();
         super.dispose();
     }
 }

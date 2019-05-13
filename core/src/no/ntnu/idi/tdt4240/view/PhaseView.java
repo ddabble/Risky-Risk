@@ -302,6 +302,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void dispose() {
         stage.dispose();
+        spriteBatch.dispose();
+        texture.dispose();
         super.dispose();
     }
 }

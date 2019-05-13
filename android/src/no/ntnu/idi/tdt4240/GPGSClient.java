@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
@@ -622,7 +623,7 @@ public class GPGSClient implements IGPGSClient {
 
         Log.d(TAG, "#############STARTING MATCH#########################");
         if(mTurnData.persist() != null) {
-            Log.d(TAG, "Sending match data that looks like: " + mTurnData.persist().toString());
+            Log.d(TAG, "Sending match data that looks like:\n" + Arrays.toString(mTurnData.persist()));
         }
 
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
@@ -698,7 +699,7 @@ public class GPGSClient implements IGPGSClient {
 
         Log.d(TAG, "########REVEIVED MATCH DATA######################");
         if(match.getData() != null) {
-            Log.d(TAG, "Match data received looks like this: " + match.getData().toString());
+            Log.d(TAG, "Match data received looks like this:\n" + Arrays.toString(match.getData()));
             Log.d(TAG, "Match data has length " + match.getData().length);
         }
 
