@@ -27,7 +27,7 @@ import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class TroopView extends AbstractView implements TroopObserver {
-    private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 40f;
+    private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 20f;
     public static final Color TEXT_COLOR = new Color(0xFFFFFFFF);
 
     private final BoardView boardView;
@@ -80,6 +80,7 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     @Override
     public void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
+        super.create();
         batch = new SpriteBatch();
 
         List<Territory> territories = territoryMap.getAllTerritories();
@@ -102,7 +103,7 @@ public class TroopView extends AbstractView implements TroopObserver {
     }
 
     private void setSizeOfSprite(Sprite sprite) {
-        final float spriteWidth = GameView.getWorldWidth() * CIRCLE_SIZE_MAP_RATIO;
+        final float spriteWidth = GameView.getWorldHeight() * CIRCLE_SIZE_MAP_RATIO;
         final float spriteHeight = spriteWidth;
         sprite.setSize(spriteWidth, spriteHeight);
         sprite.setOriginCenter();
@@ -110,7 +111,7 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     private void createCircleText(List<Territory> territories) {
         TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = new BitmapFont();
+        textStyle.font = troopCircleFont;
         textStyle.fontColor = TEXT_COLOR;
 
         circleTextMap = new HashMap<>();
