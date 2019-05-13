@@ -131,7 +131,7 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     private TextField.TextFieldStyle createTextStyle(Color fontColor) {
         TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = slideTextFont;
+        textStyle.font = troopNumFont;
         textStyle.fontColor = fontColor;
         return textStyle;
     }

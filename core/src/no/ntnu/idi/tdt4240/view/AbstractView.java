@@ -28,6 +28,7 @@ public abstract class AbstractView extends ApplicationAdapter {
     private BitmapFont inGameLabelFont;
     BitmapFont inGamePlayerColorableFont;
     private BitmapFont leaderboardFont;
+    BitmapFont troopNumFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);
@@ -134,6 +135,7 @@ public abstract class AbstractView extends ApplicationAdapter {
         inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight() / 25);
         inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 22);
         leaderboardFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 30);
+        troopNumFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 32);
 
         // inGame label font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
