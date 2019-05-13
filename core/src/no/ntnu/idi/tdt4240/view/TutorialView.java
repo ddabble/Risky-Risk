@@ -24,6 +24,7 @@ import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 import no.ntnu.idi.tdt4240.presenter.TutorialPresenter;
 
 public class TutorialView extends AbstractView implements TutorialObserver, Screen {
+    private static final Color FONT_COLOR = new Color(0x0A0A0AFF);
 
     private final RiskyRisk game;
     private Stage stage;
@@ -32,8 +33,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private int stage_width;
     private int stage_height;
     private int currentSlideCounter;
-    private int tutSlideHeight;
-    private int slideHeaderHeight;
 
     private BitmapFont headerFont;
     private BitmapFont slideHeaderFont;
@@ -76,7 +75,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int imageWidth = this.stage_width / 2 - this.stage_width / 20;
         int imageHeight = 2 * imageWidth / 3;
         stage.getBatch().begin();
-        stage.getBatch().draw(this.slideImage, this.stage_width - (imageWidth + this.stage_width / 40), this.stage_height - (imageHeight + 150), imageWidth, imageHeight);
+        stage.getBatch().draw(this.slideImage,
+                              this.stage_width - (imageWidth + this.stage_width / 40f),
+                              this.stage_height - (imageHeight + 150),
+                              imageWidth, imageHeight);
         stage.getBatch().end();
 
         stage.act(delta);
@@ -127,18 +129,21 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
         // Main menu button
         this.mainMenuButton = this.createTextButton("Back to main", labelStyle, fontColor);
-        this.mainMenuButton.setPosition(this.stage_width / 100, this.stage_height / 50);
+        this.mainMenuButton.setPosition(this.stage_width / 100f,
+                                        this.stage_height / 50f);
         this.mainMenuButton.setSize(btnWidth, btnHeight);
 
         // Previous button
         this.previousButton = this.createTextButton("Previous", labelStyle, fontColor);
-        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width / 100), this.stage_height / 50);
+        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width / 100f),
+                                        this.stage_height / 50f);
         this.previousButton.setSize(btnWidth, btnHeight);
         this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
         this.nextButton = this.createTextButton("Next", labelStyle, fontColor);
-        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100), this.stage_height / 50);
+        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100f),
+                                    this.stage_height / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
 
 
@@ -199,28 +204,31 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         int headerHeight = 50;
 
         int slideHeaderWidth = this.stage_width / 2;
-        this.slideHeaderHeight = 50;
+        int slideHeaderHeight = 50;
 
         int tutSlideWidth = this.stage_width / 2 - this.stage_width / 20;
-        this.tutSlideHeight = 2 * this.stage_height / 3;
+        int tutSlideHeight = 2 * this.stage_height / 3;
 
         this.currentSlideCounter = 0;
 
         // Header text
         this.header = this.createLabel("Tutorial", this.headerStyle);
-        this.header.setPosition(this.stage_width / 2 - headerWidth / 2, this.stage_height - (headerHeight + this.stage_height / 30));
+        this.header.setPosition(this.stage_width / 2f - headerWidth / 2f,
+                                this.stage_height - (headerHeight + this.stage_height / 30f));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
         this.slideHeader = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
-        this.slideHeader.setPosition(this.stage_width / 40, this.stage_height - (slideHeaderHeight + 150));
+        this.slideHeader.setPosition(this.stage_width / 40f,
+                                     this.stage_height - (slideHeaderHeight + 150));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
         this.slideText = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
         this.slideText.setWrap(true);
         this.slideText.setAlignment(Align.topLeft);
-        this.slideText.setPosition(this.stage_width / 40, this.stage_height - (this.tutSlideHeight + this.slideHeaderHeight + 170));
+        this.slideText.setPosition(this.stage_width / 40f,
+                                   this.stage_height - (tutSlideHeight + slideHeaderHeight + 170));
         slideText.setSize(tutSlideWidth, tutSlideHeight);
 
         // Add actors
@@ -257,22 +265,20 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private void createTextStyles() {
         // Creates text styles for the text fields
 
-        Color fontColor = new Color(0x0A0A0AFF);
-
         // Header style
         this.headerStyle = new Label.LabelStyle();
         this.headerStyle.font = this.headerFont;
-        this.headerStyle.fontColor = fontColor;
+        this.headerStyle.fontColor = FONT_COLOR;
 
         // Slide header style
         this.slideHeaderStyle = new Label.LabelStyle();
         this.slideHeaderStyle.font = this.slideHeaderFont;
-        this.slideHeaderStyle.fontColor = fontColor;
+        this.slideHeaderStyle.fontColor = FONT_COLOR;
 
         // Slide text style
         this.slideTextStyle = new Label.LabelStyle();
         this.slideTextStyle.font = this.slideTextFont;
-        this.slideTextStyle.fontColor = fontColor;
+        this.slideTextStyle.fontColor = FONT_COLOR;
     }
 
     @Override

@@ -23,12 +23,12 @@ public abstract class AbstractView extends ApplicationAdapter {
 
     private BitmapFont headerFont;
     private BitmapFont slideHeaderFont;
-    protected BitmapFont slideTextFont;
+    private BitmapFont slideTextFont;
     private BitmapFont inGameLabelButtonFont;
     private BitmapFont inGameLabelFont;
-    BitmapFont inGamePlayerColorableFont;
+    protected BitmapFont inGamePlayerColorableFont;
     private BitmapFont leaderboardFont;
-    BitmapFont troopNumFont;
+    protected BitmapFont troopNumFont;
 
     protected TextButton createButton(String text) {
         return new TextButton(text, this.textButtonStyle);

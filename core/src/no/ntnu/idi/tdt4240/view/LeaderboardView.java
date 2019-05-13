@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import no.ntnu.idi.tdt4240.observer.LeaderboardObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
@@ -24,7 +24,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
     }
 
     @Override
-    public void create(HashMap<Integer, Integer> leaderboard) {
+    public void create(Map<Integer, Integer> leaderboard) {
         super.create();
 
         // For drawing and input handling
@@ -64,9 +64,9 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
      * @param leaderboard Map<Integer playerID, Integer numOfTerritories>
      */
     @Override
-    public void updateLeaderboard(HashMap<Integer, Integer> leaderboard) {
+    public void updateLeaderboard(Map<Integer, Integer> leaderboard) {
         StringBuilder result = new StringBuilder();
-        for (HashMap.Entry<Integer, Integer> entry : leaderboard.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : leaderboard.entrySet()) {
             result.append("Player").append(entry.getKey()).append(":   ")
                   .append(entry.getValue()).append("\n");
         }

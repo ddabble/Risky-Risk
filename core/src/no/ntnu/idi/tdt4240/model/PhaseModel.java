@@ -63,9 +63,7 @@ public class PhaseModel {
         }
 
         @Override
-        public void territoryClicked(Territory territory) {
-            return;
-        }
+        public void territoryClicked(Territory territory) {}
     }
 
     public class FortifyPhase implements PhaseState {
@@ -107,9 +105,7 @@ public class PhaseModel {
         }
 
         @Override
-        public void territoryClicked(Territory territory) {
-            return;
-        }
+        public void territoryClicked(Territory territory) {}
 
         public void territoryClicked(Territory territory, int currentPlayerID) {
             //territory.setNumTroops(territory.getNumTroops() + 1);

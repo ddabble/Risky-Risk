@@ -22,17 +22,18 @@ import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 
 public class MainMenuView extends AbstractView implements MenuObserver, Screen {
     private final RiskyRisk game;
-    private Music mainMenuTheme;
+    private final IGPGSClient gpgsClient;
     private final OrthographicCamera camera;
+
+    private Music mainMenuTheme;
     private Texture background;
     private Stage stage;
     private Table table;
-    private IGPGSClient gpgsClient;
 
     public MainMenuView(RiskyRisk game) {
-        gpgsClient = game.gpgsClient;
         MenuPresenter.addObserver(this);
         this.game = game;
+        gpgsClient = game.gpgsClient;
         camera = new OrthographicCamera();
 
     }

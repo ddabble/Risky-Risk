@@ -12,7 +12,7 @@ import static com.badlogic.gdx.graphics.GL20.*;
 
 public class GLSLshaders {
     private static class Shader {
-        int type;
+        final int type;
         String source;
 
         Shader(int type) {
@@ -92,7 +92,7 @@ loop:
     }
 
     private static class GLSLshaderParseException extends RuntimeException {
-        public GLSLshaderParseException(String s) {
+        GLSLshaderParseException(String s) {
             super(s);
         }
     }

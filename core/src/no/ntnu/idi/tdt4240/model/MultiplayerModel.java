@@ -18,7 +18,7 @@ public class MultiplayerModel {
 
     private int numPlayers;
     private Map<Integer, Color> playerID_colorMap;
-    private HashMap<Integer, Integer> playerID_numTerritories; // same as leaderboard
+    private Map<Integer, Integer> playerID_numTerritories; // same as leaderboard
 
     private MultiplayerModel() {}
 
@@ -79,25 +79,25 @@ public class MultiplayerModel {
         }
     }
 
-    public void initLeaderboard() {
+    private void initLeaderboard() {
         List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
         int[] numOfTerritories = new int[numPlayers];
 
         for (Territory t : territories)
             numOfTerritories[t.getOwnerID()] += 1;
 
-        HashMap<Integer, Integer> leaderboard = new HashMap<>();
+        Map<Integer, Integer> leaderboard = new HashMap<>();
         for (int i = 0; i < numPlayers; i++) {
             leaderboard.put(i, numOfTerritories[i]);
         }
         setLeaderboard(leaderboard);
     }
 
-    public HashMap<Integer, Integer> getLeaderboard() {
+    public Map<Integer, Integer> getLeaderboard() {
         return playerID_numTerritories;
     }
 
-    public void setLeaderboard(HashMap<Integer, Integer> playerID_numTerritories) {
+    public void setLeaderboard(Map<Integer, Integer> playerID_numTerritories) {
         this.playerID_numTerritories = playerID_numTerritories;
     }
 

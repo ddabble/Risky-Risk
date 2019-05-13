@@ -26,7 +26,6 @@ public class TroopView extends AbstractView implements TroopObserver {
     private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 30f;
     private static final Color CIRCLE_COLOR_LIGHT = new Color(0xCCCCCCFF);
     private static final Color CIRCLE_COLOR_DARK = new Color(0x808080FF);
-    private static final Color CIRCLE_SELECT_COLOR = new Color(0x545454FF);
     private static final Color TEXT_COLOR_LIGHT = new Color(Color.WHITE);
     private static final Color TEXT_COLOR_DARK = new Color(Color.DARK_GRAY);
 

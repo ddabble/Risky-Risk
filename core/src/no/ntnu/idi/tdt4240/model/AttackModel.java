@@ -1,6 +1,7 @@
 package no.ntnu.idi.tdt4240.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 
@@ -10,7 +11,7 @@ public class AttackModel {
     private int troopsToPlace;
     private Territory fromTerritory;
     private Territory toTerritory;
-    private HashMap<String, Integer> attack;
+    private Map<String, Integer> attack;
 
     private AttackModel() {}
 
@@ -48,7 +49,7 @@ public class AttackModel {
         return fromTerritory;
     }
 
-    public HashMap<String, Integer> getAttack() {
+    public Map<String, Integer> getAttack() {
         return attack;
     }
 

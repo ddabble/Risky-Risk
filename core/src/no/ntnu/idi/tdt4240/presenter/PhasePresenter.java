@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Continent;
@@ -42,7 +43,7 @@ public class PhasePresenter {
         }
 
         for (LeaderboardObserver observer : leaderboardObservers) {
-            HashMap<Integer, Integer> leaderboard = new HashMap<>();
+            Map<Integer, Integer> leaderboard = new HashMap<>();
             observer.create(leaderboard);
         }
         updateRenderedCurrentPlayer();
@@ -262,7 +263,7 @@ public class PhasePresenter {
     /**
      * Exits the game if game is over
      */
-    void checkGameOver() {
+    private void checkGameOver() {
         // Check if game is over (one player owns all territories)
         if (GamePresenter.INSTANCE.isGameOver()) {
             GamePresenter.INSTANCE.exitToWinScreen();
@@ -275,12 +276,11 @@ public class PhasePresenter {
      * This approach updates only the player of the territories changed.
      * This affects the performance less than counting the territory map as a whole
      *
-     * @param playerID
      * @param diff how many territories this player has gained or lost
      */
     private void onNumOfTerritoryChange(int playerID, int diff) {
         //get players
-        HashMap<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
+        Map<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
         int currentNumOfTerritories = leaderboard.get(playerID);
         leaderboard.put(playerID, currentNumOfTerritories + diff);
         MultiplayerModel.INSTANCE.setLeaderboard(leaderboard);

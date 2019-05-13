@@ -45,8 +45,22 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         this.camera = camera;
     }
 
-    public Sprite getMapSprite() {
-        return mapSprite;
+    public Vector2 troopCirclePosToWorldPos(Vector2 troopCirclePos) {
+        Texture mapTexture = mapSprite.getTexture();
+        return new Vector2(troopCirclePos.x / mapTexture.getWidth() * mapSprite.getWidth(),
+                           troopCirclePos.y / mapTexture.getHeight() * mapSprite.getHeight());
+    }
+
+    public Vector2 screenPosRelativeToMap(Vector2 troopCirclePos) {
+        Vector3 mapScreenPos = camera.project(new Vector3(mapSprite.getX(), mapSprite.getY(), 0));
+
+        Texture mapTexture = mapSprite.getTexture();
+        Vector2 mapScreenSize = Utils.worldDistToScreenDist(mapSprite.getWidth(), mapSprite.getHeight(), camera);
+        float textureScreenWidthRatio = mapScreenSize.x / mapTexture.getWidth();
+        float textureScreenHeightRatio = mapScreenSize.y / mapTexture.getHeight();
+
+        return new Vector2(mapScreenPos.x, mapScreenPos.y).add(troopCirclePos.x * textureScreenWidthRatio,
+                                                               troopCirclePos.y * textureScreenHeightRatio);
     }
 
     /**
@@ -75,7 +89,6 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             Vector2 lastPinchPointer2;
             float initialPinchZoom;
             float initialPinchPointerWorldDistance;
-//            float lastPinchPointerDistance;
 
             @Override
             public boolean tap(float touchX, float touchY, int count, int button) {
@@ -96,6 +109,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 Vector2 touchWorldDelta = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
                 ensureCameraIsWithinMap();
+
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
                 return true;
             }
@@ -113,36 +127,23 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     lastPinchPointer2 = initialPointer2;
                     initialPinchZoom = camera.zoom;
                     initialPinchPointerWorldDistance = Utils.touchToWorldPos(initialPointer1, camera).dst(Utils.touchToWorldPos(initialPointer2, camera));
-//                    lastPinchPointerDistance = initialPointer1.dst(initialPointer2);
                 }
 
-
                 float currentPinchPointerWorldDistance = Utils.touchToWorldPos(currentPointer1, camera).dst(Utils.touchToWorldPos(currentPointer2, camera));
-//                System.out.println();
-//                System.out.println(currentPinchPointerWorldDistance + "\t" + currentPointer1 + "\t" + currentPointer2);
 
                 // initialZoom * initialDistance = newZoom * currentDistance
                 //                       newZoom = initialZoom * initialDistance / currentDistance
-                float newZoom = initialPinchZoom * initialPinchPointerWorldDistance / currentPinchPointerWorldDistance;
-                newZoom = MathUtils.clamp(newZoom, CAMERA_MIN_ZOOM, 1f);
+                camera.zoom = initialPinchZoom * initialPinchPointerWorldDistance / currentPinchPointerWorldDistance;
+                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
 
-//                float currentPinchPointerDistance = currentPointer1.dst(currentPointer2);
-//                if (Math.abs(newZoom - camera.zoom) / newZoom > 0.01f && Math.abs(currentPinchPointerDistance - lastPinchPointerDistance) < 10f) {
-//                } else
-                camera.zoom = newZoom;
-
-//                System.out.println(camera.zoom);
-
-//                Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
                 Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
                 ensureCameraIsWithinMap();
+
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
 
-//                lastMidpoint = currentMidpoint;
-//                lastPinchPointerDistance = currentPinchPointerDistance;
                 lastPinchPointer1 = currentPointer1.cpy();
                 lastPinchPointer2 = currentPointer2.cpy();
                 return true;
@@ -168,6 +169,21 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         });
     }
 
+    private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
+        Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
+        // Invert y coord, because the texture's origin is in the upper left corner
+        mapPos.y = mapSprite.getHeight() - mapPos.y;
+
+        Texture mapTexture = mapSprite.getTexture();
+        Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
+                                         mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
+
+        // Round the coords, because it's needed for getting texture pixels
+        texturePos.x = MathUtils.roundPositive(texturePos.x);
+        texturePos.y = MathUtils.roundPositive(texturePos.y);
+        return texturePos;
+    }
+
     private void ensureCameraIsWithinMap() {
         camera.update();
 
@@ -186,37 +202,6 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             camera.translate(0, frustumCorner_distFromMapEdge.y);
 
         camera.update();
-    }
-
-    private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
-        Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
-        // Invert y coord, because the texture's origin is in the upper left corner
-        mapPos.y = mapSprite.getHeight() - mapPos.y;
-
-        Texture mapTexture = mapSprite.getTexture();
-        Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
-                                         mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
-
-        // Round the coords, because it's needed for getting texture pixels
-        texturePos.x = MathUtils.roundPositive(texturePos.x);
-        texturePos.y = MathUtils.roundPositive(texturePos.y);
-        return texturePos;
-    }
-
-    public Vector2 troopCirclePosToWorldPos(Vector2 troopCirclePos) {
-        Texture mapTexture = mapSprite.getTexture();
-        return new Vector2(troopCirclePos.x / mapTexture.getWidth() * mapSprite.getWidth(),
-                           troopCirclePos.y / mapTexture.getHeight() * mapSprite.getHeight());
-    }
-
-    public Vector2 screenPosRelativeToMap(Vector2 troopCirclePos) {
-        Vector3 mapScreenPos = camera.project(new Vector3(mapSprite.getX(), mapSprite.getY(), 0));
-        Texture mapTexture = mapSprite.getTexture();
-        Vector2 mapScreenSize = Utils.worldDistToScreenDist(mapSprite.getWidth(), mapSprite.getHeight(), camera);
-        float textureScreenWidthRatio = mapScreenSize.x / mapTexture.getWidth();
-        float textureScreenHeightRatio = mapScreenSize.y / mapTexture.getHeight();
-        return new Vector2(mapScreenPos.x, mapScreenPos.y).add(troopCirclePos.x * textureScreenWidthRatio,
-                                                               troopCirclePos.y * textureScreenHeightRatio);
     }
 
     private void initShader() {

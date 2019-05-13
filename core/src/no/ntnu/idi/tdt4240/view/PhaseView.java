@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -48,7 +47,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Vector2 lineTo;
     private boolean shouldDrawArrow = false;
     private SpriteBatch spriteBatch;
-    private TextureRegion region;
     private Texture texture;
     private Sprite spriteArrowHead;
 
@@ -73,12 +71,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
         spriteBatch = new SpriteBatch();
         texture = new Texture("arrow-tip.png");
-        region = new TextureRegion(texture, 0, 0, 50, 50);
         spriteArrowHead = new Sprite(texture);
         Utils.setSizeOfSprite(spriteArrowHead, ARROW_HEAD_SIZE_MAP_RATIO);
         spriteArrowHead.setColor(0, 0, 0, 0.7f);
-        //spriteArrowHead.setSize(25,25); //scale the image down to 50%
-        //spriteArrowHead.setOriginCenter();
 
         // Actors
         phaseLabel = createInGameLabel("");
@@ -89,7 +84,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         phaseLabel.setAlignment(Align.center);
 
         playerLabel = createPlayerColorableLabel("");
-        //playerLabel.setPosition(buttonWidth/2, 3*buttonHeight + 80);
         playerLabel.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 20f);
         playerLabel.setAlignment(Align.center);
 
@@ -168,12 +162,12 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         });
     }
 
-    public void addActor(Actor actor) {
+    private void addActor(Actor actor) {
         if (!stage.getActors().contains(actor, false))
             stage.addActor(actor);
     }
 
-    public void removeActor(Actor actor) {
+    private void removeActor(Actor actor) {
         if (stage.getActors().contains(actor, false))
             actor.remove();
     }
@@ -259,7 +253,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void render() {
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Draw and update
         if (shouldDrawArrow)
             drawArrow(lineFrom, lineTo);
@@ -275,7 +268,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         spriteBatch.enableBlending();
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
-        //spriteBatch.draw(region, end.x, end.y);
         //rotate head
         float angle = end.cpy().sub(start).angle();
         spriteArrowHead.setRotation(angle - 90f);

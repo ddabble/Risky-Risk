@@ -2,7 +2,7 @@ package no.ntnu.idi.tdt4240.presenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Map;
 
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
@@ -20,16 +20,14 @@ public class GamePresenter {
     }
 
     public boolean isGameOver() {
-        HashMap<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
+        Map<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
         int countPlayerWithTerritories = 0;
-        for (HashMap.Entry entry : leaderboard.entrySet()) {
+        for (Map.Entry entry : leaderboard.entrySet()) {
             if ((int)entry.getValue() > 0) {
                 countPlayerWithTerritories++;
             }
         }
-        if (countPlayerWithTerritories <= 1)
-            return true;
-        return false;
+        return countPlayerWithTerritories <= 1;
     }
 
     public void exitToWinScreen() {

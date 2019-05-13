@@ -14,16 +14,10 @@ public class TutorialModel {
 
     public static TutorialModel INSTANCE;
 
-    public final TutorialSlide TUTORIAL_SLIDES;
+    private final TutorialSlide TUTORIAL_SLIDES;
 
     private TutorialModel() {
         TUTORIAL_SLIDES = TutorialSlide.parseJsonTutorialSlides(Gdx.files.internal("tutorial/tutorial.json"));
-    }
-
-    public static void init() {
-        if (INSTANCE != null)
-            return;
-        INSTANCE = new TutorialModel();
     }
 
     public static TutorialModel getInstance() {
@@ -32,5 +26,11 @@ public class TutorialModel {
 
     public static ArrayList<Map<String, String>> getTutorialSlides() {
         return INSTANCE.TUTORIAL_SLIDES.getTutorialSlides();
+    }
+
+    public static void init() {
+        if (INSTANCE != null)
+            return;
+        INSTANCE = new TutorialModel();
     }
 }

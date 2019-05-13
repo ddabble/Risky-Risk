@@ -14,9 +14,9 @@ public class TutorialPresenter {
     private TutorialPresenter() {}
 
     public void init() {
-        TutorialModel.INSTANCE.init();
+        TutorialModel.init();
         for (TutorialObserver observer : this.tutorialObservers) {
-            observer.create(TutorialModel.INSTANCE.getTutorialSlides());
+            observer.create(TutorialModel.getTutorialSlides());
         }
     }
 

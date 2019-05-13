@@ -3,7 +3,6 @@ package no.ntnu.idi.tdt4240.model;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
 public class TurnModel {
-    // TODO: set currentPlayerID and numberOfPlayers from somewhere else
     public static final TurnModel INSTANCE = new TurnModel();
 
     private int currentPlayerID;

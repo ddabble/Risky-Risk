@@ -22,9 +22,6 @@ public class RiskyRisk extends Game {
     private SignInView signInView;
     public IGPGSClient gpgsClient;
 
-    public RiskyRisk() {
-    }
-
     // Init needs to be called after we set the games GPGS client
     public void init() {
 
@@ -53,7 +50,6 @@ public class RiskyRisk extends Game {
     }
 
     public void setScreen(ScreenEnum screen) {
-        // TODO: add other screens
 
 
         switch (screen) {
@@ -83,9 +79,6 @@ public class RiskyRisk extends Game {
     public void create() {
         TerritoryModel.init();
         SettingsPresenter.INSTANCE.init();
-
-        // TODO: set number of players from (settings) menu
-        //SettingsPresenter.INSTANCE.setNumPlayers(8);
 
         switch (Gdx.app.getType()) {
             case Android: // android specific code

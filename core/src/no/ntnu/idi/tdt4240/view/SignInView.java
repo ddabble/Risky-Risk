@@ -17,10 +17,11 @@ import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
 public class SignInView extends AbstractView implements Screen {
     private final RiskyRisk game;
+    private final IGPGSClient gpgsClient;
+    private final OrthographicCamera camera;
+
     private Stage stage;
     private Table table;
-    private OrthographicCamera camera;
-    private IGPGSClient gpgsClient;
     private boolean isSignedIn = false;
 
     public SignInView(RiskyRisk game) {
@@ -93,29 +94,9 @@ public class SignInView extends AbstractView implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
         table.clear();
         stage.dispose();
         super.dispose();
-    }
-
-    @Override
-    public void dispose() {
-
     }
 }

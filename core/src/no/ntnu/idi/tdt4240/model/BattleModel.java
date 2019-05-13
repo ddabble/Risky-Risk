@@ -76,7 +76,6 @@ public class BattleModel {
     }
 
     private static int mostDice(int[] attDice, int[] defDice) {
-        //System.out.println("mostDice: " + Math.min(Math.max(attDice.length, defDice.length), 2));
         return Math.min(Math.min(attDice.length, defDice.length), 2);
     }
 

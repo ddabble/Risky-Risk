@@ -18,7 +18,7 @@ public class TerritoryMap {
     private Map<Integer, Territory> color_territoryMap;
 
     // TODO: move to separate class
-    public Map<String, Continent> continentMap;
+    private Map<String, Continent> continentMap;
 
     public TerritoryMap(Map<String, Territory> ID_territoryMap, Map<Integer, Territory> color_territoryMap) {
         this.ID_territoryMap = ID_territoryMap;

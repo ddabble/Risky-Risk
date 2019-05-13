@@ -22,7 +22,6 @@ import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.GamesClientStatusCodes;
 import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.Player;
-import com.google.android.gms.games.PlayersClient;
 import com.google.android.gms.games.TurnBasedMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
@@ -45,7 +44,11 @@ import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 
 public class GPGSClient implements IGPGSClient {
 
-    public static final String TAG = "GPGS";
+    private static final String TAG = "GPGS";
+    // For our intents
+    private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SELECT_PLAYERS = 10000;
+    private static final int RC_LOOK_AT_MATCHES = 10001;
 
     //For popups
     private View mView;
@@ -67,17 +70,13 @@ public class GPGSClient implements IGPGSClient {
 
     private AlertDialog mAlertDialog;
 
-    // For our intents
-    private static final int RC_SIGN_IN = 9001;
-    final static int RC_SELECT_PLAYERS = 10000;
-    final static int RC_LOOK_AT_MATCHES = 10001;
 
 
     // Should I be showing the turn API?
-    public boolean isDoingTurn = false;
+    private boolean isDoingTurn = false;
 
     // This is the current match we're in; null if not loaded
-    public TurnBasedMatch mMatch;
+    private TurnBasedMatch mMatch;
     private Activity mActivity;
 
     // This is the current match data after being unpersisted.
@@ -85,6 +84,9 @@ public class GPGSClient implements IGPGSClient {
     // taken an action on the match, such as takeTurn()
     private RiskyTurn mTurnData;
     private boolean matchActive = false;
+
+    private String mDisplayName;
+    private String mPlayerId;
 
     public GPGSClient(Activity activity, View view) {
         // Create the Google API Client with access to Games
@@ -113,11 +115,9 @@ public class GPGSClient implements IGPGSClient {
         }
     }
 
-    private String mDisplayName;
-    private String mPlayerId;
 
 
-    public void onConnected(GoogleSignInAccount googleSignInAccount) {
+    private void onConnected(GoogleSignInAccount googleSignInAccount) {
         String name = googleSignInAccount.getId();
         Log.d(TAG, "onConnected(): " + name + " connected to Google APIs");
 
@@ -308,7 +308,7 @@ public class GPGSClient implements IGPGSClient {
     // Sign-in, Sign out behavior
 
     // Update the visibility based on what state we're in.
-    public void setViewVisibility() {
+    private void setViewVisibility() {
         boolean isSignedIn = mTurnBasedMultiplayerClient != null;
 
         if (!isSignedIn) {
@@ -320,7 +320,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // Switch to gameplay view.
-    public void setGameplayUI() {
+    private void setGameplayUI() {
         isDoingTurn = true;
         setViewVisibility();
         //give a callback to the game, if one is registered
@@ -330,7 +330,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // Generic warning/info dialog
-    public void showWarning(String title, String message) {
+    private void showWarning(String title, String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
 
         // set title
@@ -354,7 +354,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // Rematch dialog
-    public void askForRematch() {
+    private void askForRematch() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
 
         alertDialogBuilder.setMessage("Do you want a rematch?");
@@ -418,7 +418,7 @@ public class GPGSClient implements IGPGSClient {
      * <p>
      * If the user has already signed in previously, it will not show dialog.
      */
-    public void signInSilently() {
+    private void signInSilently() {
         Log.d(TAG, "signInSilently()");
 
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(mActivity,
@@ -610,7 +610,7 @@ public class GPGSClient implements IGPGSClient {
     // game, saving our initial state. Calling takeTurn() will
     // callback to OnTurnBasedMatchUpdated(), which will show the game
     // UI.
-    public void startMatch(TurnBasedMatch match) {
+    private void startMatch(TurnBasedMatch match) {
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
@@ -638,7 +638,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
     // If you choose to rematch, then call it and wait for a response.
-    public void rematch() {
+    private void rematch() {
         mTurnBasedMultiplayerClient.rematch(mMatch.getMatchId())
                 .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
                     @Override
@@ -659,7 +659,7 @@ public class GPGSClient implements IGPGSClient {
      *
      * @return participantId of next player, or null if automatching
      */
-    public String getNextParticipantId() {
+    private String getNextParticipantId() {
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
@@ -689,7 +689,7 @@ public class GPGSClient implements IGPGSClient {
 
     // This is the main function that gets called when players choose a match
     // from the inbox, or else create a match and want to start it.
-    public void updateMatch(TurnBasedMatch match) {
+    private void updateMatch(TurnBasedMatch match) {
         matchActive = true;
 
         mMatch = match;
@@ -779,7 +779,7 @@ public class GPGSClient implements IGPGSClient {
     }
 
 
-    public void onUpdateMatch(TurnBasedMatch match) {
+    private void onUpdateMatch(TurnBasedMatch match) {
         if (match.canRematch()) {
             askForRematch();
         }
@@ -830,7 +830,7 @@ public class GPGSClient implements IGPGSClient {
         }
     };
 
-    public void showErrorMessage(String message) {
+    private void showErrorMessage(String message) {
         showWarning("Warning", message);
     }
 

@@ -19,7 +19,6 @@ public class ColorArray {
     }
 
     public float[] getFloatArray() {
-        // TODO: should return copy?
         return colors;
     }
 
