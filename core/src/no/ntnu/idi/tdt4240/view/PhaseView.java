@@ -261,12 +261,11 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     public void render() {
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Draw and update
+        if (shouldDrawArrow)
+            drawArrow(lineFrom, lineTo);
+
         stage.act(); // Updates all actors
         stage.draw();
-
-        if (shouldDrawArrow) {
-            drawArrow(lineFrom, lineTo);
-        }
     }
 
     private void drawArrow(Vector2 start, Vector2 end) {
