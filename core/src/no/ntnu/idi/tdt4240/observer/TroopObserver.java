@@ -8,7 +8,7 @@ import no.ntnu.idi.tdt4240.util.TerritoryMap;
 public interface TroopObserver {
     void create(TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture);
 
-    void onMapMoved();
+    void onMapRenderingChanged();
 
     void onSelectTerritory(Territory territory);
 

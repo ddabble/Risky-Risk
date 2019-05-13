@@ -23,6 +23,7 @@ import java.util.Map;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
+import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.Utils;
 import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
@@ -77,11 +78,11 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 //            float lastPinchPointerDistance;
 
             @Override
-            public boolean tap(float screenX, float screenY, int count, int button) {
+            public boolean tap(float touchX, float touchY, int count, int button) {
                 if (button != Input.Buttons.LEFT) // Only for desktop
                     return false;
 
-                Vector2 touchWorldPos = screenToWorldPos(screenX, screenY);
+                Vector2 touchWorldPos = Utils.touchToWorldPos(touchX, touchY, camera);
                 if (!mapSprite.getBoundingRectangle().contains(touchWorldPos))
                     return false;
 
@@ -91,11 +92,11 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             }
 
             @Override
-            public boolean pan(float screenX, float screenY, float deltaX, float deltaY) {
-                Vector2 touchWorldDelta = screenToWorldPos(deltaX, deltaY).sub(screenToWorldPos(0, 0));
+            public boolean pan(float touchX, float touchY, float deltaX, float deltaY) {
+                Vector2 touchWorldDelta = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
                 ensureCameraIsWithinMap();
-                BoardPresenter.INSTANCE.onMapMoved();
+                PhasePresenter.INSTANCE.onMapRenderingChanged();
                 return true;
             }
 
@@ -111,12 +112,12 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     lastPinchPointer1 = initialPointer1;
                     lastPinchPointer2 = initialPointer2;
                     initialPinchZoom = camera.zoom;
-                    initialPinchPointerWorldDistance = screenToWorldPos(initialPointer1).dst(screenToWorldPos(initialPointer2));
+                    initialPinchPointerWorldDistance = Utils.touchToWorldPos(initialPointer1, camera).dst(Utils.touchToWorldPos(initialPointer2, camera));
 //                    lastPinchPointerDistance = initialPointer1.dst(initialPointer2);
                 }
 
 
-                float currentPinchPointerWorldDistance = screenToWorldPos(currentPointer1).dst(screenToWorldPos(currentPointer2));
+                float currentPinchPointerWorldDistance = Utils.touchToWorldPos(currentPointer1, camera).dst(Utils.touchToWorldPos(currentPointer2, camera));
 //                System.out.println();
 //                System.out.println(currentPinchPointerWorldDistance + "\t" + currentPointer1 + "\t" + currentPointer2);
 
@@ -135,11 +136,10 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 //                Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
-                Vector2 touchWorldDelta = screenToWorldPos(currentMidpoint).sub(screenToWorldPos(lastMidpoint));
-                System.out.println(touchWorldDelta);
+                Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
                 ensureCameraIsWithinMap();
-                BoardPresenter.INSTANCE.onMapMoved();
+                PhasePresenter.INSTANCE.onMapRenderingChanged();
 
 //                lastMidpoint = currentMidpoint;
 //                lastPinchPointerDistance = currentPinchPointerDistance;
@@ -162,19 +162,10 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 camera.zoom += amount / 10f;
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
                 camera.update();
-                BoardPresenter.INSTANCE.onMapMoved();
+                PhasePresenter.INSTANCE.onMapRenderingChanged();
                 return true;
             }
         });
-    }
-
-    private Vector2 screenToWorldPos(Vector2 screenPos) {
-        return screenToWorldPos(screenPos.x, screenPos.y);
-    }
-
-    private Vector2 screenToWorldPos(float screenX, float screenY) {
-        Vector3 touchWorldPos = camera.unproject(new Vector3(screenX, screenY, 0));
-        return new Vector2(touchWorldPos.x, touchWorldPos.y);
     }
 
     private void ensureCameraIsWithinMap() {
@@ -220,7 +211,12 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
     public Vector2 screenPosRelativeToMap(Vector2 troopCirclePos) {
         Vector3 mapScreenPos = camera.project(new Vector3(mapSprite.getX(), mapSprite.getY(), 0));
-        return new Vector2(mapScreenPos.x, mapScreenPos.y).add(troopCirclePos.x / camera.zoom, troopCirclePos.y / camera.zoom);
+        Texture mapTexture = mapSprite.getTexture();
+        Vector2 mapScreenSize = Utils.worldDistToScreenDist(mapSprite.getWidth(), mapSprite.getHeight(), camera);
+        float textureScreenWidthRatio = mapScreenSize.x / mapTexture.getWidth();
+        float textureScreenHeightRatio = mapScreenSize.y / mapTexture.getHeight();
+        return new Vector2(mapScreenPos.x, mapScreenPos.y).add(troopCirclePos.x * textureScreenWidthRatio,
+                                                               troopCirclePos.y * textureScreenHeightRatio);
     }
 
     private void initShader() {

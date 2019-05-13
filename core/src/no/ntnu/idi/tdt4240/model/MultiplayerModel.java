@@ -12,7 +12,6 @@ import java.util.Set;
 
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
-import sun.rmi.runtime.Log;
 
 public class MultiplayerModel {
     public static final MultiplayerModel INSTANCE = new MultiplayerModel();

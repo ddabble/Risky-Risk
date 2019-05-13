@@ -284,7 +284,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private void createTextStyles(){
         // Creates text styles for the text fields
 
-        Color fontColor = new Color(10/255f,10/255f,10/255f,1);
+        Color fontColor = new Color(0x0A0A0AFF);
 
         // Header style
         this.headerStyle = new Label.LabelStyle();

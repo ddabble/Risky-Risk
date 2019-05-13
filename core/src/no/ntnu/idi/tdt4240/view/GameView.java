@@ -31,9 +31,9 @@ public class GameView implements GameObserver, Screen {
         GamePresenter.addObserver(this);
         camera = new OrthographicCamera();
 
-        phaseView = new PhaseView(camera);
         boardView = new BoardView(camera);
         troopView = new TroopView(boardView, camera);
+        phaseView = new PhaseView(boardView, camera);
         leaderboardView = new LeaderboardView();
     }
 

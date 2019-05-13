@@ -24,7 +24,7 @@ public abstract class AbstractView extends ApplicationAdapter {
 
     private BitmapFont headerFont;
     private BitmapFont slideHeaderFont;
-    private BitmapFont slideTextFont;
+    protected BitmapFont slideTextFont;
     private BitmapFont inGameLabelButtonFont;
     private BitmapFont inGameLabelFont;
     BitmapFont inGamePlayerColorableFont;

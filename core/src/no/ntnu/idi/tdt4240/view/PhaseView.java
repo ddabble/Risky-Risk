@@ -21,14 +21,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.swing.GroupLayout;
-import javax.xml.soap.Text;
-
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
+import no.ntnu.idi.tdt4240.util.Utils;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
+    private static final float ARROW_HEAD_SIZE_MAP_RATIO = 1 / 30f;
+
+    private final BoardView boardView;
+    private final OrthographicCamera camera;
+
     private int buttonWidth;
     private int buttonHeight;
     private TextButton phaseButton;
@@ -41,7 +44,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Label playerLabel;
     private Label waitingForTurnLabel;
     private Stage stage;
-    private final OrthographicCamera camera;
 
     private Vector2 lineFrom;
     private Vector2 lineTo;
@@ -51,8 +53,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Texture texture;
     private Sprite spriteArrowHead;
 
-    public PhaseView(OrthographicCamera camera) {
+    public PhaseView(BoardView boardView, OrthographicCamera camera) {
         PhasePresenter.addObserver(this);
+        this.boardView = boardView;
         this.camera = camera;
     }
 
@@ -73,7 +76,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         texture = new Texture("arrow-tip.png");
         region = new TextureRegion(texture, 0, 0, 50, 50);
         spriteArrowHead = new Sprite(texture);
-        spriteArrowHead.setScale(0.5f);
+        Utils.setSizeOfSprite(spriteArrowHead, ARROW_HEAD_SIZE_MAP_RATIO);
         spriteArrowHead.setColor(0, 0, 0, 0.7f);
         //spriteArrowHead.setSize(25,25); //scale the image down to 50%
         //spriteArrowHead.setOriginCenter();
@@ -217,6 +220,11 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
+    public void onMapRenderingChanged() {
+        spriteArrowHead.setScale(camera.zoom);
+    }
+
+    @Override
     public void onNextPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID +"'s turn");
         inGamePlayerColorableFont.setColor(playerColor);
@@ -233,8 +241,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void onSelectedTerritoriesChange(Territory start, Territory end) {
         if (start != null && end != null) {
-            lineFrom = start.getTroopCircleVector();
-            lineTo = end.getTroopCircleVector();
+            lineFrom = Utils.screenToWorldPos(boardView.screenPosRelativeToMap(start.getTroopCircleVector()), camera);
+            lineTo = Utils.screenToWorldPos(boardView.screenPosRelativeToMap(end.getTroopCircleVector()), camera);
             shouldDrawArrow = true;
         } else {
             shouldDrawArrow = false;

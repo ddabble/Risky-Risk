@@ -63,6 +63,13 @@ public class PhasePresenter {
         }
     }
 
+    public void onMapRenderingChanged() {
+        for (TroopObserver observer : troopObservers)
+            observer.onMapRenderingChanged();
+        for (PhaseObserver observer : phaseObservers)
+            observer.onMapRenderingChanged();
+    }
+
     public void nextTurnButtonClicked() {
         if(BoardModel.INSTANCE.isOnlineMatch()) {
             nextTurnOnlineMatch();

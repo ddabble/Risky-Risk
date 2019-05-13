@@ -24,6 +24,8 @@ public interface PhaseObserver {
 
     void updateRenderedVariables(String phase, int troopsToPlace);
 
+    void onMapRenderingChanged();
+
     void onNextPlayer(int playerID, Color playerColor);
 
     void onNextPhase(String currentPhase, String nextPhase);
