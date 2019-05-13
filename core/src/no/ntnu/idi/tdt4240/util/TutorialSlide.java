@@ -16,7 +16,9 @@ public class TutorialSlide {
         this.tutorialSlides = tutorialSlides;
     }
 
-    public ArrayList<Map<String, String>> getTutorialSlides() { return this.tutorialSlides;}
+    public ArrayList<Map<String, String>> getTutorialSlides() {
+        return this.tutorialSlides;
+    }
 
     public static TutorialSlide parseJsonTutorialSlides(FileHandle jsonFile) {
         ObjectMapper mapper = new ObjectMapper();
@@ -38,5 +40,4 @@ public class TutorialSlide {
         }
         return new TutorialSlide(tutorialSlides);
     }
-
 }

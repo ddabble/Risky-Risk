@@ -67,7 +67,6 @@ public abstract class AbstractView extends ApplicationAdapter {
         return selectBox;
     }
 
-
     protected Label createLabel(String text) {
         return new Label(text, labelStyle);
     }
@@ -99,7 +98,6 @@ public abstract class AbstractView extends ApplicationAdapter {
         return new Label(text, inGameLabelStyle);
     }
 
-
     protected Label createLabel(String text, Label.LabelStyle labelStyle) {
         return new Label(text, labelStyle);
     }
@@ -125,7 +123,6 @@ public abstract class AbstractView extends ApplicationAdapter {
 
         selectStyle.font = skin.getFont("default-font");
     }
-
 
     private void createBitmapFonts() {
         // Creates BitmapFonts for texts
@@ -157,7 +154,6 @@ public abstract class AbstractView extends ApplicationAdapter {
         fontGenerator.dispose();
         return result;
     }
-
 
     @Override
     public void dispose() {

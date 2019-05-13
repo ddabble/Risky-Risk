@@ -35,7 +35,6 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         this.game = game;
         gpgsClient = game.gpgsClient;
         camera = new OrthographicCamera();
-
     }
 
     @Override
@@ -138,13 +137,11 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         mainMenuTheme.setLooping(true);
         mainMenuTheme.play();
 
-
         //table.row();
     }
 
     @Override
     public void render(float delta) {
-
         if (gpgsClient != null && gpgsClient.matchActive()) {
             game.setScreen(RiskyRisk.ScreenEnum.GAME);
         }

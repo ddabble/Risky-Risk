@@ -12,7 +12,6 @@ import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.view.WinView;
 
-
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
     private MainMenuView mainMenuView;
@@ -50,8 +49,6 @@ public class RiskyRisk extends Game {
     }
 
     public void setScreen(ScreenEnum screen) {
-
-
         switch (screen) {
             case MAIN_MENU:
                 setScreen(mainMenuView);
@@ -68,10 +65,10 @@ public class RiskyRisk extends Game {
             case SIGN_IN:
                 setScreen(signInView);
                 break;
+
             case WIN:
                 setScreen(winView);
                 break;
-
         }
     }
 

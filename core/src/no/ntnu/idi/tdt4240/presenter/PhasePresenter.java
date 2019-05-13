@@ -179,7 +179,6 @@ public class PhasePresenter {
         }
     }
 
-
     private void updateTroopsToPlace() {
         List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
         List<Territory> possibleContinent = new ArrayList<>();
@@ -252,7 +251,6 @@ public class PhasePresenter {
         checkGameOver();
     }
 
-
     public void exitToMainMenuButtonClicked() {
         // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
         BoardModel.INSTANCE.getClient().setMatchNotActive(); //extremely hacky, board should not be handing out the client, instead the
@@ -269,7 +267,6 @@ public class PhasePresenter {
             GamePresenter.INSTANCE.exitToWinScreen();
         }
     }
-
 
     /**
      * Updates leaderboard according to the state of the game

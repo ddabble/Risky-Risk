@@ -31,12 +31,10 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
 
-
         // Actors
         leaderboardLabel = createLeaderboardLabel("");
         leaderboardLabel.setAlignment(Align.topLeft);
         leaderboardLabel.setPosition(25, Gdx.graphics.getHeight() - 20);
-
 
         //the PhasePresenter has to update Leaderboard at the start;
 
@@ -56,7 +54,6 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         if (stage.getActors().contains(actor, false))
             actor.remove();
     }
-
 
     /**
      * Updates the leaderboard with playerID and number of territories.
@@ -92,5 +89,4 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         stage.dispose();
         super.dispose();
     }
-
 }

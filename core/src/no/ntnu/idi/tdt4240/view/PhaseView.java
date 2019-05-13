@@ -118,7 +118,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
             }
         });
 
-
         fortifyButton = defineButton("Move 1 troop", 0, 2 * buttonHeight + 20);
         fortifyButton.addListener(new ClickListener() {
             @Override
@@ -192,7 +191,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         removeActor(phaseButton);
         addActor(turnButton);
     }
-
 
     @Override
     public void removeTurnButton() { //TODO: change to better name

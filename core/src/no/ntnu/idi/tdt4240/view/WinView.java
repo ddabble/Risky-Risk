@@ -17,9 +17,9 @@ import no.ntnu.idi.tdt4240.observer.WinObserver;
 import no.ntnu.idi.tdt4240.presenter.WinPresenter;
 
 public class WinView extends AbstractView implements WinObserver, Screen {
-
     private final RiskyRisk game;
     private final OrthographicCamera camera;
+
     private Texture background;
     private Stage stage;
     private Table table;
@@ -73,6 +73,4 @@ public class WinView extends AbstractView implements WinObserver, Screen {
         background.dispose();
         super.dispose();
     }
-
-
 }

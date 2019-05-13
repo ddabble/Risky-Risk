@@ -41,9 +41,7 @@ import java.util.Arrays;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 
-
 public class GPGSClient implements IGPGSClient {
-
     private static final String TAG = "GPGS";
     // For our intents
     private static final int RC_SIGN_IN = 9001;
@@ -70,8 +68,6 @@ public class GPGSClient implements IGPGSClient {
 
     private AlertDialog mAlertDialog;
 
-
-
     // Should I be showing the turn API?
     private boolean isDoingTurn = false;
 
@@ -96,7 +92,6 @@ public class GPGSClient implements IGPGSClient {
         mGoogleSignInClient = GoogleSignIn.getClient(mActivity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
     }
 
-
     protected void onResume() {
         // Since the state of the signed in user can change when the activity is not active
         // it is recommended to try and sign in silently from when the app resumes.
@@ -115,8 +110,6 @@ public class GPGSClient implements IGPGSClient {
         }
     }
 
-
-
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
         String name = googleSignInAccount.getId();
         Log.d(TAG, "onConnected(): " + name + " connected to Google APIs");
@@ -125,19 +118,19 @@ public class GPGSClient implements IGPGSClient {
         mInvitationsClient = Games.getInvitationsClient(mActivity, googleSignInAccount);
 
         Games.getPlayersClient(mActivity, googleSignInAccount)
-                .getCurrentPlayer()
-                .addOnSuccessListener(
-                        new OnSuccessListener<Player>() {
-                            @Override
-                            public void onSuccess(Player player) {
-                                mDisplayName = player.getDisplayName();
-                                mPlayerId = player.getPlayerId();
+             .getCurrentPlayer()
+             .addOnSuccessListener(
+                     new OnSuccessListener<Player>() {
+                         @Override
+                         public void onSuccess(Player player) {
+                             mDisplayName = player.getDisplayName();
+                             mPlayerId = player.getPlayerId();
 
-                                setViewVisibility();
-                            }
-                        }
-                )
-                .addOnFailureListener(createFailureListener("There was a problem getting the player!"));
+                             setViewVisibility();
+                         }
+                     }
+             )
+             .addOnFailureListener(createFailureListener("There was a problem getting the player!"));
 
         Log.d(TAG, "onConnected(): Connection successful");
 
@@ -149,20 +142,20 @@ public class GPGSClient implements IGPGSClient {
         gamesClient.setViewForPopups(mView);
 
         gamesClient.getActivationHint()
-                .addOnSuccessListener(new OnSuccessListener<Bundle>() {
-                    @Override
-                    public void onSuccess(Bundle hint) {
-                        if (hint != null) {
-                            TurnBasedMatch match = hint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
+                   .addOnSuccessListener(new OnSuccessListener<Bundle>() {
+                       @Override
+                       public void onSuccess(Bundle hint) {
+                           if (hint != null) {
+                               TurnBasedMatch match = hint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
 
-                            if (match != null) {
-                                updateMatch(match);
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(createFailureListener(
-                        "There was a problem getting the activation hint!"));
+                               if (match != null) {
+                                   updateMatch(match);
+                               }
+                           }
+                       }
+                   })
+                   .addOnFailureListener(createFailureListener(
+                           "There was a problem getting the activation hint!"));
 
         setViewVisibility();
 
@@ -181,7 +174,6 @@ public class GPGSClient implements IGPGSClient {
     }
 
     private void onDisconnected() {
-
         Log.d(TAG, "onDisconnected()");
 
         mTurnBasedMultiplayerClient = null;
@@ -206,38 +198,37 @@ public class GPGSClient implements IGPGSClient {
     // you will need to figure out what you clicked on.
     public void onCheckGamesClicked() {
         mTurnBasedMultiplayerClient.getInboxIntent()
-                .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        mActivity.startActivityForResult(intent, RC_LOOK_AT_MATCHES);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("Error with get_inbox_intent"));
+                                   .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                                       @Override
+                                       public void onSuccess(Intent intent) {
+                                           mActivity.startActivityForResult(intent, RC_LOOK_AT_MATCHES);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("Error with get_inbox_intent"));
     }
 
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked() {//View view) {
         mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 7, true)
-                .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        mActivity.startActivityForResult(intent, RC_SELECT_PLAYERS);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("Error with get_select_opponents"));
+                                   .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                                       @Override
+                                       public void onSuccess(Intent intent) {
+                                           mActivity.startActivityForResult(intent, RC_SELECT_PLAYERS);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("Error with get_select_opponents"));
     }
 
     public void onCancelClicked() {
-
         mTurnBasedMultiplayerClient.cancelMatch(mMatch.getMatchId())
-                .addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(String matchId) {
-                        onCancelMatch(matchId);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem cancelling the match!"));
+                                   .addOnSuccessListener(new OnSuccessListener<String>() {
+                                       @Override
+                                       public void onSuccess(String matchId) {
+                                           onCancelMatch(matchId);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem cancelling the match!"));
 
         isDoingTurn = false;
         matchActive = false;
@@ -250,13 +241,13 @@ public class GPGSClient implements IGPGSClient {
         String nextParticipantId = getNextParticipantId();
 
         mTurnBasedMultiplayerClient.leaveMatchDuringTurn(mMatch.getMatchId(), nextParticipantId)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        onLeaveMatch();
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem leaving the match!"));
+                                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                       @Override
+                                       public void onSuccess(Void aVoid) {
+                                           onLeaveMatch();
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem leaving the match!"));
 
         isDoingTurn = false;
         matchActive = false;
@@ -266,24 +257,22 @@ public class GPGSClient implements IGPGSClient {
     // Finish the game. Sometimes, this is your only choice.
     public void onFinishClicked() {
         mTurnBasedMultiplayerClient.finishMatch(mMatch.getMatchId())
-                .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                    @Override
-                    public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                        onUpdateMatch(turnBasedMatch);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
+                                   .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+                                       @Override
+                                       public void onSuccess(TurnBasedMatch turnBasedMatch) {
+                                           onUpdateMatch(turnBasedMatch);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem finishing the match!"));
 
         isDoingTurn = false;
         matchActive = false;
         //setViewVisibility();
     }
 
-
     // Upload your new gamestate, then take a turn, and pass it on to the next
     // player.
     public void onDoneClicked() {
-
         String nextParticipantId = getNextParticipantId();
         // Create the next turn
         mTurnData.turnCounter += 1;
@@ -293,14 +282,14 @@ public class GPGSClient implements IGPGSClient {
         //mTurnData.data = null; //changed from string to null as mTurnData no longer uses string to hold data
 
         mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
-                mTurnData.persist(), nextParticipantId)
-                .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                    @Override
-                    public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                        onUpdateMatch(turnBasedMatch);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
+                                             mTurnData.persist(), nextParticipantId)
+                                   .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+                                       @Override
+                                       public void onSuccess(TurnBasedMatch turnBasedMatch) {
+                                           onUpdateMatch(turnBasedMatch);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
 
         mTurnData = null;
     }
@@ -324,7 +313,7 @@ public class GPGSClient implements IGPGSClient {
         isDoingTurn = true;
         setViewVisibility();
         //give a callback to the game, if one is registered
-        if(gameUIStartHandler != null) {
+        if (gameUIStartHandler != null) {
             gameUIStartHandler.onGameUIStart();
         }
     }
@@ -337,14 +326,16 @@ public class GPGSClient implements IGPGSClient {
         alertDialogBuilder.setTitle(title).setMessage(message);
 
         // set dialog message
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close
-                        // current activity
-                    }
-                });
+        alertDialogBuilder.setCancelable(false)
+                          .setPositiveButton(
+                                  "OK",
+                                  new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int id) {
+                                          // if this button is clicked, close
+                                          // current activity
+                                      }
+                                  });
 
         // create alert dialog
         mAlertDialog = alertDialogBuilder.create();
@@ -361,18 +352,19 @@ public class GPGSClient implements IGPGSClient {
 
         alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("Sure, rematch!",
+                .setPositiveButton(
+                        "Sure, rematch!",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 rematch();
                             }
                         })
-                .setNegativeButton("No.",
+                .setNegativeButton(
+                        "No.",
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
+                            public void onClick(DialogInterface dialog, int id) {}
                         });
 
         alertDialogBuilder.show();
@@ -383,7 +375,7 @@ public class GPGSClient implements IGPGSClient {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mActivity);
         boolean hasPermissions = GoogleSignIn.hasPermissions(account);
 
-        boolean isSignedIn = account!=null && hasPermissions;
+        boolean isSignedIn = account != null && hasPermissions;
 
         if (isSignedIn) {
             Log.d(TAG, "isSignedin(): already signed in");
@@ -391,7 +383,6 @@ public class GPGSClient implements IGPGSClient {
         }
         return isSignedIn;
     }
-
 
     public void setSignInAttemptHandler(SignInAttemptHandler signInAttemptHandler) {
         this.signInAttemptHandler = signInAttemptHandler;
@@ -421,7 +412,8 @@ public class GPGSClient implements IGPGSClient {
     private void signInSilently() {
         Log.d(TAG, "signInSilently()");
 
-        mGoogleSignInClient.silentSignIn().addOnCompleteListener(mActivity,
+        mGoogleSignInClient.silentSignIn().addOnCompleteListener(
+                mActivity,
                 new OnCompleteListener<GoogleSignInAccount>() {
                     @Override
                     public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
@@ -439,7 +431,8 @@ public class GPGSClient implements IGPGSClient {
     public void signOut() {
         Log.d(TAG, "signOut()");
 
-        mGoogleSignInClient.signOut().addOnCompleteListener(mActivity,
+        mGoogleSignInClient.signOut().addOnCompleteListener(
+                mActivity,
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -459,16 +452,16 @@ public class GPGSClient implements IGPGSClient {
      * Since a lot of the operations use tasks, we can use a common handler for whenever one fails.
      *
      * @param exception The exception to evaluate.  Will try to display a more descriptive reason for
-     *                  the exception.
-     * @param details   Will display alongside the exception if you wish to provide more details for
-     *                  why the exception happened
+     * the exception.
+     * @param details Will display alongside the exception if you wish to provide more details for
+     * why the exception happened
      */
     private void handleException(Exception exception, String details) {
         int status = 0;
 
         if (exception instanceof TurnBasedMultiplayerClient.MatchOutOfDateApiException) {
             TurnBasedMultiplayerClient.MatchOutOfDateApiException matchOutOfDateApiException =
-                    (TurnBasedMultiplayerClient.MatchOutOfDateApiException) exception;
+                    (TurnBasedMultiplayerClient.MatchOutOfDateApiException)exception;
 
             new AlertDialog.Builder(mActivity)
                     .setMessage("Match was out of date, updating with latest match data...")
@@ -482,7 +475,7 @@ public class GPGSClient implements IGPGSClient {
         }
 
         if (exception instanceof ApiException) {
-            ApiException apiException = (ApiException) exception;
+            ApiException apiException = (ApiException)exception;
             status = apiException.getStatusCode();
         }
 
@@ -490,7 +483,7 @@ public class GPGSClient implements IGPGSClient {
             return;
         }
 
-        String message ="Status exception error: " +  details + " Status: " + status + " Exception:" + exception;;
+        String message = "Status exception error: " + details + " Status: " + status + " Exception:" + exception;
 
         new AlertDialog.Builder(mActivity)
                 .setMessage(message)
@@ -500,7 +493,7 @@ public class GPGSClient implements IGPGSClient {
 
     private void logBadActivityResult(int requestCode, int resultCode, String message) {
         Log.i(TAG, "Bad activity result(" + resultCode + ") for request (" + requestCode + "): "
-                + message);
+                   + message);
     }
 
     public void setMatchNotActive() {
@@ -513,14 +506,13 @@ public class GPGSClient implements IGPGSClient {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         if (requestCode == RC_SIGN_IN) {
-
             Task<GoogleSignInAccount> task =
                     GoogleSignIn.getSignedInAccountFromIntent(intent);
 
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 onConnected(account);
-                if(signInAttemptHandler != null) {
+                if (signInAttemptHandler != null) {
                     signInAttemptHandler.onSuccess();
                 }
             } catch (ApiException apiException) {
@@ -530,7 +522,7 @@ public class GPGSClient implements IGPGSClient {
                 }
 
                 onDisconnected();
-                if(signInAttemptHandler != null) {
+                if (signInAttemptHandler != null) {
                     signInAttemptHandler.onFailure();
                 }
 
@@ -540,7 +532,6 @@ public class GPGSClient implements IGPGSClient {
                             .setNeutralButton(android.R.string.ok, null)
                             .show();
                 }
-
             }
 
         } else if (requestCode == RC_LOOK_AT_MATCHES) {
@@ -548,7 +539,7 @@ public class GPGSClient implements IGPGSClient {
 
             if (resultCode != Activity.RESULT_OK) {
                 logBadActivityResult(requestCode, resultCode,
-                        "User cancelled returning from the 'Select Match' dialog.");
+                                     "User cancelled returning from the 'Select Match' dialog.");
                 return;
             }
 
@@ -566,7 +557,7 @@ public class GPGSClient implements IGPGSClient {
             if (resultCode != Activity.RESULT_OK) {
                 // user canceled
                 logBadActivityResult(requestCode, resultCode,
-                        "User cancelled returning from 'Select players to Invite' dialog");
+                                     "User cancelled returning from 'Select players to Invite' dialog");
                 return;
             }
 
@@ -582,25 +573,24 @@ public class GPGSClient implements IGPGSClient {
 
             if (minAutoMatchPlayers > 0) {
                 autoMatchCriteria = RoomConfig.createAutoMatchCriteria(minAutoMatchPlayers,
-                        maxAutoMatchPlayers, 0);
+                                                                       maxAutoMatchPlayers, 0);
             } else {
                 autoMatchCriteria = null;
             }
 
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
-                    .addInvitedPlayers(invitees)
-                    .setAutoMatchCriteria(autoMatchCriteria).build();
+                                                            .addInvitedPlayers(invitees)
+                                                            .setAutoMatchCriteria(autoMatchCriteria).build();
 
             // Start the match
-
             mTurnBasedMultiplayerClient.createMatch(tbmc)
-                    .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                        @Override
-                        public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                            onInitiateMatch(turnBasedMatch);
-                        }
-                    })
-                    .addOnFailureListener(createFailureListener("There was a problem creating a match!"));
+                                       .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+                                           @Override
+                                           public void onSuccess(TurnBasedMatch turnBasedMatch) {
+                                               onInitiateMatch(turnBasedMatch);
+                                           }
+                                       })
+                                       .addOnFailureListener(createFailureListener("There was a problem creating a match!"));
         }
     }
 
@@ -614,39 +604,39 @@ public class GPGSClient implements IGPGSClient {
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
-        Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size()+match.getAvailableAutoMatchSlots()));
-        mTurnData.setNumberOfPlayers(match.getParticipantIds().size()+match.getAvailableAutoMatchSlots());
+        Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size() + match.getAvailableAutoMatchSlots()));
+        mTurnData.setNumberOfPlayers(match.getParticipantIds().size() + match.getAvailableAutoMatchSlots());
         mTurnData.persistNumberOfPlayers();
         mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
         Log.d(TAG, "#############STARTING MATCH#########################");
-        if(mTurnData.persist() != null) {
+        if (mTurnData.persist() != null) {
             Log.d(TAG, "Sending match data that looks like:\n" + Arrays.toString(mTurnData.persist()));
         }
 
         mTurnBasedMultiplayerClient.takeTurn(match.getMatchId(),
-                mTurnData.persist(), myParticipantId)
-                .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                    @Override
-                    public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                        updateMatch(turnBasedMatch);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
+                                             mTurnData.persist(), myParticipantId)
+                                   .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+                                       @Override
+                                       public void onSuccess(TurnBasedMatch turnBasedMatch) {
+                                           updateMatch(turnBasedMatch);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem taking a turn!"));
     }
 
     // If you choose to rematch, then call it and wait for a response.
     private void rematch() {
         mTurnBasedMultiplayerClient.rematch(mMatch.getMatchId())
-                .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
-                    @Override
-                    public void onSuccess(TurnBasedMatch turnBasedMatch) {
-                        onInitiateMatch(turnBasedMatch);
-                    }
-                })
-                .addOnFailureListener(createFailureListener("There was a problem starting a rematch!"));
+                                   .addOnSuccessListener(new OnSuccessListener<TurnBasedMatch>() {
+                                       @Override
+                                       public void onSuccess(TurnBasedMatch turnBasedMatch) {
+                                           onInitiateMatch(turnBasedMatch);
+                                       }
+                                   })
+                                   .addOnFailureListener(createFailureListener("There was a problem starting a rematch!"));
         mMatch = null;
         isDoingTurn = false;
     }
@@ -698,7 +688,7 @@ public class GPGSClient implements IGPGSClient {
         int turnStatus = match.getTurnStatus();
 
         Log.d(TAG, "########REVEIVED MATCH DATA######################");
-        if(match.getData() != null) {
+        if (match.getData() != null) {
             Log.d(TAG, "Match data received looks like this:\n" + Arrays.toString(match.getData()));
             Log.d(TAG, "Match data has length " + match.getData().length);
         }
@@ -715,21 +705,21 @@ public class GPGSClient implements IGPGSClient {
             case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
                 matchActive = false;
                 showWarning("Waiting for auto-match...",
-                        "We're still waiting for an automatch partner.");
+                            "We're still waiting for an automatch partner.");
                 return;
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
                 matchActive = false;
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
                     showWarning("Complete!",
-                            "This game is over; someone finished it, and so did you!  " +
-                                    "There is nothing to be done.");
+                                "This game is over; someone finished it, and so did you!  " +
+                                "There is nothing to be done.");
                     break;
                 }
 
                 // Note that in this state, you must still call "Finish" yourself,
                 // so we allow this to continue.
                 showWarning("Complete!",
-                        "This game is over; someone finished it!  You can only finish it now.");
+                            "This game is over; someone finished it!  You can only finish it now.");
         }
 
         // OK, it's active. Check on turn status.
@@ -744,7 +734,7 @@ public class GPGSClient implements IGPGSClient {
                 break;
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good initiative!",
-                        "Still waiting for invitations.\n\nBe patient!");
+                            "Still waiting for invitations.\n\nBe patient!");
         }
 
         mTurnData = null;
@@ -758,7 +748,7 @@ public class GPGSClient implements IGPGSClient {
         matchActive = false;
 
         showWarning("Match", "This match (" + matchId + ") was canceled.  " +
-                "All other players will have their game ended.");
+                             "All other players will have their game ended.");
     }
 
     private void onInitiateMatch(TurnBasedMatch match) {
@@ -777,7 +767,6 @@ public class GPGSClient implements IGPGSClient {
         isDoingTurn = false;
         showWarning("Left", "You've left this match.");
     }
-
 
     private void onUpdateMatch(TurnBasedMatch match) {
         if (match.canRematch()) {
@@ -801,8 +790,8 @@ public class GPGSClient implements IGPGSClient {
             Toast.makeText(
                     mActivity,
                     "An invitation has arrived from "
-                            + invitation.getInviter().getDisplayName(), Toast.LENGTH_SHORT)
-                    .show();
+                    + invitation.getInviter().getDisplayName(), Toast.LENGTH_SHORT)
+                 .show();
         }
 
         @Override
@@ -810,7 +799,7 @@ public class GPGSClient implements IGPGSClient {
             Toast.makeText(
                     mActivity,
                     "An invitation was removed.", Toast.LENGTH_SHORT)
-                    .show();
+                 .show();
         }
     };
 
@@ -861,7 +850,7 @@ public class GPGSClient implements IGPGSClient {
             default:
                 showErrorMessage("unexpected_status");
                 Log.d(TAG, "Did not have warning or string to deal with: "
-                        + statusCode);
+                           + statusCode);
         }
 
         return false;
@@ -882,5 +871,4 @@ public class GPGSClient implements IGPGSClient {
     public IRiskyTurn getmRiskyTurn() {
         return mTurnData;
     }
-
 }

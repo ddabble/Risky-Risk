@@ -9,8 +9,7 @@ public class TurnModel {
     private int numberOfPlayers;
     private IGPGSClient client;
 
-    private TurnModel() {
-    }
+    private TurnModel() {}
 
     public void init() {
         try {
@@ -20,7 +19,6 @@ public class TurnModel {
             numberOfPlayers = 2;
             currentPlayerID = 0;
         }
-
     }
 
     public void setGPGSClient(IGPGSClient client) {

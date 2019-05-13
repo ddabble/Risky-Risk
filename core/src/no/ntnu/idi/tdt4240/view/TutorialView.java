@@ -27,8 +27,8 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     private static final Color FONT_COLOR = new Color(0x0A0A0AFF);
 
     private final RiskyRisk game;
-    private Stage stage;
 
+    private Stage stage;
 
     private int stage_width;
     private int stage_height;
@@ -54,12 +54,10 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     private ArrayList<Map<String, String>> tutorialSlides;
 
-
     public TutorialView(RiskyRisk game) {
         this.game = game;
         TutorialPresenter.addObserver(this);
     }
-
 
     @Override
     public void create(ArrayList<Map<String, String>> tutorialSlides) {
@@ -83,8 +81,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
         stage.act(delta);
         stage.draw();
-
-
     }
 
     @Override
@@ -117,7 +113,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
     }
 
     private void createButtons(Stage stage) {
-
         // Button sizes
         int btnHeight = 100;
         int btnWidth = 350;
@@ -125,7 +120,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = this.slideTextFont;
         Color fontColor = new Color(Color.BLACK);
-
 
         // Main menu button
         this.mainMenuButton = this.createTextButton("Back to main", labelStyle, fontColor);
@@ -145,7 +139,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100f),
                                     this.stage_height / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
-
 
         // Add event listeners to buttons
         mainMenuButton.addListener(new ClickListener() {
@@ -195,10 +188,7 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         }
     }
 
-
     private void createTextFields(Stage stage) {
-
-
         // Text field dimensions
         int headerWidth = 350;
         int headerHeight = 50;

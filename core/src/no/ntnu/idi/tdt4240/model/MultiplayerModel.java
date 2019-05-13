@@ -62,7 +62,6 @@ public class MultiplayerModel {
         return new Color(rgbaColor);
     }
 
-
     private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
         List<Territory> territories = territoryMap.getAllTerritories();
         final int numTerritories = territories.size();

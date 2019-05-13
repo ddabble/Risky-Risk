@@ -16,6 +16,5 @@ public class SettingsPresenter {
         SettingsModel.INSTANCE.setNumPlayers(num);
         MultiplayerModel.INSTANCE.init(num);
     }
-
 }
 

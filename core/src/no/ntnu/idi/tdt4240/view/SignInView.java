@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 
-
 public class SignInView extends AbstractView implements Screen {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
@@ -27,6 +26,7 @@ public class SignInView extends AbstractView implements Screen {
     public SignInView(RiskyRisk game) {
         this.game = game;
         camera = new OrthographicCamera();
+
         //GPGSTest
         gpgsClient = game.gpgsClient;
         //set the sign in attempt handler to handle what happens if sign in fails or succeeds

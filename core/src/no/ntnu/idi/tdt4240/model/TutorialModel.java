@@ -7,11 +7,9 @@ import java.util.Map;
 
 import no.ntnu.idi.tdt4240.util.TutorialSlide;
 
-
+// TutorialModel uses the utility class TutorialSlide to get the tutorial text from a json file
+//  and makes it available from the getTutorialSlides() method
 public class TutorialModel {
-    // TutorialModel uses the utility class TutorialSlide to get the tutorial text from a json file
-    //  and makes it available from the getTutorialSlides() method
-
     public static TutorialModel INSTANCE;
 
     private final TutorialSlide TUTORIAL_SLIDES;

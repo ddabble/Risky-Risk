@@ -66,9 +66,7 @@ public class GameView implements GameObserver, Screen {
         troopView.render();
         phaseView.render();
         leaderboardView.render();
-
     }
-
 
     @Override
     public void resize(int width, int height) {

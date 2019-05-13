@@ -87,7 +87,6 @@ public class BoardModel {
     //that it should update its online match state
     //i.e the data in riskyTurn and send it to the server
     public void updateAndSendMatchData() {
-
         client.getmRiskyTurn().updateData(territoryMap, TurnModel.INSTANCE.getCurrentPlayerID());
         client.onDoneClicked();
     }
