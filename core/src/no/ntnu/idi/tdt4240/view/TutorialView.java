@@ -114,18 +114,18 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     private void createButtons(Stage stage) {
         // Button sizes
-        int btnHeight = 100;
-        int btnWidth = 350;
+        final int btnHeight = 100;
+        final int btnWidth = 350;
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = this.slideTextFont;
         Color fontColor = new Color(Color.BLACK);
 
         // Main menu button
-        this.mainMenuButton = this.createTextButton("Back to main", labelStyle, fontColor);
+        this.mainMenuButton = this.createTextButton("Back to Main Menu", labelStyle, fontColor);
         this.mainMenuButton.setPosition(this.stage_width / 100f,
                                         this.stage_height / 50f);
-        this.mainMenuButton.setSize(btnWidth, btnHeight);
+        this.mainMenuButton.setSize(btnWidth + 100, btnHeight);
 
         // Previous button
         this.previousButton = this.createTextButton("Previous", labelStyle, fontColor);

@@ -25,7 +25,6 @@ public class AttackModel {
     }
 
     public void setAttackTo(Territory territory) {
-        System.out.println(attack.size());
         if (attack.size() == 2) {
             attack.remove(toTerritory.name);
         }
@@ -57,5 +56,9 @@ public class AttackModel {
         attack.clear();
         fromTerritory = null;
         toTerritory = null;
+    }
+
+    public void reset() {
+        cancelAttack();
     }
 }

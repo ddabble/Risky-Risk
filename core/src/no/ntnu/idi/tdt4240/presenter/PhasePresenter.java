@@ -35,6 +35,7 @@ public class PhasePresenter {
     private PhasePresenter() {}
 
     public void init() {
+        PhaseModel.INSTANCE.init();
         AttackModel.INSTANCE.init();
 
         for (PhaseObserver observer : phaseObservers) {
@@ -330,9 +331,7 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.FORTIFY) {
             PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
             phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
-            //phase.getSelectedFrom();
             //update UI
-            System.out.println("Draw line");
             if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null) {
                 for (PhaseObserver observer : phaseObservers) {
                     observer.addFortifyButton();
@@ -342,6 +341,10 @@ public class PhasePresenter {
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
         }
+    }
+
+    public void reset() {
+        AttackModel.INSTANCE.reset();
     }
 
     public static void addObserver(PhaseObserver observer) {

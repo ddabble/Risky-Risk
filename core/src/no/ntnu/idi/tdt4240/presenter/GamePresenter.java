@@ -43,6 +43,7 @@ public class GamePresenter {
     }
 
     public void reset() {
+        PhasePresenter.INSTANCE.reset();
         BoardPresenter.INSTANCE.reset();
     }
 

@@ -11,7 +11,9 @@ public class PhaseModel {
 
     private PhaseState phase;
 
-    private PhaseModel() {
+    private PhaseModel() {}
+
+    public void init() {
         // Initial phase state
         phase = new PlacePhase();
     }
@@ -67,15 +69,9 @@ public class PhaseModel {
     }
 
     public class FortifyPhase implements PhaseState {
-
         private Territory selectedFrom;
         private Territory selectedTo;
         private int nextCount = 0;
-
-        private void start() { //called when the phase is started
-
-            System.out.println("Started fortify phase");
-        }
 
         @Override
         public PhaseEnum getEnum() {
@@ -84,10 +80,9 @@ public class PhaseModel {
 
         @Override
         public PhaseState next() { //called in the beginning.
-            if (nextCount == 0) {
+            if (nextCount == 0)
                 nextCount++;
-                start();
-            }
+
             return new PlacePhase();
         }
 
