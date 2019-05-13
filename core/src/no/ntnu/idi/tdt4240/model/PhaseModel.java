@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.util.PhaseEnum;
 
 public class PhaseModel {
     public static final PhaseModel INSTANCE = new PhaseModel();
 
     private PhaseState phase;
-
-    public enum Phase {Place, Attack, Fortify}
 
     private PhaseModel() {
         // Initial phase state
@@ -28,9 +27,7 @@ public class PhaseModel {
 
     // Phases
     public interface PhaseState {
-        String getName();
-
-        Phase getEnum();
+        PhaseEnum getEnum();
 
         PhaseState next();
 
@@ -39,13 +36,8 @@ public class PhaseModel {
 
     private class PlacePhase implements PhaseState {
         @Override
-        public String getName() {
-            return "Place";
-        }
-
-        @Override
-        public Phase getEnum() {
-            return Phase.Place;
+        public PhaseEnum getEnum() {
+            return PhaseEnum.PLACE;
         }
 
         @Override
@@ -61,13 +53,8 @@ public class PhaseModel {
 
     private class AttackPhase implements PhaseState {
         @Override
-        public String getName() {
-            return "Attack";
-        }
-
-        @Override
-        public Phase getEnum() {
-            return Phase.Attack;
+        public PhaseEnum getEnum() {
+            return PhaseEnum.ATTACK;
         }
 
         @Override
@@ -87,19 +74,14 @@ public class PhaseModel {
         private Territory selectedTo;
         private int nextCount = 0;
 
-        @Override
-        public String getName() {
-            return "Fortify";
-        }
-
         private void start() { //called when the phase is started
 
             System.out.println("Started fortify phase");
         }
 
         @Override
-        public Phase getEnum() {
-            return Phase.Fortify;
+        public PhaseEnum getEnum() {
+            return PhaseEnum.FORTIFY;
         }
 
         @Override

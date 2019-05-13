@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.util.PhaseEnum;
 
 public interface PhaseObserver {
     Stage getStage();
@@ -28,7 +29,7 @@ public interface PhaseObserver {
 
     void onNextPlayer(int playerID, Color playerColor);
 
-    void onNextPhase(String currentPhase, String nextPhase);
+    void onNextPhase(PhaseEnum currentPhase, PhaseEnum nextPhase);
 
     void onSelectedTerritoriesChange(Territory start, Territory end);
 

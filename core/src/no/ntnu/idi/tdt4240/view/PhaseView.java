@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
+import no.ntnu.idi.tdt4240.util.PhaseEnum;
 import no.ntnu.idi.tdt4240.util.Utils;
 
 public class PhaseView extends AbstractView implements PhaseObserver {
@@ -232,9 +233,9 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     @Override
-    public void onNextPhase(String curPhase, String nextPhase) {
+    public void onNextPhase(PhaseEnum curPhase, PhaseEnum nextPhase) {
         phaseLabel.setText("Current Phase: " + curPhase);
-        phaseButton.setText(nextPhase);
+        phaseButton.setText(nextPhase.toString());
     }
 
     @Override
