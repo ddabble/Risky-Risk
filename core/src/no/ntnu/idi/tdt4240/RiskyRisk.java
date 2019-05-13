@@ -19,7 +19,7 @@ public class RiskyRisk extends Game {
     private TutorialView tutorialView;
     private WinView winView;
     private GameView gameView;
-    private SignInView signinView;
+    private SignInView signInView;
     public IGPGSClient gpgsClient;
 
     public RiskyRisk() {
@@ -32,16 +32,16 @@ public class RiskyRisk extends Game {
         tutorialView = new TutorialView(this);
         winView = new WinView(this);
         gameView = new GameView(this);
-        signinView = null;
+        signInView = null;
 
-        //gpgsClient needs serveral callbacks to be hooked up to properly function
-        //these are added here and inside signinView.
+        //gpgsClient needs several callbacks to be hooked up to properly function
+        //these are added here and inside signInView.
         if (gpgsClient != null) {
-            //create the signinView, this happens here because it requires a gpgsClient
-            signinView = new SignInView(this);
+            //create the signInView, this happens here because it requires a gpgsClient
+            signInView = new SignInView(this);
 
             //register a callback for starting the game ui when receiving match data
-            //TODO: this is currently not used, instead we jsut check matchActive() in main
+            //TODO: this is currently not used, instead we just check matchActive() in main
             //menu every frame
             gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
                 @Override
@@ -69,8 +69,8 @@ public class RiskyRisk extends Game {
                 setScreen(gameView);
                 break;
 
-            case SIGNIN:
-                setScreen(signinView);
+            case SIGN_IN:
+                setScreen(signInView);
                 break;
             case WIN:
                 setScreen(winView);
@@ -95,7 +95,7 @@ public class RiskyRisk extends Game {
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
             default:
-                setScreen(ScreenEnum.SIGNIN);
+                setScreen(ScreenEnum.SIGN_IN);
         }
     }
 
@@ -103,7 +103,7 @@ public class RiskyRisk extends Game {
         MAIN_MENU,
         TUTORIAL,
         GAME,
-        SIGNIN,
+        SIGN_IN,
         WIN,
     }
 }

@@ -36,7 +36,7 @@ public class MultiplayerModel {
 
         this.numPlayers = numPlayers;
         System.out.println("Number of players in MultiplayerModel: " + numPlayers);
-        System.out.println("Number of players in gpgsclinet: " + BoardModel.INSTANCE.getNumberOfPlayers());
+        System.out.println("Number of players in GPGSclient: " + BoardModel.INSTANCE.getNumberOfPlayers());
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());

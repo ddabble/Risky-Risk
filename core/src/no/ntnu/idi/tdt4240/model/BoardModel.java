@@ -77,7 +77,7 @@ public class BoardModel {
     }
 
     //used to check if this board is held online
-    //or only localy. This determines how it should be
+    //or only locally. This determines how it should be
     //passed to the next player
     public boolean isOnlineMatch() {
         return client.matchActive();

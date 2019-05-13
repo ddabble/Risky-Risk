@@ -38,7 +38,7 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
         leaderboardLabel.setPosition(25, Gdx.graphics.getHeight() - 20);
 
 
-        //the phasepresenter has to update Leaderboard at the start;
+        //the PhasePresenter has to update Leaderboard at the start;
 
         stage.addActor(leaderboardLabel);
     }

@@ -1,8 +1,8 @@
 {
   "1": {
-    "title": "Object of the game",
+    "title": "Objective of the game",
     "image": "background.png",
-    "text": "Welcome adventurous player to the enchanting world of Risky Risk! Your mission is to conquer the world by occupying every territory on the board, thus eliminating all your opponents."
+    "text": "Welcome, adventurous player, to the enchanting world of Risky Risk! Your mission is to conquer the world by occupying every territory on the board, thus eliminating all your opponents!"
   },
   "2": {
     "title": "Playing",
@@ -10,24 +10,24 @@
     "text": "On your turn, try to capture territories by defeating your opponents' armies. *  * Each of your turns consists of three steps: * 1. Getting and placing new armies * 2. Attacking * 3. Fortifying your position"
   },
   "3": {
-    "title": "1. Getting and placing new armies",
+    "title": "1. Earning and placing new armies",
     "image": "tutorial/images/1.png",
-    "text": "At the beginning of each turn, you will receive new armies based on the number of territories you occupy and the value of the continents you control. You can choose on which territories you wish to place them."
+    "text": "At the beginning of each turn, you will receive new armies based on the number of territories you occupy and the value of the continents you control. You can choose which territories you wish to place them in."
   },
   "4": {
-    "title": "1. Getting and placing new armies",
+    "title": "1. Earning and placing new armies",
     "image": "tutorial/images/2.png",
-    "text": "At the beginning of each turn, you will receive new armies based on the number of territories you occupy and the value of the continents you control. You can choose on which territories you wish to place them."
+    "text": "At the beginning of each turn, you will receive new armies based on the number of territories you occupy and the value of the continents you control. You can choose which territories you wish to place them in."
   },
   "5": {
     "title": "2. Attacking",
     "image": "tutorial/images/13.png",
-    "text": "First, decide if you wish to attack at this turn. The object of an attack is to capture a territory by defeating all the opposing armies already on it. If you choose to attack, you must follow these rules:"
+    "text": "First, decide if you wish to attack this turn. The objective of an attack is to capture a territory by defeating all the opposing armies already on it. If you choose to attack, you must follow the rules on the next page:"
   },
   "6": {
     "title": "2. Attacking",
     "image": "tutorial/images/3.png",
-    "text": "-You may only attack a territory that's adjacent to one of your own, or connected to it by a line. * - You must always have at least two armies in the territory you're attacking from. * - You may attack once per turn from each of your territories, but you can attack an enemy territory multiple times."
+    "text": "- You may only attack a territory that's adjacent to one of your own, or connected to it by a line. * - You must always have at least two armies in the territory you're attacking from. * - You may attack once per turn from each of your territories, but you can attack an enemy territory multiple times."
   },
   "7": {
     "title": "To attack",
@@ -37,17 +37,17 @@
   "8": {
     "title": "To attack",
     "image": "tutorial/images/5.png",
-    "text": "You, the attacker, will roll 1,2 or 3 dice, and must have at least one more army in your territory than the number of dice you roll. The game always chooses the maximum number of dice for you.  The defender will roll either 1 or 2 white dice: To roll 2 dice, he or she must have at least 2 armies on the territory under attack."
+    "text": "You, the attacker, will roll 1, 2 or 3 dice, and must have at least one more army in your territory than the number of dice you roll. The game always chooses the maximum number of dice for you. The defender will roll either 1 or 2 white dice: To roll 2 dice, they must have at least 2 armies on the territory under attack."
   },
   "9": {
-    "title": "To Decide a Battle",
+    "title": "Deciding a battle",
     "image": "tutorial/images/dice.png",
-    "text": "Compare the highest die each of you rolled. If yours is higher, the defender loses one army from the territory under attack. But if the defender's die is higher than yours, you lose one army from the territory you attacked from."
+    "text": "Compare the highest die each of you rolled. If yours is higher, the defender loses one army from the territory under attack. But if the defender's die is higher, you lose one army from the territory you attacked from."
   },
   "10": {
-    "title": "To Decide a Battle",
+    "title": "Deciding a battle",
     "image": "tutorial/images/dice.png",
-    "text": "If each of you rolled more than one die, now compare the two next-highest dice and repeat the process. In case of a tie, the defender always wins. The attacker can never lose more than 2 armies on a single roll."
+    "text": "If each of you rolled more than one die, now compare the two next-highest dice and repeat the process. In the case of a tie, the defender always wins. The attacker can never lose more than 2 armies on a single roll."
   },
   "11": {
    "title": "Capturing territories",
@@ -62,12 +62,12 @@
  "13": {
     "title": "3. Fortifying your position",
     "image": "tutorial/images/8.png",
-    "text": "No matter what you've done on your turn, you may, if you wish, end your turn by fortifying your position. This is done by moving as as many troops as you'd like from one of your territories into another of your territories assuming you own the territory between them. Remember that you must leave at least one army behind. You may do this multiple times from different territories."
+    "text": "No matter what you've done on your turn, you may, if you wish, end your turn by fortifying your position. This is done by moving as many troops as you'd like from one of your territories into another, assuming you own the territory between them. Remember that you must leave at least one army behind. You may do this multiple times from different territories."
   },
   "14": {
      "title": "3. Fortifying your position",
      "image": "tutorial/images/9.png",
-     "text": "No matter what you've done on your turn, you may, if you wish, end your turn by fortifying your position. This is done by moving as as many troops as you'd like from one of your territories into another of your territories assuming you own the territory between them. Remember that you must leave at least one army behind. You may do this multiple times from different territories."
+     "text": "No matter what you've done on your turn, you may, if you wish, end your turn by fortifying your position. This is done by moving as many troops as you'd like from one of your territories into another, assuming you own the territory between them. Remember that you must leave at least one army behind. You may do this multiple times from different territories."
    },
   "15": {
     "title": "Winning",

@@ -42,7 +42,7 @@ public class RiskyTurn implements IRiskyTurn {
         RiskyTurn riskyTurn = new RiskyTurn();
         riskyTurn.data = byteArray;
         if(byteArray.length == 1) {
-            Log.d(TAG, "Initial setup data was transfered, this game has " + byteArray[0] + " players");
+            Log.d(TAG, "Initial setup data was transferred, this game has " + byteArray[0] + " players");
             riskyTurn.numberOfPlayers = byteArray[0];
             riskyTurn.currentPlayer = 0;
         } else { // not initial setup, so just read last two bytes

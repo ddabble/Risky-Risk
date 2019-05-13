@@ -28,12 +28,12 @@ public class SignInView extends AbstractView implements Screen {
         camera = new OrthographicCamera();
         //GPGSTest
         gpgsClient = game.gpgsClient;
-        //set the sign in attempt handler to handle what happens if signin fails or succeeds
+        //set the sign in attempt handler to handle what happens if sign in fails or succeeds
         gpgsClient.setSignInAttemptHandler(new IGPGSClient.SignInAttemptHandler() {
             @Override
             public void onSuccess() {
                 //we can not actually switch scenes here because the return from an intent might
-                //happen at a time where libgdx doesnt expect it and shaders wont compile correctly
+                //happen at a time where LibGDX doesn't expect it and shaders wont compile correctly
                 //i think???? So instead we need to set a flag that we check every frame
                 //game.setScreen(new MainMenuView(game));
                 isSignedIn = true;

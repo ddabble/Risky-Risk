@@ -51,7 +51,7 @@ public class GPGSClient implements IGPGSClient {
 
     // Client used to sign in with Google APIs
     private GoogleSignInClient mGoogleSignInClient = null;
-    //function for handling a signin attempt
+    //function for handling a sign-in attempt
     private SignInAttemptHandler signInAttemptHandler;
     //function for handling incoming match data
     private MatchDataReceivedHandler matchDataReceivedHandle;
@@ -288,7 +288,7 @@ public class GPGSClient implements IGPGSClient {
         mTurnData.turnCounter += 1;
 
         //We update the turn object from the PhasePresenter (which call the BoardModel, which updates RiskyTurn)
-        //so we dont have to do it here
+        //so we don't have to do it here
         //mTurnData.data = null; //changed from string to null as mTurnData no longer uses string to hold data
 
         mTurnBasedMultiplayerClient.takeTurn(mMatch.getMatchId(),
@@ -742,7 +742,7 @@ public class GPGSClient implements IGPGSClient {
                 showWarning("Alas...", "It's not your turn.");
                 break;
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
-                showWarning("Good inititative!",
+                showWarning("Good initiative!",
                         "Still waiting for invitations.\n\nBe patient!");
         }
 

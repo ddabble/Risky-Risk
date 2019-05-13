@@ -88,7 +88,7 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         //sign in
         signInButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(RiskyRisk.ScreenEnum.SIGNIN);
+                game.setScreen(RiskyRisk.ScreenEnum.SIGN_IN);
             }
         });
 
