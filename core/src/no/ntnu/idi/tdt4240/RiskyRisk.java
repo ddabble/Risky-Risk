@@ -1,36 +1,99 @@
 package no.ntnu.idi.tdt4240;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class RiskyRisk extends ApplicationAdapter {
-    static Engine engine;
-    SpriteBatch batch;
-    Texture img;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.model.TerritoryModel;
+import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
+import no.ntnu.idi.tdt4240.view.GameView;
+import no.ntnu.idi.tdt4240.view.MainMenuView;
+import no.ntnu.idi.tdt4240.view.SignInView;
+import no.ntnu.idi.tdt4240.view.TutorialView;
+import no.ntnu.idi.tdt4240.view.WinView;
 
-    @Override
-    public void create () {
-        batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
-        engine = new Engine();
+// Switches between App states, loads shared resources
+public class RiskyRisk extends Game {
+    private MainMenuView mainMenuView;
+    private TutorialView tutorialView;
+    private WinView winView;
+    private GameView gameView;
+    private SignInView signInView;
+    public IGPGSClient gpgsClient;
+
+    // Init needs to be called after we set the games GPGS client
+    public void init() {
+
+        mainMenuView = new MainMenuView(this);
+        tutorialView = new TutorialView(this);
+        winView = new WinView(this);
+        gameView = new GameView(this);
+        signInView = null;
+
+        //gpgsClient needs several callbacks to be hooked up to properly function
+        //these are added here and inside signInView.
+        if (gpgsClient != null) {
+            //create the signInView, this happens here because it requires a gpgsClient
+            signInView = new SignInView(this);
+
+            //register a callback for starting the game ui when receiving match data
+            //TODO: this is currently not used, instead we just check matchActive() in main
+            //menu every frame
+            gpgsClient.setGameUIStartHandler(new IGPGSClient.GameUIStartHandler() {
+                @Override
+                public void onGameUIStart() {
+                    //setScreen(ScreenEnum.GAME);
+                }
+            });
+        }
+    }
+
+    public void setScreen(ScreenEnum screen) {
+        switch (screen) {
+            case MAIN_MENU:
+                setScreen(mainMenuView);
+                break;
+
+            case TUTORIAL:
+                setScreen(tutorialView);
+                break;
+
+            case GAME:
+                setScreen(gameView);
+                break;
+
+            case SIGN_IN:
+                setScreen(signInView);
+                break;
+
+            case WIN:
+                setScreen(winView);
+                break;
+        }
     }
 
     @Override
-    public void render () {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        batch.draw(img, 0, 0);
-        batch.end();
+    public void create() {
+        TerritoryModel.init();
+        SettingsPresenter.INSTANCE.init();
+
+        switch (Gdx.app.getType()) {
+            case Android: // android specific code
+                setScreen(ScreenEnum.MAIN_MENU);
+                break;
+            case Desktop: // desktop specific code
+                setScreen(ScreenEnum.MAIN_MENU);
+                break;
+            default:
+                setScreen(ScreenEnum.SIGN_IN);
+        }
     }
 
-    @Override
-    public void dispose () {
-        batch.dispose();
-        img.dispose();
+    public enum ScreenEnum {
+        MAIN_MENU,
+        TUTORIAL,
+        GAME,
+        SIGN_IN,
+        WIN,
     }
 }
