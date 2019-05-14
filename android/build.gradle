@@ -1,13 +1,16 @@
 apply plugin: 'com.android.application'
 android {
+    def debugKeystoreProps = new Properties()
+    file("debug.keystore.properties").withInputStream { debugKeystoreProps.load(it) }
     signingConfigs {
         config {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
             storeFile file('debug.keystore')
-            storePassword 'android'
+            storePassword debugKeystoreProps.getProperty("storePassword")
+            keyAlias debugKeystoreProps.getProperty("keyAlias")
+            keyPassword debugKeystoreProps.getProperty("keyPassword")
         }
     }
+
     buildToolsVersion "28.0.3"
     compileSdkVersion android_compile_version //compileSdkVersion 27
     sourceSets {

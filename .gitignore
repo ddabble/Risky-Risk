@@ -127,4 +127,5 @@ Thumbs.db
 
 ## Keystores
 *.keystore
+*.keystore.properties
 *.jks
