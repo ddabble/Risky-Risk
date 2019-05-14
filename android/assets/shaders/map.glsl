@@ -32,7 +32,7 @@ int roundToInt(float n)
 {
     // OpenGl ES's `round()` does for some reason not work;
     // it always rounds to 0 - no matter how big the number.
-    return int(n + 0.5);
+    return int(floor(n + 0.5));
 }
 
 void main()
