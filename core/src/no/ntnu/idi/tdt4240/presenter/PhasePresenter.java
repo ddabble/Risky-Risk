@@ -107,8 +107,7 @@ public class PhasePresenter {
 
         for (PhaseObserver observer : phaseObservers)
             updatePhase(observer);
-        TroopModel.INSTANCE.onSelectTerritory(null);
-        deselectedTerritories();
+        deselectTerritories();
     }
 
     public void nextPhaseButtonClicked() {
@@ -116,17 +115,20 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.ATTACK)
             AttackModel.INSTANCE.cancelAttack();
         PhaseModel.INSTANCE.nextPhase();
-        deselectedTerritories();
+        deselectTerritories();
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.FORTIFY) {
             for (PhaseObserver observer : phaseObservers)
                 observer.addTurnButton();
         }
         for (PhaseObserver observer : phaseObservers)
             updatePhase(observer);
-        TroopModel.INSTANCE.onSelectTerritory(null);
     }
 
-    private void deselectedTerritories() {
+    private void deselectTerritories() {
+        TroopModel.INSTANCE.onSelectTerritory(null);
+        for (TroopObserver observer : troopObservers)
+            observer.onSelectTerritory(null);
+
         for (PhaseObserver observer : phaseObservers)
             observer.onSelectedTerritoriesChange(null, null);
     }
@@ -168,9 +170,7 @@ public class PhasePresenter {
             if (phase.getSelectedFrom().getNumTroops() == 1) {
                 phase.clearTerritorySelection();
                 removePhaseButtons();
-                for (PhaseObserver observer : phaseObservers) {
-                    observer.onSelectedTerritoriesChange(null, null);
-                }
+                deselectTerritories();
             }
         }
 
@@ -246,10 +246,7 @@ public class PhasePresenter {
         BoardPresenter.INSTANCE.onTerritoryChangedOwner(AttackModel.INSTANCE.getToTerritory());
         //Clears the attack HashMap after the attack has gone through.
         AttackModel.INSTANCE.cancelAttack();
-        for (PhaseObserver observer : phaseObservers)
-            observer.onSelectedTerritoriesChange(null, null);
-        for (TroopObserver observer : troopObservers)
-            observer.onSelectTerritory(null);
+        deselectTerritories();
         System.out.println(" - Player" + winner[0] + " won this fight. - ");
         checkGameOver();
     }
