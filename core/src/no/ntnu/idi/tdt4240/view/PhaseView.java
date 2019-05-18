@@ -46,7 +46,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     private Vector2 lineFrom;
     private Vector2 lineTo;
-    private boolean shouldDrawArrow = false;
+    private boolean shouldDrawArrow;
     private SpriteBatch spriteBatch;
     private Texture texture;
     private Sprite spriteArrowHead;
@@ -65,6 +65,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     public void create(OrthographicCamera camera) {
         super.create();
         this.camera = camera;
+        shouldDrawArrow = false;
 
         buttonWidth = Math.round(Gdx.graphics.getWidth() / 6.3f);
         buttonHeight = Gdx.graphics.getHeight() / 13;
