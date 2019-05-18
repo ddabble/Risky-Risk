@@ -5,7 +5,7 @@ import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 // TODO: make this work properly
-public class OfflineGPGSClient implements IGPGSClient {
+public class DesktopMockGPGSClient implements IGPGSClient {
     @Override
     public boolean matchActive() {
         return false;
@@ -51,7 +51,7 @@ public class OfflineGPGSClient implements IGPGSClient {
 
             @Override
             public int getNumberOfPlayers() {
-                return 8;
+                return 2;
             }
 
             @Override

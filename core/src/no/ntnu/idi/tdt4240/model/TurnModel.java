@@ -35,11 +35,7 @@ public class TurnModel {
     }
 
     public int getNumberOfPlayers() {
-        if (client != null) {
-            return numberOfPlayers;
-        } else {
-            return 6;
-        }
+        return numberOfPlayers;
     }
 
     public int getCurrentPlayerID() {

@@ -290,57 +290,57 @@ public class PhasePresenter {
         // update the view
         switch (PhaseModel.INSTANCE.getPhase().getEnum()) {
             case PLACE:
-            if (AttackModel.INSTANCE.getTroopsToPlace() > 0 && territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
-                PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
-                AttackModel.INSTANCE.setTroopsToPlace(AttackModel.INSTANCE.getTroopsToPlace() - 1);
-                for (TroopObserver observer : troopObservers)
-                    observer.onTerritoryChangeNumTroops(territory);
-                for (PhaseObserver observer : phaseObservers)
-                    observer.updateRenderedVariables(PhaseModel.INSTANCE.getPhase().getEnum().toString(), AttackModel.INSTANCE.getTroopsToPlace());
-            } else {
-                System.out.println("No troops left to place");
-            }
+                if (AttackModel.INSTANCE.getTroopsToPlace() > 0 && territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
+                    PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
+                    AttackModel.INSTANCE.setTroopsToPlace(AttackModel.INSTANCE.getTroopsToPlace() - 1);
+                    for (TroopObserver observer : troopObservers)
+                        observer.onTerritoryChangeNumTroops(territory);
+                    for (PhaseObserver observer : phaseObservers)
+                        observer.updateRenderedVariables(PhaseModel.INSTANCE.getPhase().getEnum().toString(), AttackModel.INSTANCE.getTroopsToPlace());
+                } else {
+                    System.out.println("No troops left to place");
+                }
                 break;
 
             case ATTACK:
-            if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID() && territory.getNumTroops() > 1) {
-                if (AttackModel.INSTANCE.getAttack() == null || AttackModel.INSTANCE.getAttack().size() == 0) {
-                    AttackModel.INSTANCE.setAttackFrom(territory);
-                    for (PhaseObserver observer : phaseObservers)
-                        observer.addCancelButton();
+                if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID() && territory.getNumTroops() > 1) {
+                    if (AttackModel.INSTANCE.getAttack() == null || AttackModel.INSTANCE.getAttack().size() == 0) {
+                        AttackModel.INSTANCE.setAttackFrom(territory);
+                        for (PhaseObserver observer : phaseObservers)
+                            observer.addCancelButton();
+                    }
                 }
-            }
-            if (AttackModel.INSTANCE.getAttack() != null) {
-                if (AttackModel.INSTANCE.getAttack().size() == 1 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
-                    if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
-                        AttackModel.INSTANCE.setAttackTo(territory);
-                        for (PhaseObserver observer : phaseObservers) {
-                            observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
-                            observer.addAttackButton();
+                if (AttackModel.INSTANCE.getAttack() != null) {
+                    if (AttackModel.INSTANCE.getAttack().size() == 1 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
+                        if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
+                            AttackModel.INSTANCE.setAttackTo(territory);
+                            for (PhaseObserver observer : phaseObservers) {
+                                observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
+                                observer.addAttackButton();
+                            }
+                        }
+                    } else if (AttackModel.INSTANCE.getAttack().size() == 2 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
+                        if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
+                            AttackModel.INSTANCE.setAttackTo(territory);
+                            for (PhaseObserver observer : phaseObservers)
+                                observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
                         }
                     }
-                } else if (AttackModel.INSTANCE.getAttack().size() == 2 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
-                    if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
-                        AttackModel.INSTANCE.setAttackTo(territory);
-                        for (PhaseObserver observer : phaseObservers)
-                            observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
-                    }
                 }
-            }
                 break;
 
             case FORTIFY:
-            PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
-            phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
-            //update UI
-            if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null) {
-                for (PhaseObserver observer : phaseObservers) {
-                    observer.addFortifyButton();
-                    observer.addCancelButton();
+                PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
+                phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
+                //update UI
+                if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null) {
+                    for (PhaseObserver observer : phaseObservers) {
+                        observer.addFortifyButton();
+                        observer.addCancelButton();
+                    }
                 }
-            }
-            for (PhaseObserver observer : phaseObservers)
-                observer.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
+                for (PhaseObserver observer : phaseObservers)
+                    observer.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
                 break;
         }
     }
