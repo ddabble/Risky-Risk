@@ -36,7 +36,7 @@ public class MultiplayerModel {
 
         this.numPlayers = numPlayers;
         System.out.println("Number of players in MultiplayerModel: " + numPlayers);
-        System.out.println("Number of players in GPGSclient: " + BoardModel.INSTANCE.getNumberOfPlayers());
+        System.out.println("Number of players in GPGSclient: " + TurnModel.INSTANCE.getNumberOfPlayers());
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
@@ -52,14 +52,20 @@ public class MultiplayerModel {
     }
 
     private void assignPlayerColors(List<Integer> playerIDs) {
-        playerID_colorMap = new HashMap<>();
+        playerID_colorMap = new HashMap<>(playerIDs.size());
+        List<Color> colors = intArrayToColorList(COLORS);
         for (int i = 0; i < playerIDs.size(); i++)
-            playerID_colorMap.put(playerIDs.get(i), intToColor(COLORS[i]));
+            playerID_colorMap.put(playerIDs.get(i), colors.get(i));
     }
 
-    private static Color intToColor(int rgbColor) {
-        int rgbaColor = (rgbColor << 8) | 0xFF;
-        return new Color(rgbaColor);
+    private static List<Color> intArrayToColorList(int[] colorArray) {
+        List<Color> colorList = new ArrayList<>(colorArray.length);
+        for (int rgbColor : colorArray) {
+            int rgbaColor = (rgbColor << 8) | 0xFF;
+            colorList.add(new Color(rgbaColor));
+        }
+        Collections.shuffle(colorList);
+        return colorList;
     }
 
     private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {

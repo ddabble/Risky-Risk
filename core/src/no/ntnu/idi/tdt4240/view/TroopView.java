@@ -152,6 +152,7 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     @Override
     public void dispose() {
+        selectedTerritory = null;
         stage.dispose();
         batch.dispose();
         super.dispose();

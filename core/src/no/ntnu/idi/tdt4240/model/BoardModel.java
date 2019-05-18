@@ -68,14 +68,6 @@ public class BoardModel {
         mapPixmap = textureData.consumePixmap();
     }
 
-    public int getNumberOfPlayers() {
-        try {
-            return client.getmRiskyTurn().getNumberOfPlayers();
-        } catch (NullPointerException e) {
-            return 2;
-        }
-    }
-
     //used to check if this board is held online
     //or only locally. This determines how it should be
     //passed to the next player

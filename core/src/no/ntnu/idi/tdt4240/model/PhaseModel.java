@@ -103,21 +103,21 @@ public class PhaseModel {
         public void territoryClicked(Territory territory) {}
 
         public void territoryClicked(Territory territory, int currentPlayerID) {
-            //territory.setNumTroops(territory.getNumTroops() + 1);
+            if (territory == null)
+                return;
+
             if (territory.getOwnerID() == currentPlayerID) {
-                if (selectedFrom == null && territory.getNumTroops() > 1) {
-                    selectedFrom = territory;
-                } else if (selectedTo == null && territory != null && selectedFrom != null) { //at this point the from is selected
-                    if (isConnected(selectedFrom, territory))
+                if (selectedFrom == null) {
+                    if (territory.getNumTroops() > 1)
+                        selectedFrom = territory;
+                } else if (selectedTo == null) { //at this point the from is selected
+                    if (territory != selectedFrom && isConnected(selectedFrom, territory))
                         selectedTo = territory;
-                } else if (selectedTo != null && selectedTo != selectedFrom && selectedFrom != territory &&
-                           selectedFrom != null && territory != null) {
+                } else if (territory != selectedFrom) {
                     if (isConnected(selectedFrom, territory))
                         selectedTo = territory;
                 }
             }
-
-            //update the ui, show what is being selected.
         }
 
         /**
