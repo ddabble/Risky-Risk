@@ -49,6 +49,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private boolean shouldDrawArrow;
     private SpriteBatch spriteBatch;
     private Texture texture;
+
+    private ShapeRenderer shapeRenderer;
     private Sprite spriteArrowHead;
 
     public PhaseView(BoardView boardView) {
@@ -77,6 +79,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         spriteArrowHead = new Sprite(texture);
         Utils.setSizeOfSprite(spriteArrowHead, ARROW_HEAD_SIZE_MAP_RATIO);
         spriteArrowHead.setColor(0, 0, 0, 0.7f);
+        shapeRenderer = new ShapeRenderer();
 
         // Actors
         phaseLabel = createInGameLabel("");
@@ -281,7 +284,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         Gdx.gl.glLineWidth(4);
         Gdx.gl.glEnable(GL20.GL_BLEND); //make it work when debug mode is off
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); //make it work when debug mode is off
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 0.7f);
@@ -294,6 +296,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void dispose() {
+        shapeRenderer.dispose();
         stage.dispose();
         spriteBatch.dispose();
         texture.dispose();
