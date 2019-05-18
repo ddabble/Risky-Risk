@@ -230,7 +230,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void onNextPhase(PhaseEnum curPhase, PhaseEnum nextPhase) {
         phaseLabel.setText("Current Phase: " + curPhase);
-        phaseButton.setText(nextPhase.toString());
+        phaseButton.setText(nextPhase.toString() + " phase");
     }
 
     @Override

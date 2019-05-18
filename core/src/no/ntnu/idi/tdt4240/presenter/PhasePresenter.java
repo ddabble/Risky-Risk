@@ -137,11 +137,11 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.ATTACK) {
             AttackModel.INSTANCE.cancelAttack();
             removePhaseButtons();
-            deselectedTerritories();
         } else if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.FORTIFY) {
             PhasePresenter.INSTANCE.cancelFortify();
-            deselectedTerritories();
         }
+
+        deselectTerritories();
     }
 
     private void updateRenderedCurrentPlayer() {
@@ -173,7 +173,6 @@ public class PhasePresenter {
                 deselectTerritories();
             }
         }
-
     }
 
     private void removePhaseButtons() {
@@ -289,7 +288,8 @@ public class PhasePresenter {
     public void onTerritoryClicked(Territory territory) {
         //PhaseModel.INSTANCE.getPhase().territoryClicked(territory); //update the model
         // update the view
-        if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.PLACE) {
+        switch (PhaseModel.INSTANCE.getPhase().getEnum()) {
+            case PLACE:
             if (AttackModel.INSTANCE.getTroopsToPlace() > 0 && territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
                 PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
                 AttackModel.INSTANCE.setTroopsToPlace(AttackModel.INSTANCE.getTroopsToPlace() - 1);
@@ -300,8 +300,9 @@ public class PhasePresenter {
             } else {
                 System.out.println("No troops left to place");
             }
-        }
-        if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.ATTACK) {
+                break;
+
+            case ATTACK:
             if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID() && territory.getNumTroops() > 1) {
                 if (AttackModel.INSTANCE.getAttack() == null || AttackModel.INSTANCE.getAttack().size() == 0) {
                     AttackModel.INSTANCE.setAttackFrom(territory);
@@ -326,8 +327,9 @@ public class PhasePresenter {
                     }
                 }
             }
-        }
-        if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.FORTIFY) {
+                break;
+
+            case FORTIFY:
             PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
             phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
             //update UI
@@ -339,6 +341,7 @@ public class PhasePresenter {
             }
             for (PhaseObserver observer : phaseObservers)
                 observer.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
+                break;
         }
     }
 
