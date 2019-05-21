@@ -3,7 +3,7 @@ package no.ntnu.idi.tdt4240.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 
 public class AttackModel {
     public static final AttackModel INSTANCE = new AttackModel();

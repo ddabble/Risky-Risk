@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import no.ntnu.idi.tdt4240.data.Continent;
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Continent;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.model.BattleModel;
 import no.ntnu.idi.tdt4240.model.BoardModel;

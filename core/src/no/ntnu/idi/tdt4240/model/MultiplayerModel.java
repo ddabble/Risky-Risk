@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class MultiplayerModel {

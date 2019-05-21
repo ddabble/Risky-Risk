@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.PhaseEnum;
