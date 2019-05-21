@@ -11,6 +11,7 @@ import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.view.WinView;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
@@ -76,7 +77,9 @@ public class RiskyRisk extends Game {
     public void create() {
         TerritoryModel.init();
         SettingsPresenter.INSTANCE.init();
+        UIStyle.init();
 
+        // Calls `show()` on views
         switch (Gdx.app.getType()) {
             case Android: // android specific code
                 setScreen(ScreenEnum.MAIN_MENU);
@@ -87,6 +90,13 @@ public class RiskyRisk extends Game {
             default:
                 setScreen(ScreenEnum.SIGN_IN);
         }
+    }
+
+    @Override
+    public void dispose() {
+        // Calls `hide()` on active view
+        super.dispose();
+        UIStyle.dispose();
     }
 
     public enum ScreenEnum {

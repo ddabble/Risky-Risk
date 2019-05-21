@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,8 +14,9 @@ import java.util.Map;
 
 import no.ntnu.idi.tdt4240.observer.LeaderboardObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class LeaderboardView extends AbstractView implements LeaderboardObserver {
+public class LeaderboardView extends ApplicationAdapter implements LeaderboardObserver {
     private Stage stage;
     private Label leaderboardLabel;
     private ShapeRenderer shapeRenderer;
@@ -25,14 +27,12 @@ public class LeaderboardView extends AbstractView implements LeaderboardObserver
 
     @Override
     public void create(Map<Integer, Integer> leaderboard) {
-        super.create();
-
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
 
         // Actors
-        leaderboardLabel = createLeaderboardLabel("");
+        leaderboardLabel = UIStyle.INSTANCE.createLeaderboardLabel("");
         leaderboardLabel.setAlignment(Align.topLeft);
         leaderboardLabel.setPosition(25, Gdx.graphics.getHeight() - 20);
 

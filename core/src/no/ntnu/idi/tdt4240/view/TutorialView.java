@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -22,8 +23,9 @@ import java.util.Map;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 import no.ntnu.idi.tdt4240.presenter.TutorialPresenter;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class TutorialView extends AbstractView implements TutorialObserver, Screen {
+public class TutorialView extends ApplicationAdapter implements TutorialObserver, Screen {
     private static final Color FONT_COLOR = new Color(0x0A0A0AFF);
 
     private final RiskyRisk game;
@@ -85,7 +87,6 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
 
     @Override
     public void show() {
-        super.create();
         TutorialPresenter.INSTANCE.init();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -122,20 +123,20 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         Color fontColor = new Color(Color.BLACK);
 
         // Main menu button
-        this.mainMenuButton = this.createTextButton("Back to Main Menu", labelStyle, fontColor);
+        this.mainMenuButton = UIStyle.INSTANCE.createTextButton("Back to Main Menu", labelStyle, fontColor);
         this.mainMenuButton.setPosition(this.stage_width / 100f,
                                         this.stage_height / 50f);
         this.mainMenuButton.setSize(btnWidth + 100, btnHeight);
 
         // Previous button
-        this.previousButton = this.createTextButton("Previous", labelStyle, fontColor);
+        this.previousButton = UIStyle.INSTANCE.createTextButton("Previous", labelStyle, fontColor);
         this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width / 100f),
                                         this.stage_height / 50f);
         this.previousButton.setSize(btnWidth, btnHeight);
         this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
-        this.nextButton = this.createTextButton("Next", labelStyle, fontColor);
+        this.nextButton = UIStyle.INSTANCE.createTextButton("Next", labelStyle, fontColor);
         this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100f),
                                     this.stage_height / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
@@ -202,19 +203,19 @@ public class TutorialView extends AbstractView implements TutorialObserver, Scre
         this.currentSlideCounter = 0;
 
         // Header text
-        this.header = this.createLabel("Tutorial", this.headerStyle);
+        this.header = UIStyle.INSTANCE.createLabel("Tutorial", this.headerStyle);
         this.header.setPosition(this.stage_width / 2f - headerWidth / 2f,
                                 this.stage_height - (headerHeight + this.stage_height / 30f));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
+        this.slideHeader = UIStyle.INSTANCE.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
         this.slideHeader.setPosition(this.stage_width / 40f,
                                      this.stage_height - (slideHeaderHeight + 150));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = this.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
+        this.slideText = UIStyle.INSTANCE.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
         this.slideText.setWrap(true);
         this.slideText.setAlignment(Align.topLeft);
         this.slideText.setPosition(this.stage_width / 40f,

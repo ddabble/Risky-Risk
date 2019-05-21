@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,8 +22,9 @@ import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import no.ntnu.idi.tdt4240.util.Utils;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class TroopView extends AbstractView implements TroopObserver {
+public class TroopView extends ApplicationAdapter implements TroopObserver {
     private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 30f;
     private static final Color CIRCLE_COLOR_LIGHT = new Color(0xCCCCCCFF);
     private static final Color CIRCLE_COLOR_DARK = new Color(0x808080FF);
@@ -85,7 +87,6 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     @Override
     public void create(OrthographicCamera camera, TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
-        super.create();
         this.camera = camera;
         batch = new SpriteBatch();
 
@@ -130,7 +131,7 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     private TextField.TextFieldStyle createTextStyle(Color fontColor) {
         TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = troopNumFont;
+        textStyle.font = UIStyle.INSTANCE.troopNumFont;
         textStyle.fontColor = fontColor;
         return textStyle;
     }

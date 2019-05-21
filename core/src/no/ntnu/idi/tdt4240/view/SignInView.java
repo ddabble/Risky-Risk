@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,8 +14,9 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class SignInView extends AbstractView implements Screen {
+public class SignInView extends ApplicationAdapter implements Screen {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
     private final OrthographicCamera camera;
@@ -50,8 +52,6 @@ public class SignInView extends AbstractView implements Screen {
 
     @Override
     public void show() {
-        super.create();
-
         isSignedIn = false;
         camera.setToOrtho(false, 800, 480);
         stage = new Stage(new StretchViewport(800, 480, camera));
@@ -65,7 +65,7 @@ public class SignInView extends AbstractView implements Screen {
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
-            Button signInButton = this.createButton("Sign in to Google Play");
+            Button signInButton = UIStyle.INSTANCE.createButton("Sign in to Google Play");
 
             signInButton.addListener(new ClickListener() {
                 @Override

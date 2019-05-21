@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,8 +16,9 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.observer.WinObserver;
 import no.ntnu.idi.tdt4240.presenter.WinPresenter;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class WinView extends AbstractView implements WinObserver, Screen {
+public class WinView extends ApplicationAdapter implements WinObserver, Screen {
     private final RiskyRisk game;
     private final OrthographicCamera camera;
 
@@ -32,13 +34,12 @@ public class WinView extends AbstractView implements WinObserver, Screen {
 
     @Override
     public void show() {
-        super.create();
         camera.setToOrtho(false, 800, 400);
         stage = new Stage(new StretchViewport(800, 400, camera));
         background = new Texture("youwin.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
-        Button winButton = createButton("You won!");
+        Button winButton = UIStyle.INSTANCE.createButton("You won!");
 
         winButton.addListener(new ClickListener() {
             @Override

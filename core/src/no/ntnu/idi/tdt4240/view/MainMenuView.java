@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -19,8 +20,9 @@ import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class MainMenuView extends AbstractView implements MenuObserver, Screen {
+public class MainMenuView extends ApplicationAdapter implements MenuObserver, Screen {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
     private final OrthographicCamera camera;
@@ -39,8 +41,6 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
 
     @Override
     public void show() {
-        super.create();
-
         BoardModel.INSTANCE.setGPGSClient(gpgsClient);
         TurnModel.INSTANCE.setGPGSClient(gpgsClient);
 
@@ -58,13 +58,13 @@ public class MainMenuView extends AbstractView implements MenuObserver, Screen {
         stage.addActor(table);
 
 
-        Button signOutButton = createButton("Sign out");
-        Button signInButton = createButton("Sign in");
-        Button checkGamesButton = createButton("Check active games");
-        Button startMatchButton = createButton("Start new match");
-        Button tutorialButton = createButton("Tutorial");
+        Button signOutButton = UIStyle.INSTANCE.createButton("Sign out");
+        Button signInButton = UIStyle.INSTANCE.createButton("Sign in");
+        Button checkGamesButton = UIStyle.INSTANCE.createButton("Check active games");
+        Button startMatchButton = UIStyle.INSTANCE.createButton("Start new match");
+        Button tutorialButton = UIStyle.INSTANCE.createButton("Tutorial");
 
-        Button offlineButton = createButton("Offline Game");
+        Button offlineButton = UIStyle.INSTANCE.createButton("Offline Game");
 
         // Sign out
         offlineButton.addListener(new ClickListener() {
