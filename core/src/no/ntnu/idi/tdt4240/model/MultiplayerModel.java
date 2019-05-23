@@ -1,12 +1,15 @@
 package no.ntnu.idi.tdt4240.model;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
@@ -18,7 +21,7 @@ public class MultiplayerModel {
 
     private int numPlayers;
     private Map<Integer, Color> playerID_colorMap;
-    private Map<Integer, Integer> playerID_numTerritories; // same as leaderboard
+    private Map<Integer, Set<Territory>> playerID_territoriesMap; // functions as the leaderboard
 
     private MultiplayerModel() {}
 
@@ -28,6 +31,30 @@ public class MultiplayerModel {
 
     public Map<Integer, Color> getPlayerID_colorMap() {
         return new HashMap<>(playerID_colorMap);
+    }
+
+    /**
+     * @return an <i>unmodifiable</i> set of the player's owned territories.
+     */
+    public Set<Territory> getTerritoriesOwnedByPlayer(int playerID) {
+        return Collections.unmodifiableSet(playerID_territoriesMap.get(playerID));
+    }
+
+    /**
+     * @return a map from player IDs to an <i>unmodifiable</i> set of the player's owned territories.
+     */
+    public Map<Integer, Set<Territory>> getTerritoriesPerPlayer() {
+        Map<Integer, Set<Territory>> newMap = new HashMap<>(playerID_territoriesMap.size());
+
+        for (Map.Entry<Integer, Set<Territory>> entry : playerID_territoriesMap.entrySet())
+            newMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+
+        return newMap;
+    }
+
+    public void onTerritoryChangedOwner(int oldPlayerID, int newPlayerID, Territory territory) {
+        playerID_territoriesMap.get(oldPlayerID).remove(territory);
+        playerID_territoriesMap.get(newPlayerID).add(territory);
     }
 
     public static void init(int numPlayers) {
@@ -41,6 +68,7 @@ public class MultiplayerModel {
         this.numPlayers = numPlayers;
         System.out.println("Number of players in MultiplayerModel: " + numPlayers);
         System.out.println("Number of players in GPGSclient: " + TurnModel.INSTANCE.getNumberOfPlayers());
+
         List<Integer> playerIDs = generatePlayerIDs();
         assignPlayerColors(playerIDs);
         assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
@@ -89,25 +117,20 @@ public class MultiplayerModel {
     }
 
     private void initLeaderboard() {
+        playerID_territoriesMap = new HashMap<>(numPlayers);
+
         List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
-        int[] numOfTerritories = new int[numPlayers];
-
-        for (Territory t : territories)
-            numOfTerritories[t.getOwnerID()] += 1;
-
-        Map<Integer, Integer> leaderboard = new HashMap<>();
-        for (int i = 0; i < numPlayers; i++) {
-            leaderboard.put(i, numOfTerritories[i]);
+        for (Territory territory : territories) {
+            Set<Territory> ownerTerritories = playerID_territoriesMap.get(territory.getOwnerID());
+            if (ownerTerritories != null)
+                ownerTerritories.add(territory);
+            else {
+                final int approxNumTerritoriesPerPlayer = MathUtils.ceilPositive(territories.size() / (float)numPlayers);
+                ownerTerritories = new HashSet<>(approxNumTerritoriesPerPlayer);
+                ownerTerritories.add(territory);
+                playerID_territoriesMap.put(territory.getOwnerID(), ownerTerritories);
+            }
         }
-        setLeaderboard(leaderboard);
-    }
-
-    public Map<Integer, Integer> getLeaderboard() {
-        return playerID_numTerritories;
-    }
-
-    public void setLeaderboard(Map<Integer, Integer> playerID_numTerritories) {
-        this.playerID_numTerritories = playerID_numTerritories;
     }
 
 }

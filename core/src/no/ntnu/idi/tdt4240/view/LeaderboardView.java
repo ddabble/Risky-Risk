@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.List;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.observer.LeaderboardObserver;
@@ -26,7 +27,7 @@ public class LeaderboardView extends ApplicationAdapter implements LeaderboardOb
     }
 
     @Override
-    public void create(Map<Integer, Integer> leaderboard) {
+    public void create() {
         // For drawing and input handling
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
@@ -55,15 +56,10 @@ public class LeaderboardView extends ApplicationAdapter implements LeaderboardOb
             actor.remove();
     }
 
-    /**
-     * Updates the leaderboard with playerID and number of territories.
-     *
-     * @param leaderboard Map<Integer playerID, Integer numOfTerritories>
-     */
     @Override
-    public void updateLeaderboard(Map<Integer, Integer> leaderboard) {
+    public void updateLeaderboard(List<Map.Entry<Integer, Integer>> numTerritoriesPerPlayer_sorted) {
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Integer, Integer> entry : leaderboard.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : numTerritoriesPerPlayer_sorted) {
             result.append("Player").append(entry.getKey()).append(":   ")
                   .append(entry.getValue()).append("\n");
         }

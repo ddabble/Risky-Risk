@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -50,13 +52,11 @@ public class PhasePresenter {
         }
 
         for (LeaderboardObserver observer : leaderboardObservers) {
-            Map<Integer, Integer> leaderboard = new HashMap<>();
-            observer.create(leaderboard);
+            observer.create();
         }
-        updateRenderedCurrentPlayer();
 
-        // Update leaderboard
-        onNumOfTerritoryChange(0, 0);
+        updateRenderedCurrentPlayer();
+        updateLeaderboard();
     }
 
     private void updatePhase(PhaseObserver observer) {
@@ -237,8 +237,8 @@ public class PhasePresenter {
         // update leaderboard
         // if the attacker won the fight.
         if (AttackModel.INSTANCE.getToTerritory().getOwnerID() == AttackModel.INSTANCE.getFromTerritory().getOwnerID()) {
-            onNumOfTerritoryChange(winner[0], 1);
-            onNumOfTerritoryChange(defenderID, -1);
+            MultiplayerModel.INSTANCE.onTerritoryChangedOwner(defenderID, winner[0], AttackModel.INSTANCE.getToTerritory());
+            updateLeaderboard();
         }
 
         // update the troop observers
@@ -271,21 +271,26 @@ public class PhasePresenter {
     }
 
     /**
-     * Updates leaderboard according to the state of the game
-     * This approach updates only the player of the territories changed.
-     * This affects the performance less than counting the territory map as a whole
-     *
-     * @param diff how many territories this player has gained or lost
+     * Updates the leaderboard when a player has conquered another player's territory.
      */
-    private void onNumOfTerritoryChange(int playerID, int diff) {
-        //get players
-        Map<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
-        int currentNumOfTerritories = leaderboard.get(playerID);
-        leaderboard.put(playerID, currentNumOfTerritories + diff);
-        MultiplayerModel.INSTANCE.setLeaderboard(leaderboard);
+    private void updateLeaderboard() {
+        Map<Integer, Set<Territory>> territoriesPerPlayer = MultiplayerModel.INSTANCE.getTerritoriesPerPlayer();
+
+        Map<Integer, Integer> numTerritoriesPerPlayer = new HashMap<>(territoriesPerPlayer.size());
+        for (Map.Entry<Integer, Set<Territory>> entry : territoriesPerPlayer.entrySet())
+            numTerritoriesPerPlayer.put(entry.getKey(), entry.getValue().size());
+
+        List<Map.Entry<Integer, Integer>> numTerritoriesPerPlayer_sorted = new ArrayList<>(numTerritoriesPerPlayer.entrySet());
+        Collections.sort(numTerritoriesPerPlayer_sorted, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                // Sort with decreasing order
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
 
         for (LeaderboardObserver observer : leaderboardObservers)
-            observer.updateLeaderboard(leaderboard);
+            observer.updateLeaderboard(numTerritoriesPerPlayer_sorted);
     }
 
     public void onTerritoryClicked(Territory territory) {
