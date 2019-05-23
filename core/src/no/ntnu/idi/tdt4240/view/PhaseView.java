@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import no.ntnu.idi.tdt4240.model.data.Territory;
@@ -88,11 +87,9 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
         phaseLabel.setPosition(Gdx.graphics.getWidth() / 2, buttonHeight);
         phaseLabel.setWidth(0);
         phaseLabel.setColor(Color.DARK_GRAY);
-        phaseLabel.setAlignment(Align.center);
 
         playerLabel = UIStyle.INSTANCE.createPlayerColorableLabel("");
         playerLabel.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 20f);
-        playerLabel.setAlignment(Align.center);
 
         defineAllButtons();
 
@@ -106,7 +103,7 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
     }
 
     private TextButton defineButton(String text, int x, int y) {
-        TextButton b = UIStyle.INSTANCE.createInGameButton(text);
+        TextButton b = UIStyle.INSTANCE.createTextButton(text);
         b.setWidth(buttonWidth);
         b.setHeight(buttonHeight);
         b.setPosition(x, y);
@@ -156,7 +153,8 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
                 PhasePresenter.INSTANCE.nextPhaseButtonClicked();
             }
         });
-        exitToMainMenuButton = UIStyle.INSTANCE.createInGameButton("Exit to Main Menu");
+
+        exitToMainMenuButton = UIStyle.INSTANCE.createTextButton("Exit to Main Menu");
         exitToMainMenuButton.setWidth((int)Math.round(buttonWidth * 1.5));
         exitToMainMenuButton.setHeight(buttonHeight);
         exitToMainMenuButton.setPosition(Gdx.graphics.getWidth() - exitToMainMenuButton.getWidth(), 0);
@@ -226,9 +224,7 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
     @Override
     public void onNextPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID + "'s turn");
-        UIStyle.INSTANCE.inGamePlayerColorableFont.setColor(playerColor);
-
-        playerLabel.setStyle(new Label.LabelStyle(UIStyle.INSTANCE.inGamePlayerColorableFont, playerColor));
+        playerLabel.setColor(playerColor);
     }
 
     @Override

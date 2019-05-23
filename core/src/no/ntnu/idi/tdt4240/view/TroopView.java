@@ -70,12 +70,12 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
             Vector2 circlePos = boardView.troopCirclePosToWorldPos(territory.getTroopCircleVector());
             circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
             circleSpriteMap.get(territory).setColor(CIRCLE_COLOR_LIGHT);
-            circleTextMap.get(territory).setStyle(createTextStyle(TEXT_COLOR_DARK));
+            circleTextMap.get(territory).setStyle(UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_DARK));
         }
 
         if (selectedTerritory != null && selectedTerritory != territory) {
             circleSpriteMap.get(selectedTerritory).setColor(CIRCLE_COLOR_DARK);
-            circleTextMap.get(selectedTerritory).setStyle(createTextStyle(TEXT_COLOR_LIGHT));
+            circleTextMap.get(selectedTerritory).setStyle(UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_LIGHT));
         }
         selectedTerritory = territory;
     }
@@ -112,7 +112,7 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
     }
 
     private void createCircleText(List<Territory> territories) {
-        TextField.TextFieldStyle textStyle = createTextStyle(TEXT_COLOR_LIGHT);
+        TextField.TextFieldStyle textStyle = UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_LIGHT);
         circleTextMap = new HashMap<>();
         textField_territoryMap = new HashMap<>();
         stage = new Stage();
@@ -127,13 +127,6 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
             textField_territoryMap.put(textField, territory);
             stage.addActor(textField);
         }
-    }
-
-    private TextField.TextFieldStyle createTextStyle(Color fontColor) {
-        TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = UIStyle.INSTANCE.troopNumFont;
-        textStyle.fontColor = fontColor;
-        return textStyle;
     }
 
     @Override

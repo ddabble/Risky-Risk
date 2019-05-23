@@ -39,7 +39,8 @@ public class WinView extends ApplicationAdapter implements WinObserver, Screen {
         background = new Texture("youwin.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
-        Button winButton = UIStyle.INSTANCE.createButton("You won!");
+
+        Button winButton = UIStyle.INSTANCE.createTextButton("You won!");
 
         winButton.addListener(new ClickListener() {
             @Override

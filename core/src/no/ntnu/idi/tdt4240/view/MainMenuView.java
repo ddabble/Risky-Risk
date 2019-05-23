@@ -55,16 +55,21 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
         table.setFillParent(true);
         table.setX(0);
         table.setY(0);
+
+        createButtons();
+
         stage.addActor(table);
 
+    }
 
-        Button signOutButton = UIStyle.INSTANCE.createButton("Sign out");
-        Button signInButton = UIStyle.INSTANCE.createButton("Sign in");
-        Button checkGamesButton = UIStyle.INSTANCE.createButton("Check active games");
-        Button startMatchButton = UIStyle.INSTANCE.createButton("Start new match");
-        Button tutorialButton = UIStyle.INSTANCE.createButton("Tutorial");
+    private void createButtons() {
+        Button signOutButton = UIStyle.INSTANCE.createTextButton("Sign out");
+        Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in");
+        Button checkGamesButton = UIStyle.INSTANCE.createTextButton("Check active games");
+        Button startMatchButton = UIStyle.INSTANCE.createTextButton("Start new match");
+        Button tutorialButton = UIStyle.INSTANCE.createTextButton("Tutorial");
 
-        Button offlineButton = UIStyle.INSTANCE.createButton("Offline Game");
+        Button offlineButton = UIStyle.INSTANCE.createTextButton("Offline Game");
 
         // Sign out
         offlineButton.addListener(new ClickListener() {

@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -35,14 +33,6 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
     private int stage_width;
     private int stage_height;
     private int currentSlideCounter;
-
-    private BitmapFont headerFont;
-    private BitmapFont slideHeaderFont;
-    private BitmapFont slideTextFont;
-
-    private Label.LabelStyle headerStyle;
-    private Label.LabelStyle slideHeaderStyle;
-    private Label.LabelStyle slideTextStyle;
 
     private Label header;
     private Label slideHeader;
@@ -96,8 +86,6 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         this.stage_width = Gdx.graphics.getWidth();
         this.stage_height = Gdx.graphics.getHeight();
 
-        this.createBitmapFonts();
-        this.createTextStyles();
         this.createButtons(stage);
         this.createTextFields(stage);
     }
@@ -118,25 +106,23 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         final int btnHeight = 100;
         final int btnWidth = 350;
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = this.slideTextFont;
         Color fontColor = new Color(Color.BLACK);
 
         // Main menu button
-        this.mainMenuButton = UIStyle.INSTANCE.createTextButton("Back to Main Menu", labelStyle, fontColor);
+        this.mainMenuButton = UIStyle.INSTANCE.createTutorialButton("Back to Main Menu", fontColor);
         this.mainMenuButton.setPosition(this.stage_width / 100f,
                                         this.stage_height / 50f);
         this.mainMenuButton.setSize(btnWidth + 100, btnHeight);
 
         // Previous button
-        this.previousButton = UIStyle.INSTANCE.createTextButton("Previous", labelStyle, fontColor);
+        this.previousButton = UIStyle.INSTANCE.createTutorialButton("Previous", fontColor);
         this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width / 100f),
                                         this.stage_height / 50f);
         this.previousButton.setSize(btnWidth, btnHeight);
         this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
-        this.nextButton = UIStyle.INSTANCE.createTextButton("Next", labelStyle, fontColor);
+        this.nextButton = UIStyle.INSTANCE.createTutorialButton("Next", fontColor);
         this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100f),
                                     this.stage_height / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
@@ -203,19 +189,21 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         this.currentSlideCounter = 0;
 
         // Header text
-        this.header = UIStyle.INSTANCE.createLabel("Tutorial", this.headerStyle);
+        this.header = UIStyle.INSTANCE.createTutorialHeaderLabel("Tutorial", FONT_COLOR);
         this.header.setPosition(this.stage_width / 2f - headerWidth / 2f,
                                 this.stage_height - (headerHeight + this.stage_height / 30f));
         this.header.setSize(headerWidth, headerHeight);
 
         // Slide header text
-        this.slideHeader = UIStyle.INSTANCE.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("title"), this.slideHeaderStyle);
+        String headerText = this.tutorialSlides.get(this.currentSlideCounter).get("title");
+        this.slideHeader = UIStyle.INSTANCE.createTutorialSlideHeaderLabel(headerText, FONT_COLOR);
         this.slideHeader.setPosition(this.stage_width / 40f,
                                      this.stage_height - (slideHeaderHeight + 150));
         this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
 
         // Tutorial slide text
-        this.slideText = UIStyle.INSTANCE.createLabel(this.tutorialSlides.get(this.currentSlideCounter).get("text"), this.slideTextStyle);
+        String bodyText = this.tutorialSlides.get(this.currentSlideCounter).get("text");
+        this.slideText = UIStyle.INSTANCE.createTutorialSlideTextLabel(bodyText, FONT_COLOR);
         this.slideText.setWrap(true);
         this.slideText.setAlignment(Align.topLeft);
         this.slideText.setPosition(this.stage_width / 40f,
@@ -228,59 +216,10 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         stage.addActor(slideText);
     }
 
-    private void createBitmapFonts() {
-        // Creates BitmapFonts for the text fields
-
-        // Header font
-        FreeTypeFontGenerator headerGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter headerParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        headerParameter.size = 80;
-        this.headerFont = headerGenerator.generateFont(headerParameter);
-        headerGenerator.dispose();
-
-        // Slide header font
-        FreeTypeFontGenerator slideHeaderGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter slideHeaderParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        slideHeaderParameter.size = 60;
-        this.slideHeaderFont = slideHeaderGenerator.generateFont(slideHeaderParameter);
-        slideHeaderGenerator.dispose();
-
-        // Slide text font
-        FreeTypeFontGenerator slideTextGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter slideTextParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        slideTextParameter.size = 45;
-        this.slideTextFont = slideTextGenerator.generateFont(slideTextParameter);
-        slideTextGenerator.dispose();
-    }
-
-    private void createTextStyles() {
-        // Creates text styles for the text fields
-
-        // Header style
-        this.headerStyle = new Label.LabelStyle();
-        this.headerStyle.font = this.headerFont;
-        this.headerStyle.fontColor = FONT_COLOR;
-
-        // Slide header style
-        this.slideHeaderStyle = new Label.LabelStyle();
-        this.slideHeaderStyle.font = this.slideHeaderFont;
-        this.slideHeaderStyle.fontColor = FONT_COLOR;
-
-        // Slide text style
-        this.slideTextStyle = new Label.LabelStyle();
-        this.slideTextStyle.font = this.slideTextFont;
-        this.slideTextStyle.fontColor = FONT_COLOR;
-    }
-
     @Override
     public void hide() {
         slideImage.dispose();
         stage.dispose();
-
-        slideTextFont.dispose();
-        slideHeaderFont.dispose();
-        headerFont.dispose();
-
         super.dispose();
     }
 } // End class

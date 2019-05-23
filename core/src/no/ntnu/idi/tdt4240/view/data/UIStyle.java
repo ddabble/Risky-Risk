@@ -14,82 +14,95 @@ import com.badlogic.gdx.utils.Align;
 public class UIStyle {
     public static final UIStyle INSTANCE = new UIStyle();
 
+    private static final String REGULAR_FONT_PATH = "fonts/open-sans/OpenSans-Regular.ttf";
+    private static final String BOLD_FONT_PATH = "fonts/open-sans/OpenSans-Bold.ttf";
+
+    private Skin skin;
+
+    private TextButton.TextButtonStyle textButtonStyle;
     private SelectBox.SelectBoxStyle selectStyle;
     private Label.LabelStyle labelStyle;
-    private Skin skin;
-    private TextButton.TextButtonStyle textButtonStyle;
     private TextField.TextFieldStyle textFieldStyle;
 
-    private BitmapFont headerFont;
-    private BitmapFont slideHeaderFont;
-    private BitmapFont slideTextFont;
-    private BitmapFont inGameLabelButtonFont;
+    private BitmapFont standardButtonFont;
+    private BitmapFont tutorialHeaderFont;
+    private BitmapFont tutorialSlideHeaderFont;
+    private BitmapFont tutorialSlideTextFont;
     private BitmapFont inGameLabelFont;
-    public BitmapFont inGamePlayerColorableFont;
+    private BitmapFont inGamePlayerColorableFont;
     private BitmapFont leaderboardFont;
-    public BitmapFont troopNumFont;
+    private BitmapFont troopNumFont;
 
     private UIStyle() {}
 
-    public TextButton createButton(String text) {
-        return new TextButton(text, this.textButtonStyle);
+    public static int getStandardButtonFontSize() {
+        return Gdx.graphics.getHeight() / 24;
     }
 
-    public TextButton createInGameButton(String text) {
-        //in game buttons
-        TextButton textButton = new TextButton(text, this.textButtonStyle);
-        Label label = this.createLabel(text);
-        Label.LabelStyle inGameButtonLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-        inGameButtonLabelStyle.font = inGameLabelButtonFont;
-        label.setStyle(inGameButtonLabelStyle);
-        label.setAlignment(Align.center);
-        textButton.setLabel(label);
+    public TextButton createTutorialButton(String text, Color fontColor) {
+        return createTextButton(text, tutorialSlideTextFont, fontColor);
+    }
+
+    public TextButton createTextButton(String text) {
+        return createTextButton(text, standardButtonFont);
+    }
+
+    public TextButton createTextButton(String text, BitmapFont font) {
+        return createTextButton(text, font, null);
+    }
+
+    public TextButton createTextButton(String text, BitmapFont font, Color fontColor) {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(this.textButtonStyle);
+        if (fontColor != null)
+            textButtonStyle.fontColor = fontColor;
+
+        TextButton textButton = new TextButton(text, textButtonStyle);
+        textButton.setLabel(createLabel(text, font, null));
         return textButton;
     }
 
-    public TextButton createTextButton(String text, Label.LabelStyle labelStyle, Color fontColor) {
-        TextButton textButton = new TextButton(text, this.textButtonStyle);
-        this.textButtonStyle.fontColor = fontColor;
-        Label label = this.createLabel(text);
-        label.setStyle(labelStyle);
-        label.setAlignment(Align.center);
-        textButton.setLabel(label);
-        return textButton;
+    public Label createTutorialHeaderLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialHeaderFont, fontColor);
     }
 
-    public Label createLabel(String text) {
-        return new Label(text, labelStyle);
+    public Label createTutorialSlideHeaderLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialSlideHeaderFont, fontColor);
+    }
+
+    public Label createTutorialSlideTextLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialSlideTextFont, fontColor);
     }
 
     public Label createLeaderboardLabel(String text) {
-        Label label = this.createLabel(text);
-        Label.LabelStyle leaderboardLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-        leaderboardLabelStyle.font = leaderboardFont;
-        label.setStyle(leaderboardLabelStyle);
-
-        return new Label(text, leaderboardLabelStyle);
+        return createLabel(text, leaderboardFont, null);
     }
 
     public Label createInGameLabel(String text) {
-        Label label = this.createLabel(text);
-        Label.LabelStyle inGameLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-        inGameLabelStyle.font = inGameLabelFont;
-        label.setStyle(inGameLabelStyle);
-
-        return new Label(text, inGameLabelStyle);
+        return createLabel(text, inGameLabelFont, null);
     }
 
     public Label createPlayerColorableLabel(String text) {
-        Label label = this.createLabel(text);
-        Label.LabelStyle inGameLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-        inGameLabelStyle.font = inGamePlayerColorableFont;
-        label.setStyle(inGameLabelStyle);
-
-        return new Label(text, inGameLabelStyle);
+        return createLabel(text, inGamePlayerColorableFont, null);
     }
 
-    public Label createLabel(String text, Label.LabelStyle labelStyle) {
-        return new Label(text, labelStyle);
+    public Label createLabel(String text) {
+        return createLabel(text, null, null);
+    }
+
+    private Label createLabel(String text, BitmapFont font, Color fontColor) {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(this.labelStyle);
+        if (font != null)
+            labelStyle.font = font;
+        if (fontColor != null)
+            labelStyle.fontColor = fontColor;
+
+        return createLabel(text, labelStyle);
+    }
+
+    public Label createLabel(String text, Label.LabelStyle style) {
+        Label label = new Label(text, style);
+        label.setAlignment(Align.center);
+        return label;
     }
 
     public static void init() {
@@ -115,33 +128,52 @@ public class UIStyle {
 
     private void createBitmapFonts() {
         // Creates BitmapFonts for texts
-        headerFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", 40);
-        slideHeaderFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", 25);
-        slideTextFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", 20);
-        inGameLabelButtonFont = createBitmapFont("fonts/open-sans/OpenSans-Regular.ttf", Gdx.graphics.getHeight() / 25);
-        inGameLabelFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 22);
-        leaderboardFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 30);
-        troopNumFont = createBitmapFont("fonts/open-sans/OpenSans-Bold.ttf", Gdx.graphics.getHeight() / 32);
+        standardButtonFont = createStandardButtonFont();
+        tutorialHeaderFont = createBoldFont((int)(Gdx.graphics.getHeight() / 13.5f));
+        tutorialSlideHeaderFont = createBoldFont(Gdx.graphics.getHeight() / 18);
+        tutorialSlideTextFont = createRegularFont(Gdx.graphics.getHeight() / 24);
+        inGameLabelFont = createBoldFont(Gdx.graphics.getHeight() / 22);
+        leaderboardFont = createBoldFont(Gdx.graphics.getHeight() / 30);
+        troopNumFont = createBoldFont(Gdx.graphics.getHeight() / 32);
 
         // inGame label font
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/open-sans/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = Gdx.graphics.getHeight() / 20;
         fontParameter.borderColor = new Color(0.3f, 0.3f, 0.3f, 0.8f);
         fontParameter.borderWidth = 3f;
-        fontParameter.color = Color.WHITE;
-        inGamePlayerColorableFont = fontGenerator.generateFont(fontParameter);
-        fontGenerator.dispose();
+        inGamePlayerColorableFont = createFont(BOLD_FONT_PATH, fontParameter,
+                                               Gdx.graphics.getHeight() / 20);
     }
 
-    private BitmapFont createBitmapFont(String path, int size) {
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    public BitmapFont createStandardButtonFont() {
+        return createRegularFont(getStandardButtonFontSize());
+    }
+
+    public BitmapFont createRegularFont(int size) {
+        return createFont(REGULAR_FONT_PATH, size);
+    }
+
+    public BitmapFont createBoldFont(int size) {
+        return createFont(BOLD_FONT_PATH, size);
+    }
+
+    private BitmapFont createFont(String path, int size) {
+        return createFont(path, new FreeTypeFontGenerator.FreeTypeFontParameter(), size);
+    }
+
+    private BitmapFont createFont(String path, FreeTypeFontGenerator.FreeTypeFontParameter fontParameter, int size) {
         fontParameter.size = size;
-        fontParameter.color = Color.WHITE;
+        fontParameter.color = new Color(Color.WHITE);
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(path));
         BitmapFont result = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
         return result;
+    }
+
+    public TextField.TextFieldStyle createTroopTextStyle(Color fontColor) {
+        TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
+        textStyle.font = troopNumFont;
+        textStyle.fontColor = fontColor;
+        return textStyle;
     }
 
     public static void dispose() {
@@ -153,10 +185,10 @@ public class UIStyle {
         leaderboardFont.dispose();
         inGamePlayerColorableFont.dispose();
         inGameLabelFont.dispose();
-        inGameLabelButtonFont.dispose();
-        slideTextFont.dispose();
-        slideHeaderFont.dispose();
-        headerFont.dispose();
+        tutorialSlideTextFont.dispose();
+        tutorialSlideHeaderFont.dispose();
+        tutorialHeaderFont.dispose();
+        standardButtonFont.dispose();
 
         skin.dispose();
     }

@@ -65,7 +65,7 @@ public class SignInView extends ApplicationAdapter implements Screen {
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
-            Button signInButton = UIStyle.INSTANCE.createButton("Sign in to Google Play");
+            Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in to Google Play");
 
             signInButton.addListener(new ClickListener() {
                 @Override
