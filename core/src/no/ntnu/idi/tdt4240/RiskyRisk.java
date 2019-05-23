@@ -15,15 +15,16 @@ import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
+    private final IGPGSClient gpgsClient;
+
     private MainMenuView mainMenuView;
     private TutorialView tutorialView;
     private WinView winView;
     private GameView gameView;
     private SignInView signInView;
-    public IGPGSClient gpgsClient;
 
-    // Init needs to be called after we set the games GPGS client
-    public void init() {
+    public RiskyRisk(IGPGSClient gpgsClient) {
+        this.gpgsClient = gpgsClient;
 
         mainMenuView = new MainMenuView(this);
         tutorialView = new TutorialView(this);

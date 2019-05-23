@@ -17,15 +17,11 @@ public class AndroidLauncher extends AndroidApplication {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
-        RiskyRisk game = new RiskyRisk();
-
         //For popups
         View view = findViewById(android.R.id.content);
 
         gpgsClient = new GPGSClient(this, view);
-        game.gpgsClient = gpgsClient;
-        game.init();
-        initialize(game, config);
+        initialize(new RiskyRisk(gpgsClient), config);
     }
 
     @Override

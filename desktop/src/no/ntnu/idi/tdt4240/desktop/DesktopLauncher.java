@@ -12,9 +12,6 @@ public class DesktopLauncher {
         // Size of `risk_game_map.png`, for simplicity:
         config.width = 1227;
         config.height = 601;
-        RiskyRisk game = new RiskyRisk();
-        game.gpgsClient = new DesktopMockGPGSClient();
-        game.init();
-        new LwjglApplication(game, config);
+        new LwjglApplication(new RiskyRisk(new DesktopMockGPGSClient()), config);
     }
 }
