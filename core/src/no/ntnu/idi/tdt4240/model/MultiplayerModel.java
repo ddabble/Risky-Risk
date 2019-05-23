@@ -20,6 +20,8 @@ public class MultiplayerModel {
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
     private int numPlayers;
+    private List<Integer> playerIDs;
+
     private Map<Integer, Color> playerID_colorMap;
     private Map<Integer, Set<Territory>> playerID_territoriesMap; // functions as the leaderboard
 
@@ -59,6 +61,7 @@ public class MultiplayerModel {
 
     public static void init(int numPlayers) {
         INSTANCE._init(numPlayers);
+        TurnModel.init(INSTANCE.playerIDs);
     }
 
     private void _init(int numPlayers) {
@@ -69,9 +72,9 @@ public class MultiplayerModel {
         System.out.println("Number of players in MultiplayerModel: " + numPlayers);
         System.out.println("Number of players in GPGSclient: " + TurnModel.INSTANCE.getNumberOfPlayers());
 
-        List<Integer> playerIDs = generatePlayerIDs();
-        assignPlayerColors(playerIDs);
-        assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
+        playerIDs = generatePlayerIDs();
+        assignPlayerColors();
+        assignTerritoryOwners(TerritoryModel.getTerritoryMap());
         initLeaderboard();
     }
 
@@ -83,7 +86,7 @@ public class MultiplayerModel {
         return playerIDs;
     }
 
-    private void assignPlayerColors(List<Integer> playerIDs) {
+    private void assignPlayerColors() {
         playerID_colorMap = new HashMap<>(playerIDs.size());
         List<Color> colors = intArrayToColorList(COLORS);
         for (int i = 0; i < playerIDs.size(); i++)
@@ -100,7 +103,7 @@ public class MultiplayerModel {
         return colorList;
     }
 
-    private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
+    private void assignTerritoryOwners(TerritoryMap territoryMap) {
         List<Territory> territories = territoryMap.getAllTerritories();
         final int numTerritories = territories.size();
 

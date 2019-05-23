@@ -30,7 +30,6 @@ public class BoardPresenter {
 
     private void _init(OrthographicCamera camera, IGPGSClient client) {
         TroopModel.init();
-        TurnModel.init();
         SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
         BoardModel.init(client);
 

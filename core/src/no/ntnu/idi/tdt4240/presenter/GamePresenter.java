@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
@@ -30,21 +29,9 @@ public class GamePresenter {
         PhasePresenter.init(camera);
     }
 
-    public boolean isGameOver() {
-        Map<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
-        int countPlayerWithTerritories = 0;
-        for (Map.Entry entry : leaderboard.entrySet()) {
-            if ((int)entry.getValue() > 0) {
-                countPlayerWithTerritories++;
-            }
-        }
-        return countPlayerWithTerritories <= 1;
-    }
-
-    public void exitToWinScreen() {
-        for (GameObserver observer : observers) {
+    public void onGameOver() {
+        for (GameObserver observer : observers)
             observer.exitToWinScreen();
-        }
     }
 
     public void exitToMainMenu() {

@@ -1,48 +1,38 @@
 package no.ntnu.idi.tdt4240.model;
 
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import java.util.List;
 
 public class TurnModel {
     public static final TurnModel INSTANCE = new TurnModel();
 
-    private int currentPlayerID;
-    private int numberOfPlayers;
-    private IGPGSClient client;
+    private List<Integer> playerIDs;
+    private int currentPlayerIndex;
 
     private TurnModel() {}
 
-    public static void init() {
-        INSTANCE._init();
+    static void init(List<Integer> playerIDs) {
+        INSTANCE._init(playerIDs);
     }
 
-    private void _init() {
-        try {
-            numberOfPlayers = client.getmRiskyTurn().getNumberOfPlayers();
-            currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();
-        } catch (NullPointerException e) {
-            numberOfPlayers = 2;
-            currentPlayerID = 0;
-        }
-    }
-
-    public void setGPGSClient(IGPGSClient client) {
-        this.client = client;
+    private void _init(List<Integer> playerIDs) {
+        this.playerIDs = playerIDs;
+        currentPlayerIndex = 0;
     }
 
     public void nextTurn() {
-        currentPlayerID++;
-        currentPlayerID %= numberOfPlayers;
+        currentPlayerIndex++;
+        currentPlayerIndex %= playerIDs.size();
     }
 
-    public void setCurrentPlayer(int playerID) {
-        currentPlayerID = playerID;
+    public void removePlayer(Integer playerID) {
+        playerIDs.remove(playerID);
     }
 
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
+    public int getNumPlayingPlayers() {
+        return playerIDs.size();
     }
 
     public int getCurrentPlayerID() {
-        return currentPlayerID;
+        return playerIDs.get(currentPlayerIndex);
     }
 }

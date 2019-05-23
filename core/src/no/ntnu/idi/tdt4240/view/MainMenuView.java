@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
-import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
@@ -50,8 +49,6 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
 
     @Override
     public void show() {
-        TurnModel.INSTANCE.setGPGSClient(gpgsClient);
-
         camera.setToOrtho(false, 800, 480);
         stage = new Stage(new StretchViewport(800, 480, camera));
         background = new Texture("background.png");

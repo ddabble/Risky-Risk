@@ -196,11 +196,6 @@ public class PhasePresenter {
                 possibleContinent.add(territory);
             }
         }
-        if (territoriesOwned == 0) {
-            TurnModel.INSTANCE.nextTurn();
-            updateTroopsToPlace();
-            updateRenderedCurrentPlayer();
-        } else {
             boolean hasContinent;
             int extraTroops = 0;
             for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
@@ -215,7 +210,6 @@ public class PhasePresenter {
             AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
             for (PhaseObserver observer : phaseObservers)
                 observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
-        }
     }
 
     public void attackButtonClicked() {
@@ -239,6 +233,14 @@ public class PhasePresenter {
         if (AttackModel.INSTANCE.getToTerritory().getOwnerID() == AttackModel.INSTANCE.getFromTerritory().getOwnerID()) {
             MultiplayerModel.INSTANCE.onTerritoryChangedOwner(defenderID, winner[0], AttackModel.INSTANCE.getToTerritory());
             updateLeaderboard();
+
+            // Remove player from taking turns if they own 0 territories
+            if (MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(defenderID).size() == 0) {
+                TurnModel.INSTANCE.removePlayer(defenderID);
+                // Game over if there is only 1 remaining player
+                if (TurnModel.INSTANCE.getNumPlayingPlayers() == 1)
+                    GamePresenter.INSTANCE.onGameOver();
+            }
         }
 
         // update the troop observers
@@ -251,23 +253,12 @@ public class PhasePresenter {
         AttackModel.INSTANCE.cancelAttack();
         deselectTerritories();
         System.out.println(" - Player" + winner[0] + " won this fight. - ");
-        checkGameOver();
     }
 
     public void exitToMainMenuButtonClicked() {
         // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
         GamePresenter.INSTANCE.client.setMatchNotActive();
         GamePresenter.INSTANCE.exitToMainMenu();
-    }
-
-    /**
-     * Exits the game if game is over
-     */
-    private void checkGameOver() {
-        // Check if game is over (one player owns all territories)
-        if (GamePresenter.INSTANCE.isGameOver()) {
-            GamePresenter.INSTANCE.exitToWinScreen();
-        }
     }
 
     /**
