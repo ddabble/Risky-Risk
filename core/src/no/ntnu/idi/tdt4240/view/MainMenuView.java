@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +25,8 @@ import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 public class MainMenuView extends ApplicationAdapter implements MenuObserver, Screen {
+    public static final Color BACKGROUND_COLOR = new Color(0xE9E6B9FF);
+
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
     private final OrthographicCamera camera;
@@ -63,6 +66,8 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
 
         stage.addActor(table);
 
+
+        Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
     }
 
     private void createButtons() {

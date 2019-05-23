@@ -3,6 +3,7 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -85,6 +86,9 @@ public class SignInView extends ApplicationAdapter implements Screen {
             table.add(signInButton).width(350).height(150).pad(100);
             table.row();
         }
+
+        Color backgroundColor = MainMenuView.BACKGROUND_COLOR;
+        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     }
 
     @Override

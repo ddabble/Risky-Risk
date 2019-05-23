@@ -59,7 +59,6 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(233 / 255f, 230 / 255f, 185 / 255f, 1);
 
         // Render the tutorial slide image
         int imageWidth = this.stage_width / 2 - this.stage_width / 20;
@@ -88,6 +87,9 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
         this.createButtons(stage);
         this.createTextFields(stage);
+
+        Color backgroundColor = MainMenuView.BACKGROUND_COLOR;
+        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     }
 
     private void updateCurrentSlide(boolean increment) {
