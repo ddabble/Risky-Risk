@@ -60,7 +60,6 @@ public class SignInView extends ApplicationAdapter implements Screen {
         isSignedIn = false;
         camera.setToOrtho(false, 800, 480);
         stage = new Stage(new StretchViewport(800, 480, camera));
-        Gdx.input.setInputProcessor(stage);
         table = new Table();
         //table.setDebug(true);
         table.setFillParent(true);
@@ -87,6 +86,8 @@ public class SignInView extends ApplicationAdapter implements Screen {
             table.row();
         }
 
+        MainMenuView.setInputProcessors_mainMenuSubViews(stage, game);
+
         Color backgroundColor = MainMenuView.BACKGROUND_COLOR;
         Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     }
@@ -106,6 +107,8 @@ public class SignInView extends ApplicationAdapter implements Screen {
 
     @Override
     public void hide() {
+        Gdx.input.setCatchBackKey(false);
+
         if (buttonFont != null)
             buttonFont.dispose();
 

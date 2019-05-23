@@ -3,6 +3,10 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -180,5 +184,24 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
         stage.dispose();
         background.dispose();
         super.dispose();
+    }
+
+    public static void setInputProcessors_mainMenuSubViews(Stage stage, final RiskyRisk game) {
+        Gdx.input.setCatchBackKey(true);
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.BACK) {
+                    game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
+                    return true;
+                }
+                return false;
+            }
+        });
+        multiplexer.addProcessor(stage);
+
+        Gdx.input.setInputProcessor(multiplexer);
     }
 }

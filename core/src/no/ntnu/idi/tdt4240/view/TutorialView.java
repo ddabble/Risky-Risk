@@ -78,7 +78,7 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
     public void show() {
         TutorialPresenter.INSTANCE.init();
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        MainMenuView.setInputProcessors_mainMenuSubViews(stage, game);
 
         this.slideImage = new Texture(this.tutorialSlides.get(0).get("image"));
 
@@ -213,6 +213,8 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
     @Override
     public void hide() {
+        Gdx.input.setCatchBackKey(false);
+
         slideImage.dispose();
         stage.dispose();
         super.dispose();
