@@ -186,16 +186,9 @@ public class PhasePresenter {
     }
 
     private void updateTroopsToPlace() {
-        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
-        List<Territory> possibleContinent = new ArrayList<>();
-        int territoriesOwned = 0;
-        for (Territory territory : territories) {
-            // Temporary ID Check
-            if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
-                territoriesOwned++;
-                possibleContinent.add(territory);
-            }
-        }
+        int currentPlayerID = TurnModel.INSTANCE.getCurrentPlayerID();
+        Set<Territory> possibleContinent = MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(currentPlayerID);
+
         boolean hasContinent;
         int extraTroops = 0;
         for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
@@ -207,7 +200,10 @@ public class PhasePresenter {
             if (hasContinent)
                 extraTroops += continent.getBonusTroops();
         }
-        AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
+
+        int numTerritoriesOwned = possibleContinent.size();
+        AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(numTerritoriesOwned / 3f), 3) + extraTroops);
+
         for (PhaseObserver observer : phaseObservers)
             observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
     }
