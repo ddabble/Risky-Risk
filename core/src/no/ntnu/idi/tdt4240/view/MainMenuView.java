@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
-import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
@@ -42,16 +41,15 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
 
     private BitmapFont buttonFont;
 
-    public MainMenuView(RiskyRisk game) {
+    public MainMenuView(RiskyRisk game, IGPGSClient gpgsClient) {
         MenuPresenter.addObserver(this);
         this.game = game;
-        gpgsClient = game.gpgsClient;
+        this.gpgsClient = gpgsClient;
         camera = new OrthographicCamera();
     }
 
     @Override
     public void show() {
-        BoardModel.INSTANCE.setGPGSClient(gpgsClient);
         TurnModel.INSTANCE.setGPGSClient(gpgsClient);
 
         camera.setToOrtho(false, 800, 480);

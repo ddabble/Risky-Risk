@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
@@ -16,6 +17,8 @@ public class GameView implements GameObserver, Screen {
     private final RiskyRisk game;
     private static final float WORLD_WIDTH = 100;
     private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
+
+    private final IGPGSClient client;
 
     private Music gameThemeMusic;
 
@@ -26,9 +29,10 @@ public class GameView implements GameObserver, Screen {
 
     private OrthographicCamera camera;
 
-    public GameView(RiskyRisk game) {
+    public GameView(RiskyRisk game, IGPGSClient client) {
         this.game = game; // need this for exiting back to main menu
         GamePresenter.addObserver(this);
+        this.client = client;
 
         boardView = new BoardView();
         troopView = new TroopView(boardView);
@@ -42,7 +46,7 @@ public class GameView implements GameObserver, Screen {
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
 
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        GamePresenter.init(camera);
+        GamePresenter.init(camera, client);
         setInputProcessors();
 
         gameThemeMusic.setLooping(true);

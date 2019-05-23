@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
@@ -14,14 +15,18 @@ public class GamePresenter {
 
     private Collection<GameObserver> observers = new ArrayList<>();
 
+    private IGPGSClient client;
+
     private GamePresenter() {}
 
-    public static void init(OrthographicCamera camera) {
-        INSTANCE._init(camera);
+    public static void init(OrthographicCamera camera, IGPGSClient client) {
+        INSTANCE._init(camera, client);
     }
 
-    private void _init(OrthographicCamera camera) {
-        BoardPresenter.init(camera);
+    private void _init(OrthographicCamera camera, IGPGSClient client) {
+        BoardPresenter.init(camera, client);
+        this.client = client;
+
         PhasePresenter.init(camera);
     }
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import no.ntnu.idi.tdt4240.model.data.Territory;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
@@ -23,15 +24,15 @@ public class BoardPresenter {
 
     private BoardPresenter() {}
 
-    public static void init(OrthographicCamera camera) {
-        INSTANCE._init(camera);
+    public static void init(OrthographicCamera camera, IGPGSClient client) {
+        INSTANCE._init(camera, client);
     }
 
-    private void _init(OrthographicCamera camera) {
+    private void _init(OrthographicCamera camera, IGPGSClient client) {
         TroopModel.init();
         TurnModel.init();
         SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
-        BoardModel.init();
+        BoardModel.init(client);
 
         for (BoardObserver observer : boardObservers) {
             observer.create(camera, BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),

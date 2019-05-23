@@ -256,8 +256,7 @@ public class PhasePresenter {
 
     public void exitToMainMenuButtonClicked() {
         // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
-        BoardModel.INSTANCE.getClient().setMatchNotActive(); //extremely hacky, board should not be handing out the client, instead the
-        //client should be its own singleton model
+        GamePresenter.INSTANCE.client.setMatchNotActive();
         GamePresenter.INSTANCE.exitToMainMenu();
     }
 

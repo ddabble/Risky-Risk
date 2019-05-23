@@ -30,12 +30,11 @@ public class SignInView extends ApplicationAdapter implements Screen {
 
     private boolean isSignedIn = false;
 
-    public SignInView(RiskyRisk game) {
+    public SignInView(RiskyRisk game, IGPGSClient gpgsClient) {
         this.game = game;
         camera = new OrthographicCamera();
+        this.gpgsClient = gpgsClient;
 
-        //GPGSTest
-        gpgsClient = game.gpgsClient;
         //set the sign in attempt handler to handle what happens if sign in fails or succeeds
         gpgsClient.setSignInAttemptHandler(new IGPGSClient.SignInAttemptHandler() {
             @Override

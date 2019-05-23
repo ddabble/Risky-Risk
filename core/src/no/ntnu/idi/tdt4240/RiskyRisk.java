@@ -26,17 +26,18 @@ public class RiskyRisk extends Game {
     public RiskyRisk(IGPGSClient gpgsClient) {
         this.gpgsClient = gpgsClient;
 
-        mainMenuView = new MainMenuView(this);
+        mainMenuView = new MainMenuView(this, gpgsClient);
         tutorialView = new TutorialView(this);
         winView = new WinView(this);
-        gameView = new GameView(this);
+        gameView = new GameView(this, gpgsClient); // the game should not be handing out the client, instead the
+        // client should be its own singleton model
         signInView = null;
 
         //gpgsClient needs several callbacks to be hooked up to properly function
         //these are added here and inside signInView.
         if (gpgsClient != null) {
             //create the signInView, this happens here because it requires a gpgsClient
-            signInView = new SignInView(this);
+            signInView = new SignInView(this, gpgsClient);
 
             //register a callback for starting the game ui when receiving match data
             //TODO: this is currently not used, instead we just check matchActive() in main

@@ -17,12 +17,12 @@ import no.ntnu.idi.tdt4240.util.TerritoryMap;
 public class BoardModel {
     public static final BoardModel INSTANCE = new BoardModel();
 
+    private IGPGSClient client;
+
     private TerritoryMap territoryMap;
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
-
-    private IGPGSClient client;
 
     private BoardModel() {}
 
@@ -30,11 +30,13 @@ public class BoardModel {
         return mapTexture;
     }
 
-    public static void init() {
-        INSTANCE._init();
+    public static void init(IGPGSClient client) {
+        INSTANCE._init(client);
     }
 
-    private void _init() {
+    private void _init(IGPGSClient client) {
+        this.client = client;
+
         territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
@@ -51,14 +53,6 @@ public class BoardModel {
                 client.getmRiskyTurn().updateData(territoryMap, 0);
             }
         }
-    }
-
-    public void setGPGSClient(IGPGSClient client) {
-        this.client = client;
-    }
-
-    public IGPGSClient getClient() {
-        return client;
     }
 
     private void prepareMapPixmap(Texture mapTexture) {
