@@ -86,9 +86,11 @@ public class RiskyRisk extends Game {
             case Android: // android specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
+
             case Desktop: // desktop specific code
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
+
             default:
                 setScreen(ScreenEnum.SIGN_IN);
         }

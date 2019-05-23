@@ -67,10 +67,7 @@ public class MultiplayerModel {
     private void _init(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
-
         this.numPlayers = numPlayers;
-        System.out.println("Number of players in MultiplayerModel: " + numPlayers);
-        System.out.println("Number of players in GPGSclient: " + TurnModel.INSTANCE.getNumberOfPlayers());
 
         playerIDs = generatePlayerIDs();
         assignPlayerColors();
@@ -135,5 +132,4 @@ public class MultiplayerModel {
             }
         }
     }
-
 }

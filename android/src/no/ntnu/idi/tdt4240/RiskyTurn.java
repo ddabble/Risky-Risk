@@ -13,6 +13,7 @@ public class RiskyTurn implements IRiskyTurn {
 
     public byte[] data;
     public int turnCounter;
+
     private int numberOfPlayers;
     private int currentPlayer;
 
@@ -25,7 +26,6 @@ public class RiskyTurn implements IRiskyTurn {
 
     // Creates a new instance of RiskyTurn.
     public static RiskyTurn unpersist(byte[] byteArray) {
-
         if (byteArray == null) {
             Log.d(TAG, "Empty array---possible bug.");
             return new RiskyTurn();

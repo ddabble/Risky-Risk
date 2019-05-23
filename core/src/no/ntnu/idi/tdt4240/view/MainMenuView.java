@@ -34,6 +34,7 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
     private final OrthographicCamera camera;
 
     private Music mainMenuTheme;
+
     private Texture background;
     private Stage stage;
     private Table table;
@@ -165,9 +166,11 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
+
         stage.act();
         stage.draw();
     }

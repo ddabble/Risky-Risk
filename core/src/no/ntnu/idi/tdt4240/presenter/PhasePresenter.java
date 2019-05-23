@@ -196,20 +196,20 @@ public class PhasePresenter {
                 possibleContinent.add(territory);
             }
         }
-            boolean hasContinent;
-            int extraTroops = 0;
-            for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
-                hasContinent = true;
-                for (Territory territory : continent.getTerritories()) {
-                    if (!possibleContinent.contains(territory))
-                        hasContinent = false;
-                }
-                if (hasContinent)
-                    extraTroops = continent.getBonusTroops();
+        boolean hasContinent;
+        int extraTroops = 0;
+        for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
+            hasContinent = true;
+            for (Territory territory : continent.getTerritories()) {
+                if (!possibleContinent.contains(territory))
+                    hasContinent = false;
             }
-            AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
-            for (PhaseObserver observer : phaseObservers)
-                observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
+            if (hasContinent)
+                extraTroops = continent.getBonusTroops();
+        }
+        AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
+        for (PhaseObserver observer : phaseObservers)
+            observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
     }
 
     public void attackButtonClicked() {

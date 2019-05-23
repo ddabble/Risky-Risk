@@ -650,7 +650,6 @@ public class GPGSClient implements IGPGSClient {
      * @return participantId of next player, or null if automatching
      */
     private String getNextParticipantId() {
-
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
         ArrayList<String> participantIds = mMatch.getParticipantIds();
@@ -698,15 +697,18 @@ public class GPGSClient implements IGPGSClient {
                 matchActive = false;
                 showWarning("Canceled!", "This game was canceled!");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_EXPIRED:
                 matchActive = false;
                 showWarning("Expired!", "This game is expired.  So sad!");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
                 matchActive = false;
                 showWarning("Waiting for auto-match...",
                             "We're still waiting for an automatch partner.");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
                 matchActive = false;
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
@@ -728,10 +730,12 @@ public class GPGSClient implements IGPGSClient {
                 mTurnData = RiskyTurn.unpersist(mMatch.getData());
                 setGameplayUI();
                 return;
+
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
                 // Should return results.
                 showWarning("Alas...", "It's not your turn.");
                 break;
+
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good initiative!",
                             "Still waiting for invitations.\n\nBe patient!");
@@ -829,24 +833,31 @@ public class GPGSClient implements IGPGSClient {
         switch (statusCode) {
             case GamesCallbackStatusCodes.OK:
                 return true;
+
             case GamesClientStatusCodes.MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
                 showErrorMessage("status_multiplayer_error_not_trusted_tester");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_ALREADY_REMATCHED:
                 showErrorMessage("match_error_already_rematched");
                 break;
+
             case GamesClientStatusCodes.NETWORK_ERROR_OPERATION_FAILED:
                 showErrorMessage("network_error_operation_failed");
                 break;
+
             case GamesClientStatusCodes.INTERNAL_ERROR:
                 showErrorMessage("internal_error");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_INACTIVE_MATCH:
                 showErrorMessage("match_error_inactive_match");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_LOCALLY_MODIFIED:
                 showErrorMessage("match_error_locally_modified");
                 break;
+
             default:
                 showErrorMessage("unexpected_status");
                 Log.d(TAG, "Did not have warning or string to deal with: "

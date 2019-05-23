@@ -281,6 +281,7 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
         Gdx.gl.glLineWidth(4);
         Gdx.gl.glEnable(GL20.GL_BLEND); //make it work when debug mode is off
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); //make it work when debug mode is off
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 0.7f);
