@@ -36,9 +36,13 @@ public class PhasePresenter {
 
     private PhasePresenter() {}
 
-    public void init(OrthographicCamera camera) {
-        PhaseModel.INSTANCE.init();
-        AttackModel.INSTANCE.init();
+    public static void init(OrthographicCamera camera) {
+        INSTANCE._init(camera);
+    }
+
+    private void _init(OrthographicCamera camera) {
+        PhaseModel.init();
+        AttackModel.init();
 
         for (PhaseObserver observer : phaseObservers) {
             observer.create(camera);
@@ -345,8 +349,12 @@ public class PhasePresenter {
         }
     }
 
-    public void reset() {
-        AttackModel.INSTANCE.reset();
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
+        AttackModel.reset();
     }
 
     public static void addObserver(PhaseObserver observer) {

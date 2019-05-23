@@ -30,7 +30,11 @@ public class BoardModel {
         return mapTexture;
     }
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
@@ -174,7 +178,11 @@ public class BoardModel {
         return territoryMap.getTerritory(color);
     }
 
-    public void reset() {
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
         if (mapTexture.getTextureData().disposePixmap())
             mapPixmap.dispose();
         mapTexture.dispose();

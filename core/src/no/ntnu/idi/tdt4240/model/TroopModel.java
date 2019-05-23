@@ -26,12 +26,20 @@ public class TroopModel {
         selectedTerritory = territory;
     }
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         circleTexture = new Texture("map/troop_circle.png");
         circleSelectTexture = new Texture("map/troop_circle_select.png");
     }
 
-    public void reset() {
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
         circleSelectTexture.dispose();
         circleTexture.dispose();
     }

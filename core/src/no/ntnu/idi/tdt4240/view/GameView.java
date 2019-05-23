@@ -42,7 +42,7 @@ public class GameView implements GameObserver, Screen {
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
 
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        GamePresenter.INSTANCE.init(camera);
+        GamePresenter.init(camera);
         setInputProcessors();
 
         gameThemeMusic.setLooping(true);
@@ -90,7 +90,7 @@ public class GameView implements GameObserver, Screen {
         troopView.dispose();
         boardView.dispose();
         gameThemeMusic.dispose();
-        GamePresenter.INSTANCE.reset();
+        GamePresenter.reset();
     }
 
     @Override

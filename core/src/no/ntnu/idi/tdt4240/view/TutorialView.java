@@ -76,7 +76,7 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
     @Override
     public void show() {
-        TutorialPresenter.INSTANCE.init();
+        TutorialPresenter.init();
         stage = new Stage(new ScreenViewport());
         MainMenuView.setInputProcessors_mainMenuSubViews(stage, game);
 

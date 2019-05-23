@@ -15,7 +15,11 @@ public class AttackModel {
 
     private AttackModel() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         attack = new HashMap<>();
     }
 
@@ -58,7 +62,11 @@ public class AttackModel {
         toTerritory = null;
     }
 
-    public void reset() {
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
         cancelAttack();
     }
 }

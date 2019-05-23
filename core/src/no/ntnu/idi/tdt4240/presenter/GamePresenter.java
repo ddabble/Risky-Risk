@@ -16,9 +16,13 @@ public class GamePresenter {
 
     private GamePresenter() {}
 
-    public void init(OrthographicCamera camera) {
-        BoardPresenter.INSTANCE.init(camera);
-        PhasePresenter.INSTANCE.init(camera);
+    public static void init(OrthographicCamera camera) {
+        INSTANCE._init(camera);
+    }
+
+    private void _init(OrthographicCamera camera) {
+        BoardPresenter.init(camera);
+        PhasePresenter.init(camera);
     }
 
     public boolean isGameOver() {
@@ -44,9 +48,13 @@ public class GamePresenter {
         }
     }
 
-    public void reset() {
-        PhasePresenter.INSTANCE.reset();
-        BoardPresenter.INSTANCE.reset();
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
+        PhasePresenter.reset();
+        BoardPresenter.reset();
     }
 
     public static void addObserver(GameObserver observer) {

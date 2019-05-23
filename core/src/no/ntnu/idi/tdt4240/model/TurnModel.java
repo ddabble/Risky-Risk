@@ -11,7 +11,11 @@ public class TurnModel {
 
     private TurnModel() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         try {
             numberOfPlayers = client.getmRiskyTurn().getNumberOfPlayers();
             currentPlayerID = client.getmRiskyTurn().getCurrentPlayer();

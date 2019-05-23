@@ -13,7 +13,11 @@ public class SettingsModel {
 
     private SettingsModel() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         prefs = Gdx.app.getPreferences(FILENAME);
     }
 

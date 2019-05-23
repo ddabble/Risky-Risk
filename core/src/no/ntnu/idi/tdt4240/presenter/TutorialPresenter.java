@@ -13,7 +13,11 @@ public class TutorialPresenter {
 
     private TutorialPresenter() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         TutorialModel.init();
         for (TutorialObserver observer : this.tutorialObservers) {
             observer.create(TutorialModel.getTutorialSlides());

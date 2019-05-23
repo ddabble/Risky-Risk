@@ -13,7 +13,11 @@ public class PhaseModel {
 
     private PhaseModel() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         // Initial phase state
         phase = new PlacePhase();
     }

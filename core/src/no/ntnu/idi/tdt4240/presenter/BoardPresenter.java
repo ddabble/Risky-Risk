@@ -23,11 +23,15 @@ public class BoardPresenter {
 
     private BoardPresenter() {}
 
-    public void init(OrthographicCamera camera) {
-        TroopModel.INSTANCE.init();
-        TurnModel.INSTANCE.init();
+    public static void init(OrthographicCamera camera) {
+        INSTANCE._init(camera);
+    }
+
+    private void _init(OrthographicCamera camera) {
+        TroopModel.init();
+        TurnModel.init();
         SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
-        BoardModel.INSTANCE.init();
+        BoardModel.init();
 
         for (BoardObserver observer : boardObservers) {
             observer.create(camera, BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
@@ -58,9 +62,13 @@ public class BoardPresenter {
             observer.onTerritoryChangeColor(territory, MultiplayerModel.INSTANCE.getPlayerColor(territory.getOwnerID()));
     }
 
-    public void reset() {
-        TroopModel.INSTANCE.reset();
-        BoardModel.INSTANCE.reset();
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
+        TroopModel.reset();
+        BoardModel.reset();
     }
 
     public static void addObserver(BoardObserver observer) {

@@ -30,7 +30,11 @@ public class MultiplayerModel {
         return new HashMap<>(playerID_colorMap);
     }
 
-    public void init(int numPlayers) {
+    public static void init(int numPlayers) {
+        INSTANCE._init(numPlayers);
+    }
+
+    private void _init(int numPlayers) {
         if (numPlayers > COLORS.length)
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
 
