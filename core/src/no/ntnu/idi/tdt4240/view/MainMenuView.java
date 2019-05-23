@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -31,6 +32,8 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
     private Texture background;
     private Stage stage;
     private Table table;
+
+    private BitmapFont buttonFont;
 
     public MainMenuView(RiskyRisk game) {
         MenuPresenter.addObserver(this);
@@ -63,13 +66,17 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
     }
 
     private void createButtons() {
-        Button signOutButton = UIStyle.INSTANCE.createTextButton("Sign out");
-        Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in");
-        Button checkGamesButton = UIStyle.INSTANCE.createTextButton("Check active games");
-        Button startMatchButton = UIStyle.INSTANCE.createTextButton("Start new match");
-        Button tutorialButton = UIStyle.INSTANCE.createTextButton("Tutorial");
+        buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
+        float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+        buttonFont.getData().setScale(heightRatio);
 
-        Button offlineButton = UIStyle.INSTANCE.createTextButton("Offline Game");
+        Button signOutButton = UIStyle.INSTANCE.createTextButton("Sign out", buttonFont);
+        Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in", buttonFont);
+        Button checkGamesButton = UIStyle.INSTANCE.createTextButton("Check active games", buttonFont);
+        Button startMatchButton = UIStyle.INSTANCE.createTextButton("Start new match", buttonFont);
+        Button tutorialButton = UIStyle.INSTANCE.createTextButton("Tutorial", buttonFont);
+
+        Button offlineButton = UIStyle.INSTANCE.createTextButton("Offline Game", buttonFont);
 
         // Sign out
         offlineButton.addListener(new ClickListener() {
@@ -163,6 +170,7 @@ public class MainMenuView extends ApplicationAdapter implements MenuObserver, Sc
 
     @Override
     public void hide() {
+        buttonFont.dispose();
         table.clear();
         stage.dispose();
         background.dispose();

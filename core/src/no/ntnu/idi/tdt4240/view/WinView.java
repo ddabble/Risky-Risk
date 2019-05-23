@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -26,6 +27,8 @@ public class WinView extends ApplicationAdapter implements WinObserver, Screen {
     private Stage stage;
     private Table table;
 
+    private BitmapFont buttonFont;
+
     public WinView(RiskyRisk game) {
         WinPresenter.addObserver(this);
         this.game = game;
@@ -40,7 +43,10 @@ public class WinView extends ApplicationAdapter implements WinObserver, Screen {
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
 
-        Button winButton = UIStyle.INSTANCE.createTextButton("You won!");
+        buttonFont = UIStyle.INSTANCE.createBoldFont(UIStyle.getStandardButtonFontSize());
+        float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+        buttonFont.getData().setScale(heightRatio);
+        Button winButton = UIStyle.INSTANCE.createTextButton("You won!", buttonFont);
 
         winButton.addListener(new ClickListener() {
             @Override
@@ -70,6 +76,7 @@ public class WinView extends ApplicationAdapter implements WinObserver, Screen {
 
     @Override
     public void hide() {
+        buttonFont.dispose();
         table.clear();
         stage.dispose();
         background.dispose();

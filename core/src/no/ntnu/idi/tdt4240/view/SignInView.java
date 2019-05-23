@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -23,6 +24,9 @@ public class SignInView extends ApplicationAdapter implements Screen {
 
     private Stage stage;
     private Table table;
+
+    private BitmapFont buttonFont;
+
     private boolean isSignedIn = false;
 
     public SignInView(RiskyRisk game) {
@@ -65,7 +69,10 @@ public class SignInView extends ApplicationAdapter implements Screen {
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
-            Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in to Google Play");
+            buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
+            float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+            buttonFont.getData().setScale(heightRatio);
+            Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in to Google Play", buttonFont);
 
             signInButton.addListener(new ClickListener() {
                 @Override
@@ -95,6 +102,9 @@ public class SignInView extends ApplicationAdapter implements Screen {
 
     @Override
     public void hide() {
+        if (buttonFont != null)
+            buttonFont.dispose();
+
         table.clear();
         stage.dispose();
         super.dispose();
