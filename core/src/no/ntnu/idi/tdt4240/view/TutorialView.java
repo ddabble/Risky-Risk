@@ -67,7 +67,7 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         stage.getBatch().begin();
         stage.getBatch().draw(this.slideImage,
                               this.stage_width - (imageWidth + this.stage_width / 40f),
-                              this.stage_height - (imageHeight + 150),
+                              this.slideHeader.getTop() - imageHeight,
                               imageWidth, imageHeight);
         stage.getBatch().end();
 
@@ -103,8 +103,8 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
     private void createButtons(Stage stage) {
         // Button sizes
-        final int btnHeight = 100;
-        final int btnWidth = 350;
+        final float btnHeight = stage_height / 11f;
+        final float btnWidth = stage_width / 5.5f;
 
         Color fontColor = new Color(Color.BLACK);
 
@@ -112,7 +112,7 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         this.mainMenuButton = UIStyle.INSTANCE.createTutorialButton("Back to Main Menu", fontColor);
         this.mainMenuButton.setPosition(this.stage_width / 100f,
                                         this.stage_height / 50f);
-        this.mainMenuButton.setSize(btnWidth + 100, btnHeight);
+        this.mainMenuButton.setSize(btnWidth * 1.4f, btnHeight);
 
         // Previous button
         this.previousButton = UIStyle.INSTANCE.createTutorialButton("Previous", fontColor);
@@ -176,39 +176,32 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
     }
 
     private void createTextFields(Stage stage) {
-        // Text field dimensions
-        int headerWidth = 350;
-        int headerHeight = 50;
-
-        int slideHeaderWidth = this.stage_width / 2;
-        int slideHeaderHeight = 50;
-
-        int tutSlideWidth = this.stage_width / 2 - this.stage_width / 20;
-        int tutSlideHeight = 2 * this.stage_height / 3;
-
         this.currentSlideCounter = 0;
 
         // Header text
         this.header = UIStyle.INSTANCE.createTutorialHeaderLabel("Tutorial", FONT_COLOR);
-        this.header.setPosition(this.stage_width / 2f - headerWidth / 2f,
-                                this.stage_height - (headerHeight + this.stage_height / 30f));
-        this.header.setSize(headerWidth, headerHeight);
+        this.header.setPosition(this.stage_width / 2f,
+                                this.stage_height * 29f / 30f,
+                                Align.top);
 
         // Slide header text
         String headerText = this.tutorialSlides.get(this.currentSlideCounter).get("title");
         this.slideHeader = UIStyle.INSTANCE.createTutorialSlideHeaderLabel(headerText, FONT_COLOR);
+        this.slideHeader.setAlignment(Align.left);
+        this.slideHeader.setWidth(this.stage_width / 2f);
         this.slideHeader.setPosition(this.stage_width / 40f,
-                                     this.stage_height - (slideHeaderHeight + 150));
-        this.slideHeader.setSize(slideHeaderWidth, slideHeaderHeight);
+                                     this.header.getY() - this.slideHeader.getHeight() / 2f,
+                                     Align.topLeft);
 
         // Tutorial slide text
         String bodyText = this.tutorialSlides.get(this.currentSlideCounter).get("text");
         this.slideText = UIStyle.INSTANCE.createTutorialSlideTextLabel(bodyText, FONT_COLOR);
         this.slideText.setWrap(true);
         this.slideText.setAlignment(Align.topLeft);
+        this.slideText.setWidth(this.stage_width * 9f / 20f);
         this.slideText.setPosition(this.stage_width / 40f,
-                                   this.stage_height - (tutSlideHeight + slideHeaderHeight + 170));
-        slideText.setSize(tutSlideWidth, tutSlideHeight);
+                                   this.slideHeader.getY(),
+                                   Align.topLeft);
 
         // Add actors
         stage.addActor(header);
