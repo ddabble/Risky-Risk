@@ -205,7 +205,7 @@ public class PhasePresenter {
                     hasContinent = false;
             }
             if (hasContinent)
-                extraTroops = continent.getBonusTroops();
+                extraTroops += continent.getBonusTroops();
         }
         AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
         for (PhaseObserver observer : phaseObservers)
