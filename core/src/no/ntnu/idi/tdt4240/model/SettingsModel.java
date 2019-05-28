@@ -9,7 +9,7 @@ public class SettingsModel {
 
     private Preferences prefs;
 
-    private int numberOfPlayers;
+    private int numPlayers;
 
     private SettingsModel() {}
 
@@ -22,16 +22,16 @@ public class SettingsModel {
     }
 
     public int getNumPlayers() {
-        return numberOfPlayers;
+        return numPlayers;
     }
 
     public void setNumPlayers(int num) {
         if (num > 6)
-            numberOfPlayers = 6;
+            numPlayers = 6;
         else if (num < 2)
-            numberOfPlayers = 2;
+            numPlayers = 2;
         else
-            numberOfPlayers = num;
+            numPlayers = num;
     }
 
     public void setString(String key, String value) {

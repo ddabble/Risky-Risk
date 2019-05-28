@@ -50,12 +50,12 @@ public class DesktopMockGPGSClient implements IGPGSClient {
             }
 
             @Override
-            public int getNumberOfPlayers() {
+            public int getNumPlayers() {
                 return 2;
             }
 
             @Override
-            public void setNumberOfPlayers(int numberOfPlayers) {
+            public void setNumPlayers(int numPlayers) {
 
             }
 
@@ -65,7 +65,7 @@ public class DesktopMockGPGSClient implements IGPGSClient {
             }
 
             @Override
-            public void persistNumberOfPlayers() {
+            public void persistNumPlayers() {
 
             }
         };

@@ -14,7 +14,7 @@ public class RiskyTurn implements IRiskyTurn {
     public byte[] data;
     public int turnCounter;
 
-    private int numberOfPlayers;
+    private int numPlayers;
     private int currentPlayer;
 
     // This is the byte array we will write out to the TBMP API.
@@ -35,11 +35,11 @@ public class RiskyTurn implements IRiskyTurn {
         riskyTurn.data = byteArray;
         if (byteArray.length == 1) {
             Log.d(TAG, "Initial setup data was transferred, this game has " + byteArray[0] + " players");
-            riskyTurn.numberOfPlayers = byteArray[0];
+            riskyTurn.numPlayers = byteArray[0];
             riskyTurn.currentPlayer = 0;
         } else { // not initial setup, so just read last two bytes
             riskyTurn.currentPlayer = byteArray[byteArray.length - 2];
-            riskyTurn.numberOfPlayers = byteArray[byteArray.length - 1];
+            riskyTurn.numPlayers = byteArray[byteArray.length - 1];
         }
         System.out.println("Byte array received looks like this:");
         System.out.println(Arrays.toString(byteArray));
@@ -57,20 +57,20 @@ public class RiskyTurn implements IRiskyTurn {
         }
         //store whose turn it is and how many people are playing
         data[map.getAllTerritories().size() * 2] = (byte)currentPlayer;
-        data[map.getAllTerritories().size() * 2 + 1] = (byte)numberOfPlayers;
+        data[map.getAllTerritories().size() * 2 + 1] = (byte)numPlayers;
     }
 
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
+    public int getNumPlayers() {
+        return numPlayers;
     }
 
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
     }
 
-    public void persistNumberOfPlayers() {
+    public void persistNumPlayers() {
         data = new byte[1];
-        data[0] = (byte)numberOfPlayers;
+        data[0] = (byte)numPlayers;
     }
 
     public int getCurrentPlayer() {

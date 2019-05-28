@@ -30,8 +30,8 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
     private Stage stage;
 
-    private int stage_width;
-    private int stage_height;
+    private int stageWidth;
+    private int stageHeight;
     private int currentSlideCounter;
 
     private Label header;
@@ -61,11 +61,11 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Render the tutorial slide image
-        int imageWidth = this.stage_width / 2 - this.stage_width / 20;
+        int imageWidth = this.stageWidth / 2 - this.stageWidth / 20;
         int imageHeight = 2 * imageWidth / 3;
         stage.getBatch().begin();
         stage.getBatch().draw(this.slideImage,
-                              this.stage_width - (imageWidth + this.stage_width / 40f),
+                              this.stageWidth - (imageWidth + this.stageWidth / 40f),
                               this.slideHeader.getTop() - imageHeight,
                               imageWidth, imageHeight);
         stage.getBatch().end();
@@ -82,8 +82,8 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
         this.slideImage = new Texture(this.tutorialSlides.get(0).get("image"));
 
-        this.stage_width = Gdx.graphics.getWidth();
-        this.stage_height = Gdx.graphics.getHeight();
+        this.stageWidth = Gdx.graphics.getWidth();
+        this.stageHeight = Gdx.graphics.getHeight();
 
         this.createButtons(stage);
         this.createTextFields(stage);
@@ -105,28 +105,28 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
     private void createButtons(Stage stage) {
         // Button sizes
-        final float btnHeight = stage_height / 11f;
-        final float btnWidth = stage_width / 5.5f;
+        final float btnHeight = stageHeight / 11f;
+        final float btnWidth = stageWidth / 5.5f;
 
         Color fontColor = new Color(Color.BLACK);
 
         // Main menu button
         this.mainMenuButton = UIStyle.INSTANCE.createTutorialButton("Back to Main Menu", fontColor);
-        this.mainMenuButton.setPosition(this.stage_width / 100f,
-                                        this.stage_height / 50f);
+        this.mainMenuButton.setPosition(this.stageWidth / 100f,
+                                        this.stageHeight / 50f);
         this.mainMenuButton.setSize(btnWidth * 1.4f, btnHeight);
 
         // Previous button
         this.previousButton = UIStyle.INSTANCE.createTutorialButton("Previous", fontColor);
-        this.previousButton.setPosition(this.stage_width - 2 * (btnWidth + this.stage_width / 100f),
-                                        this.stage_height / 50f);
+        this.previousButton.setPosition(this.stageWidth - 2 * (btnWidth + this.stageWidth / 100f),
+                                        this.stageHeight / 50f);
         this.previousButton.setSize(btnWidth, btnHeight);
         this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
         this.nextButton = UIStyle.INSTANCE.createTutorialButton("Next", fontColor);
-        this.nextButton.setPosition(this.stage_width - (btnWidth + this.stage_width / 100f),
-                                    this.stage_height / 50f);
+        this.nextButton.setPosition(this.stageWidth - (btnWidth + this.stageWidth / 100f),
+                                    this.stageHeight / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
 
         // Add event listeners to buttons
@@ -182,16 +182,16 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
 
         // Header text
         this.header = UIStyle.INSTANCE.createTutorialHeaderLabel("Tutorial", FONT_COLOR);
-        this.header.setPosition(this.stage_width / 2f,
-                                this.stage_height * 29f / 30f,
+        this.header.setPosition(this.stageWidth / 2f,
+                                this.stageHeight * 29f / 30f,
                                 Align.top);
 
         // Slide header text
         String headerText = this.tutorialSlides.get(this.currentSlideCounter).get("title");
         this.slideHeader = UIStyle.INSTANCE.createTutorialSlideHeaderLabel(headerText, FONT_COLOR);
         this.slideHeader.setAlignment(Align.left);
-        this.slideHeader.setWidth(this.stage_width / 2f);
-        this.slideHeader.setPosition(this.stage_width / 40f,
+        this.slideHeader.setWidth(this.stageWidth / 2f);
+        this.slideHeader.setPosition(this.stageWidth / 40f,
                                      this.header.getY() - this.slideHeader.getHeight() / 2f,
                                      Align.topLeft);
 
@@ -200,8 +200,8 @@ public class TutorialView extends ApplicationAdapter implements TutorialObserver
         this.slideText = UIStyle.INSTANCE.createTutorialSlideTextLabel(bodyText, FONT_COLOR);
         this.slideText.setWrap(true);
         this.slideText.setAlignment(Align.topLeft);
-        this.slideText.setWidth(this.stage_width * 9f / 20f);
-        this.slideText.setPosition(this.stage_width / 40f,
+        this.slideText.setWidth(this.stageWidth * 9f / 20f);
+        this.slideText.setPosition(this.stageWidth / 40f,
                                    this.slideHeader.getY(),
                                    Align.topLeft);
 

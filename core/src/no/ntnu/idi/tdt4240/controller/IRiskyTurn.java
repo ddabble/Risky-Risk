@@ -13,11 +13,11 @@ public interface IRiskyTurn {
 
     boolean isDataInitialized();
 
-    int getNumberOfPlayers();
+    int getNumPlayers();
 
-    void setNumberOfPlayers(int numberOfPlayers);
+    void setNumPlayers(int numPlayers);
 
     int getCurrentPlayer();
 
-    void persistNumberOfPlayers();
+    void persistNumPlayers();
 }
