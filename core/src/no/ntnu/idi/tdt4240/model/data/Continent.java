@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.data;
+package no.ntnu.idi.tdt4240.model.data;
 
 import java.util.List;
 

@@ -4,37 +4,42 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
-import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
+import no.ntnu.idi.tdt4240.view.StartOfflineView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.view.WinView;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 // Switches between App states, loads shared resources
 public class RiskyRisk extends Game {
-    private MainMenuView mainMenuView;
-    private TutorialView tutorialView;
-    private WinView winView;
-    private GameView gameView;
-    private SignInView signInView;
-    public IGPGSClient gpgsClient;
+    private final IGPGSClient gpgsClient;
 
-    // Init needs to be called after we set the games GPGS client
-    public void init() {
+    private final MainMenuView mainMenuView;
+    private final TutorialView tutorialView;
+    private final WinView winView;
+    private final StartOfflineView startOfflineView;
+    private final GameView gameView;
+    private final SignInView signInView;
 
-        mainMenuView = new MainMenuView(this);
+    public RiskyRisk(IGPGSClient gpgsClient) {
+        this.gpgsClient = gpgsClient;
+
+        mainMenuView = new MainMenuView(this, gpgsClient);
         tutorialView = new TutorialView(this);
         winView = new WinView(this);
-        gameView = new GameView(this);
-        signInView = null;
+        startOfflineView = new StartOfflineView(this, gpgsClient);
+        gameView = new GameView(this, gpgsClient); // the game should not be handing out the client, instead the
+        // client should be its own singleton model
 
         //gpgsClient needs several callbacks to be hooked up to properly function
         //these are added here and inside signInView.
         if (gpgsClient != null) {
             //create the signInView, this happens here because it requires a gpgsClient
-            signInView = new SignInView(this);
+            signInView = new SignInView(this, gpgsClient);
 
             //register a callback for starting the game ui when receiving match data
             //TODO: this is currently not used, instead we just check matchActive() in main
@@ -45,7 +50,8 @@ public class RiskyRisk extends Game {
                     //setScreen(ScreenEnum.GAME);
                 }
             });
-        }
+        } else
+            signInView = null;
     }
 
     public void setScreen(ScreenEnum screen) {
@@ -56,6 +62,10 @@ public class RiskyRisk extends Game {
 
             case TUTORIAL:
                 setScreen(tutorialView);
+                break;
+
+            case START_OFFLINE:
+                setScreen(startOfflineView);
                 break;
 
             case GAME:
@@ -74,24 +84,43 @@ public class RiskyRisk extends Game {
 
     @Override
     public void create() {
-        TerritoryModel.init();
-        SettingsPresenter.INSTANCE.init();
+        /*
+        Prevents exiting to the home screen when the back button is pressed,
+        which for some reason also makes the app restart when resumed, but without clearing all memory.
+        It's also currently used by the main menu sub-screens to go back to the main menu.
+         */
+        Gdx.input.setCatchBackKey(true);
 
+        TerritoryModel.init();
+        SettingsModel.init();
+        UIStyle.init();
+
+        // Calls `show()` on views
         switch (Gdx.app.getType()) {
-            case Android: // android specific code
+            case Android:
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
-            case Desktop: // desktop specific code
+
+            case Desktop:
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
+
             default:
                 setScreen(ScreenEnum.SIGN_IN);
         }
     }
 
+    @Override
+    public void dispose() {
+        // Calls `hide()` on active view
+        super.dispose();
+        UIStyle.dispose();
+    }
+
     public enum ScreenEnum {
         MAIN_MENU,
         TUTORIAL,
+        START_OFFLINE,
         GAME,
         SIGN_IN,
         WIN,

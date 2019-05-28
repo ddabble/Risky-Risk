@@ -1,9 +1,10 @@
 package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -13,22 +14,23 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class SignInView extends AbstractView implements Screen {
+public class SignInView extends ScreenAdapter {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
-    private final OrthographicCamera camera;
 
     private Stage stage;
     private Table table;
+
+    private BitmapFont buttonFont;
+
     private boolean isSignedIn = false;
 
-    public SignInView(RiskyRisk game) {
+    public SignInView(RiskyRisk game, IGPGSClient gpgsClient) {
         this.game = game;
-        camera = new OrthographicCamera();
+        this.gpgsClient = gpgsClient;
 
-        //GPGSTest
-        gpgsClient = game.gpgsClient;
         //set the sign in attempt handler to handle what happens if sign in fails or succeeds
         gpgsClient.setSignInAttemptHandler(new IGPGSClient.SignInAttemptHandler() {
             @Override
@@ -50,12 +52,8 @@ public class SignInView extends AbstractView implements Screen {
 
     @Override
     public void show() {
-        super.create();
-
         isSignedIn = false;
-        camera.setToOrtho(false, 800, 480);
-        stage = new Stage(new StretchViewport(800, 480, camera));
-        Gdx.input.setInputProcessor(stage);
+        stage = new Stage(new StretchViewport(800, 480));
         table = new Table();
         //table.setDebug(true);
         table.setFillParent(true);
@@ -65,7 +63,10 @@ public class SignInView extends AbstractView implements Screen {
         if (gpgsClient.isSignedIn()) {
             isSignedIn = true;
         } else { //show sign in button
-            Button signInButton = this.createButton("Sign in to Google Play");
+            buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
+            float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+            buttonFont.getData().setScale(heightRatio);
+            Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in to Google Play", buttonFont);
 
             signInButton.addListener(new ClickListener() {
                 @Override
@@ -78,6 +79,11 @@ public class SignInView extends AbstractView implements Screen {
             table.add(signInButton).width(350).height(150).pad(100);
             table.row();
         }
+
+        MainMenuView.setInputProcessors_mainMenuSubViews(stage, game);
+
+        Color backgroundColor = MainMenuView.BACKGROUND_COLOR;
+        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     }
 
     @Override
@@ -95,6 +101,9 @@ public class SignInView extends AbstractView implements Screen {
 
     @Override
     public void hide() {
+        if (buttonFont != null)
+            buttonFont.dispose();
+
         table.clear();
         stage.dispose();
         super.dispose();

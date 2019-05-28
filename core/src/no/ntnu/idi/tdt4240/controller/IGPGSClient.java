@@ -26,6 +26,10 @@ public interface IGPGSClient {
 
     void onStartMatchClicked();
 
+    default void onStartOfflineMatchClicked(int numPlayersChosen) {
+        getmRiskyTurn().setNumPlayers(numPlayersChosen);
+    }
+
     void onCheckGamesClicked();
 
     void onDoneClicked(); //not sure this is needed -ø 11.05, it is, this is how we send data to the server -Ø 12.05

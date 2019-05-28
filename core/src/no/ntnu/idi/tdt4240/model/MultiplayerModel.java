@@ -1,15 +1,17 @@
 package no.ntnu.idi.tdt4240.model;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import no.ntnu.idi.tdt4240.data.Territory;
-import no.ntnu.idi.tdt4240.util.TerritoryMap;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 
 public class MultiplayerModel {
     public static final MultiplayerModel INSTANCE = new MultiplayerModel();
@@ -17,8 +19,10 @@ public class MultiplayerModel {
     private static final int[] COLORS = new int[] {0xFE796F, 0xFECFFF, 0xF4FE6F, 0xACFE6F, 0x6FFEC1, 0xAB6FFE, 0xFE6FC2, 0xFEBB6F};
 
     private int numPlayers;
+    private List<Integer> playerIDs;
+
     private Map<Integer, Color> playerID_colorMap;
-    private Map<Integer, Integer> playerID_numTerritories; // same as leaderboard
+    private Map<Integer, Set<Territory>> playerID_territoriesMap; // functions as the leaderboard
 
     private MultiplayerModel() {}
 
@@ -30,20 +34,48 @@ public class MultiplayerModel {
         return new HashMap<>(playerID_colorMap);
     }
 
-    public void init(int numPlayers) {
-        if (numPlayers > COLORS.length)
-            throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
-
-        this.numPlayers = numPlayers;
-        System.out.println("Number of players in MultiplayerModel: " + numPlayers);
-        System.out.println("Number of players in GPGSclient: " + TurnModel.INSTANCE.getNumberOfPlayers());
-        List<Integer> playerIDs = generatePlayerIDs();
-        assignPlayerColors(playerIDs);
-        assignTerritoryOwners(playerIDs, TerritoryModel.getTerritoryMap());
-        initLeaderboard();
+    /**
+     * @return an <i>unmodifiable</i> set of the player's owned territories.
+     */
+    public Set<Territory> getTerritoriesOwnedByPlayer(int playerID) {
+        return Collections.unmodifiableSet(playerID_territoriesMap.get(playerID));
     }
 
-    private List<Integer> generatePlayerIDs() {
+    /**
+     * @return a map from player IDs to an <i>unmodifiable</i> set of the player's owned territories.
+     */
+    public Map<Integer, Set<Territory>> getTerritoriesPerPlayer() {
+        Map<Integer, Set<Territory>> newMap = new HashMap<>(playerID_territoriesMap.size());
+
+        for (Map.Entry<Integer, Set<Territory>> entry : playerID_territoriesMap.entrySet())
+            newMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+
+        return newMap;
+    }
+
+    public void onTerritoryChangedOwner(int oldPlayerID, int newPlayerID, Territory territory) {
+        playerID_territoriesMap.get(oldPlayerID).remove(territory);
+        playerID_territoriesMap.get(newPlayerID).add(territory);
+    }
+
+    public static void init(int numPlayers) {
+        INSTANCE._init(numPlayers);
+        TurnModel.init(INSTANCE.playerIDs);
+    }
+
+    private void _init(int numPlayers) {
+        if (numPlayers > COLORS.length)
+            throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
+        this.numPlayers = numPlayers;
+
+        playerIDs = generatePlayerIDs(numPlayers);
+        assignPlayerColors();
+        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
+        assignTerritoryOwners(territories);
+        initLeaderboard(territories);
+    }
+
+    private static List<Integer> generatePlayerIDs(int numPlayers) {
         List<Integer> playerIDs = new ArrayList<>(numPlayers);
         for (int i = 0; i < numPlayers; i++)
             playerIDs.add(i);
@@ -51,7 +83,7 @@ public class MultiplayerModel {
         return playerIDs;
     }
 
-    private void assignPlayerColors(List<Integer> playerIDs) {
+    private void assignPlayerColors() {
         playerID_colorMap = new HashMap<>(playerIDs.size());
         List<Color> colors = intArrayToColorList(COLORS);
         for (int i = 0; i < playerIDs.size(); i++)
@@ -68,8 +100,7 @@ public class MultiplayerModel {
         return colorList;
     }
 
-    private void assignTerritoryOwners(List<Integer> playerIDs, TerritoryMap territoryMap) {
-        List<Territory> territories = territoryMap.getAllTerritories();
+    private void assignTerritoryOwners(List<Territory> territories) {
         final int numTerritories = territories.size();
 
         // Fill the list with an approximately equal amount of each player ID, then shuffle the list
@@ -84,26 +115,19 @@ public class MultiplayerModel {
         }
     }
 
-    private void initLeaderboard() {
-        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
-        int[] numOfTerritories = new int[numPlayers];
+    private void initLeaderboard(List<Territory> territories) {
+        playerID_territoriesMap = new HashMap<>(numPlayers);
 
-        for (Territory t : territories)
-            numOfTerritories[t.getOwnerID()] += 1;
-
-        Map<Integer, Integer> leaderboard = new HashMap<>();
-        for (int i = 0; i < numPlayers; i++) {
-            leaderboard.put(i, numOfTerritories[i]);
+        for (Territory territory : territories) {
+            Set<Territory> ownerTerritories = playerID_territoriesMap.get(territory.getOwnerID());
+            if (ownerTerritories != null)
+                ownerTerritories.add(territory);
+            else {
+                final int approxNumTerritoriesPerPlayer = MathUtils.ceilPositive(territories.size() / (float)numPlayers);
+                ownerTerritories = new HashSet<>(approxNumTerritoriesPerPlayer);
+                ownerTerritories.add(territory);
+                playerID_territoriesMap.put(territory.getOwnerID(), ownerTerritories);
+            }
         }
-        setLeaderboard(leaderboard);
     }
-
-    public Map<Integer, Integer> getLeaderboard() {
-        return playerID_numTerritories;
-    }
-
-    public void setLeaderboard(Map<Integer, Integer> playerID_numTerritories) {
-        this.playerID_numTerritories = playerID_numTerritories;
-    }
-
 }

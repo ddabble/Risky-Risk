@@ -40,6 +40,7 @@ import java.util.Arrays;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class GPGSClient implements IGPGSClient {
     private static final String TAG = "GPGS";
@@ -90,6 +91,8 @@ public class GPGSClient implements IGPGSClient {
         mActivity = activity;
         mView = view;
         mGoogleSignInClient = GoogleSignIn.getClient(mActivity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+
+        mTurnData = new RiskyTurn();
     }
 
     protected void onResume() {
@@ -210,7 +213,7 @@ public class GPGSClient implements IGPGSClient {
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked() {//View view) {
-        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 7, true)
+        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(SettingsModel.MIN_NUM_PLAYERS - 1, SettingsModel.MAX_NUM_PLAYERS - 1, true)
                                    .addOnSuccessListener(new OnSuccessListener<Intent>() {
                                        @Override
                                        public void onSuccess(Intent intent) {
@@ -601,13 +604,13 @@ public class GPGSClient implements IGPGSClient {
     // callback to OnTurnBasedMatchUpdated(), which will show the game
     // UI.
     private void startMatch(TurnBasedMatch match) {
+        mMatch = match;
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
         Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size() + match.getAvailableAutoMatchSlots()));
-        mTurnData.setNumberOfPlayers(match.getParticipantIds().size() + match.getAvailableAutoMatchSlots());
-        mTurnData.persistNumberOfPlayers();
-        mMatch = match;
+        mTurnData.setNumPlayers(match.getParticipantIds().size() + match.getAvailableAutoMatchSlots());
+        mTurnData.persistNumPlayers();
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
@@ -650,7 +653,6 @@ public class GPGSClient implements IGPGSClient {
      * @return participantId of next player, or null if automatching
      */
     private String getNextParticipantId() {
-
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 
         ArrayList<String> participantIds = mMatch.getParticipantIds();
@@ -698,15 +700,18 @@ public class GPGSClient implements IGPGSClient {
                 matchActive = false;
                 showWarning("Canceled!", "This game was canceled!");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_EXPIRED:
                 matchActive = false;
                 showWarning("Expired!", "This game is expired.  So sad!");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_AUTO_MATCHING:
                 matchActive = false;
                 showWarning("Waiting for auto-match...",
                             "We're still waiting for an automatch partner.");
                 return;
+
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
                 matchActive = false;
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
@@ -720,6 +725,7 @@ public class GPGSClient implements IGPGSClient {
                 // so we allow this to continue.
                 showWarning("Complete!",
                             "This game is over; someone finished it!  You can only finish it now.");
+                break;
         }
 
         // OK, it's active. Check on turn status.
@@ -728,13 +734,16 @@ public class GPGSClient implements IGPGSClient {
                 mTurnData = RiskyTurn.unpersist(mMatch.getData());
                 setGameplayUI();
                 return;
+
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
                 // Should return results.
                 showWarning("Alas...", "It's not your turn.");
                 break;
+
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good initiative!",
                             "Still waiting for invitations.\n\nBe patient!");
+                break;
         }
 
         mTurnData = null;
@@ -829,28 +838,36 @@ public class GPGSClient implements IGPGSClient {
         switch (statusCode) {
             case GamesCallbackStatusCodes.OK:
                 return true;
+
             case GamesClientStatusCodes.MULTIPLAYER_ERROR_NOT_TRUSTED_TESTER:
                 showErrorMessage("status_multiplayer_error_not_trusted_tester");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_ALREADY_REMATCHED:
                 showErrorMessage("match_error_already_rematched");
                 break;
+
             case GamesClientStatusCodes.NETWORK_ERROR_OPERATION_FAILED:
                 showErrorMessage("network_error_operation_failed");
                 break;
+
             case GamesClientStatusCodes.INTERNAL_ERROR:
                 showErrorMessage("internal_error");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_INACTIVE_MATCH:
                 showErrorMessage("match_error_inactive_match");
                 break;
+
             case GamesClientStatusCodes.MATCH_ERROR_LOCALLY_MODIFIED:
                 showErrorMessage("match_error_locally_modified");
                 break;
+
             default:
                 showErrorMessage("unexpected_status");
                 Log.d(TAG, "Did not have warning or string to deal with: "
                            + statusCode);
+                break;
         }
 
         return false;

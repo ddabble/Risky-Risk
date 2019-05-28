@@ -3,7 +3,7 @@ package no.ntnu.idi.tdt4240.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.util.PhaseEnum;
 
 public class PhaseModel {
@@ -13,7 +13,11 @@ public class PhaseModel {
 
     private PhaseModel() {}
 
-    public void init() {
+    public static void init() {
+        INSTANCE._init();
+    }
+
+    private void _init() {
         // Initial phase state
         phase = new PlacePhase();
     }

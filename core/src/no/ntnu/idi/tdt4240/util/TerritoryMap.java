@@ -10,14 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.data.Continent;
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Continent;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 
 public class TerritoryMap {
     private Map<String, Territory> ID_territoryMap;
     private Map<Integer, Territory> color_territoryMap;
 
-    // TODO: move to separate class
     private Map<String, Continent> continentMap;
 
     public TerritoryMap(Map<String, Territory> ID_territoryMap, Map<Integer, Territory> color_territoryMap) {

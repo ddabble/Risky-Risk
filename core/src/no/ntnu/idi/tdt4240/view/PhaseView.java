@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,16 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.PhaseEnum;
 import no.ntnu.idi.tdt4240.util.Utils;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class PhaseView extends AbstractView implements PhaseObserver {
+public class PhaseView extends ApplicationAdapter implements PhaseObserver {
     private static final float ARROW_HEAD_SIZE_MAP_RATIO = 1 / 30f;
 
     private final BoardView boardView;
@@ -54,8 +55,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     private Sprite spriteArrowHead;
 
     public PhaseView(BoardView boardView) {
-        PhasePresenter.addObserver(this);
         this.boardView = boardView;
+        PhasePresenter.addObserver(this);
     }
 
     @Override
@@ -65,7 +66,6 @@ public class PhaseView extends AbstractView implements PhaseObserver {
 
     @Override
     public void create(OrthographicCamera camera) {
-        super.create();
         this.camera = camera;
         shouldDrawArrow = false;
 
@@ -82,20 +82,18 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         shapeRenderer = new ShapeRenderer();
 
         // Actors
-        phaseLabel = createInGameLabel("");
+        phaseLabel = UIStyle.INSTANCE.createInGameLabel("");
         //noinspection IntegerDivisionInFloatingPointContext
         phaseLabel.setPosition(Gdx.graphics.getWidth() / 2, buttonHeight);
         phaseLabel.setWidth(0);
         phaseLabel.setColor(Color.DARK_GRAY);
-        phaseLabel.setAlignment(Align.center);
 
-        playerLabel = createPlayerColorableLabel("");
+        playerLabel = UIStyle.INSTANCE.createPlayerColorableLabel("");
         playerLabel.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 20f);
-        playerLabel.setAlignment(Align.center);
 
         defineAllButtons();
 
-        waitingForTurnLabel = createLabel("Match object sent, wait for your turn...");
+        waitingForTurnLabel = UIStyle.INSTANCE.createLabel("Match object sent, wait for your turn...");
         waitingForTurnLabel.setPosition(150, 150);
 
         stage.addActor(phaseLabel);
@@ -105,7 +103,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     }
 
     private TextButton defineButton(String text, int x, int y) {
-        TextButton b = createInGameButton(text);
+        TextButton b = UIStyle.INSTANCE.createTextButton(text);
         b.setWidth(buttonWidth);
         b.setHeight(buttonHeight);
         b.setPosition(x, y);
@@ -155,7 +153,8 @@ public class PhaseView extends AbstractView implements PhaseObserver {
                 PhasePresenter.INSTANCE.nextPhaseButtonClicked();
             }
         });
-        exitToMainMenuButton = createInGameButton("Exit to Main Menu");
+
+        exitToMainMenuButton = UIStyle.INSTANCE.createTextButton("Exit to Main Menu");
         exitToMainMenuButton.setWidth((int)Math.round(buttonWidth * 1.5));
         exitToMainMenuButton.setHeight(buttonHeight);
         exitToMainMenuButton.setPosition(Gdx.graphics.getWidth() - exitToMainMenuButton.getWidth(), 0);
@@ -225,9 +224,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
     @Override
     public void onNextPlayer(int playerID, Color playerColor) {
         playerLabel.setText("Player" + playerID + "'s turn");
-        inGamePlayerColorableFont.setColor(playerColor);
-
-        playerLabel.setStyle(new Label.LabelStyle(inGamePlayerColorableFont, playerColor));
+        playerLabel.setColor(playerColor);
     }
 
     @Override
@@ -284,6 +281,7 @@ public class PhaseView extends AbstractView implements PhaseObserver {
         Gdx.gl.glLineWidth(4);
         Gdx.gl.glEnable(GL20.GL_BLEND); //make it work when debug mode is off
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); //make it work when debug mode is off
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0, 0, 0, 0.7f);

@@ -4,14 +4,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import no.ntnu.idi.tdt4240.data.Continent;
-import no.ntnu.idi.tdt4240.data.Territory;
 import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.model.BattleModel;
 import no.ntnu.idi.tdt4240.model.BoardModel;
@@ -20,6 +20,8 @@ import no.ntnu.idi.tdt4240.model.PhaseModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
+import no.ntnu.idi.tdt4240.model.data.Continent;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.LeaderboardObserver;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
@@ -36,23 +38,24 @@ public class PhasePresenter {
 
     private PhasePresenter() {}
 
-    public void init(OrthographicCamera camera) {
-        PhaseModel.INSTANCE.init();
-        AttackModel.INSTANCE.init();
+    public static void init(OrthographicCamera camera) {
+        INSTANCE._init(camera);
+    }
+
+    private void _init(OrthographicCamera camera) {
+        PhaseModel.init();
+        AttackModel.init();
 
         for (PhaseObserver observer : phaseObservers) {
             observer.create(camera);
             updatePhase(observer);
         }
 
-        for (LeaderboardObserver observer : leaderboardObservers) {
-            Map<Integer, Integer> leaderboard = new HashMap<>();
-            observer.create(leaderboard);
-        }
-        updateRenderedCurrentPlayer();
+        for (LeaderboardObserver observer : leaderboardObservers)
+            observer.create();
 
-        // Update leaderboard
-        onNumOfTerritoryChange(0, 0);
+        updateRenderedCurrentPlayer();
+        updateLeaderboard();
     }
 
     private void updatePhase(PhaseObserver observer) {
@@ -63,6 +66,37 @@ public class PhasePresenter {
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.PLACE) {
             updateTroopsToPlace();
         }
+    }
+
+    private void updateRenderedCurrentPlayer() {
+        // update rendered current player label and color
+        for (PhaseObserver observer : phaseObservers) {
+            observer.onNextPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
+                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+        }
+    }
+
+    /**
+     * Updates the leaderboard when a player has conquered another player's territory.
+     */
+    private void updateLeaderboard() {
+        Map<Integer, Set<Territory>> territoriesPerPlayer = MultiplayerModel.INSTANCE.getTerritoriesPerPlayer();
+
+        Map<Integer, Integer> numTerritoriesPerPlayer = new HashMap<>(territoriesPerPlayer.size());
+        for (Map.Entry<Integer, Set<Territory>> entry : territoriesPerPlayer.entrySet())
+            numTerritoriesPerPlayer.put(entry.getKey(), entry.getValue().size());
+
+        List<Map.Entry<Integer, Integer>> numTerritoriesPerPlayer_sorted = new ArrayList<>(numTerritoriesPerPlayer.entrySet());
+        Collections.sort(numTerritoriesPerPlayer_sorted, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                // Sort with decreasing order
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        for (LeaderboardObserver observer : leaderboardObservers)
+            observer.updateLeaderboard(numTerritoriesPerPlayer_sorted);
     }
 
     public void onMapRenderingChanged() {
@@ -110,6 +144,12 @@ public class PhasePresenter {
         deselectTerritories();
     }
 
+    private void removePhaseButtons() {
+        for (PhaseObserver observer : phaseObservers) {
+            observer.removePhaseButtons();
+        }
+    }
+
     public void nextPhaseButtonClicked() {
         removePhaseButtons();
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.ATTACK)
@@ -144,14 +184,6 @@ public class PhasePresenter {
         deselectTerritories();
     }
 
-    private void updateRenderedCurrentPlayer() {
-        // update rendered current player label and color
-        for (PhaseObserver observer : phaseObservers) {
-            observer.onNextPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
-                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
-        }
-    }
-
     private void cancelFortify() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
@@ -160,14 +192,17 @@ public class PhasePresenter {
 
     public void fortifyButtonClicked() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
-        if (phase.getSelectedFrom().getNumTroops() > 1) {
-            phase.getSelectedFrom().setNumTroops(phase.getSelectedFrom().getNumTroops() - 1);
-            phase.getSelectedTo().setNumTroops(phase.getSelectedTo().getNumTroops() + 1);
+        final Territory fromTerritory = phase.getSelectedFrom();
+        final Territory toTerritory = phase.getSelectedTo();
+
+        if (fromTerritory.getNumTroops() > 1) {
+            fromTerritory.setNumTroops(fromTerritory.getNumTroops() - 1);
+            toTerritory.setNumTroops(toTerritory.getNumTroops() + 1);
             for (TroopObserver observer : troopObservers) {
-                observer.onTerritoryChangeNumTroops(phase.getSelectedFrom());
-                observer.onTerritoryChangeNumTroops(phase.getSelectedTo());
+                observer.onTerritoryChangeNumTroops(fromTerritory);
+                observer.onTerritoryChangeNumTroops(toTerritory);
             }
-            if (phase.getSelectedFrom().getNumTroops() == 1) {
+            if (fromTerritory.getNumTroops() == 1) {
                 phase.clearTerritorySelection();
                 removePhaseButtons();
                 deselectTerritories();
@@ -175,178 +210,151 @@ public class PhasePresenter {
         }
     }
 
-    private void removePhaseButtons() {
-        for (PhaseObserver observer : phaseObservers) {
-            observer.removePhaseButtons();
-        }
-    }
-
     private void updateTroopsToPlace() {
-        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
-        List<Territory> possibleContinent = new ArrayList<>();
-        int territoriesOwned = 0;
-        for (Territory territory : territories) {
-            // Temporary ID Check
-            if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
-                territoriesOwned++;
-                possibleContinent.add(territory);
+        int currentPlayerID = TurnModel.INSTANCE.getCurrentPlayerID();
+        Set<Territory> possibleContinent = MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(currentPlayerID);
+
+        int extraTroops = 0;
+        for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
+            boolean hasContinent = true;
+            for (Territory territory : continent.getTerritories()) {
+                if (!possibleContinent.contains(territory))
+                    hasContinent = false;
             }
+            if (hasContinent)
+                extraTroops += continent.getBonusTroops();
         }
-        if (territoriesOwned == 0) {
-            TurnModel.INSTANCE.nextTurn();
-            updateTroopsToPlace();
-            updateRenderedCurrentPlayer();
-        } else {
-            boolean hasContinent;
-            int extraTroops = 0;
-            for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
-                hasContinent = true;
-                for (Territory territory : continent.getTerritories()) {
-                    if (!possibleContinent.contains(territory))
-                        hasContinent = false;
-                }
-                if (hasContinent)
-                    extraTroops = continent.getBonusTroops();
-            }
-            AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(territoriesOwned / 3f), 3) + extraTroops);
-            for (PhaseObserver observer : phaseObservers)
-                observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
-        }
+
+        int numTerritoriesOwned = possibleContinent.size();
+        AttackModel.INSTANCE.setTroopsToPlace(Math.max((int)Math.ceil(numTerritoriesOwned / 3f), 3) + extraTroops);
+
+        for (PhaseObserver observer : phaseObservers)
+            observer.updateRenderedVariables("Place", AttackModel.INSTANCE.getTroopsToPlace());
     }
 
     public void attackButtonClicked() {
-        int defenderID = AttackModel.INSTANCE.getToTerritory().getOwnerID();
-        int[] winner = BattleModel.fight(AttackModel.INSTANCE.getFromTerritory().getOwnerID(),
-                                         AttackModel.INSTANCE.getToTerritory().getOwnerID(),
-                                         AttackModel.INSTANCE.getFromTerritory().getNumTroops() - 1,
-                                         AttackModel.INSTANCE.getToTerritory().getNumTroops());
+        final Territory fromTerritory = AttackModel.INSTANCE.getFromTerritory();
+        final Territory toTerritory = AttackModel.INSTANCE.getToTerritory();
+
+        int defenderID = toTerritory.getOwnerID();
+        int[] winner = BattleModel.fight(fromTerritory.getOwnerID(),
+                                         toTerritory.getOwnerID(),
+                                         fromTerritory.getNumTroops() - 1,
+                                         toTerritory.getNumTroops());
 
         // update phase observers
         for (PhaseObserver observer : phaseObservers) {
             observer.removePhaseButtons();
         }
         // update territory models
-        AttackModel.INSTANCE.getToTerritory().setOwnerID(winner[0]);
-        AttackModel.INSTANCE.getToTerritory().setNumTroops(winner[1]);
-        AttackModel.INSTANCE.getFromTerritory().setNumTroops(1);
+        toTerritory.setOwnerID(winner[0]);
+        toTerritory.setNumTroops(winner[1]);
+        fromTerritory.setNumTroops(1);
 
-        // update leaderboard
-        // if the attacker won the fight.
-        if (AttackModel.INSTANCE.getToTerritory().getOwnerID() == AttackModel.INSTANCE.getFromTerritory().getOwnerID()) {
-            onNumOfTerritoryChange(winner[0], 1);
-            onNumOfTerritoryChange(defenderID, -1);
+        // update leaderboard if the attacker won the fight
+        if (toTerritory.getOwnerID() == fromTerritory.getOwnerID()) {
+            MultiplayerModel.INSTANCE.onTerritoryChangedOwner(defenderID, winner[0], toTerritory);
+            updateLeaderboard();
+            BoardPresenter.INSTANCE.onTerritoryChangedOwner(toTerritory);
+
+            // Remove player from taking turns if they own 0 territories
+            if (MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(defenderID).size() == 0) {
+                TurnModel.INSTANCE.removePlayer(defenderID);
+                // Game over if there is only 1 remaining player
+                if (TurnModel.INSTANCE.getNumPlayingPlayers() == 1)
+                    GamePresenter.INSTANCE.onGameOver();
+            }
         }
 
         // update the troop observers
         for (TroopObserver observer : troopObservers) {
-            observer.onTerritoryChangeNumTroops(AttackModel.INSTANCE.getFromTerritory());
-            observer.onTerritoryChangeNumTroops(AttackModel.INSTANCE.getToTerritory());
+            observer.onTerritoryChangeNumTroops(fromTerritory);
+            observer.onTerritoryChangeNumTroops(toTerritory);
         }
-        BoardPresenter.INSTANCE.onTerritoryChangedOwner(AttackModel.INSTANCE.getToTerritory());
+
         //Clears the attack HashMap after the attack has gone through.
         AttackModel.INSTANCE.cancelAttack();
         deselectTerritories();
         System.out.println(" - Player" + winner[0] + " won this fight. - ");
-        checkGameOver();
-    }
-
-    public void exitToMainMenuButtonClicked() {
-        // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
-        BoardModel.INSTANCE.getClient().setMatchNotActive(); //extremely hacky, board should not be handing out the client, instead the
-        //client should be its own singleton model
-        GamePresenter.INSTANCE.exitToMainMenu();
-    }
-
-    /**
-     * Exits the game if game is over
-     */
-    private void checkGameOver() {
-        // Check if game is over (one player owns all territories)
-        if (GamePresenter.INSTANCE.isGameOver()) {
-            GamePresenter.INSTANCE.exitToWinScreen();
-        }
-    }
-
-    /**
-     * Updates leaderboard according to the state of the game
-     * This approach updates only the player of the territories changed.
-     * This affects the performance less than counting the territory map as a whole
-     *
-     * @param diff how many territories this player has gained or lost
-     */
-    private void onNumOfTerritoryChange(int playerID, int diff) {
-        //get players
-        Map<Integer, Integer> leaderboard = MultiplayerModel.INSTANCE.getLeaderboard();
-        int currentNumOfTerritories = leaderboard.get(playerID);
-        leaderboard.put(playerID, currentNumOfTerritories + diff);
-        MultiplayerModel.INSTANCE.setLeaderboard(leaderboard);
-
-        for (LeaderboardObserver observer : leaderboardObservers)
-            observer.updateLeaderboard(leaderboard);
     }
 
     public void onTerritoryClicked(Territory territory) {
         //PhaseModel.INSTANCE.getPhase().territoryClicked(territory); //update the model
         // update the view
-        switch (PhaseModel.INSTANCE.getPhase().getEnum()) {
+        final int currentPlayerID = TurnModel.INSTANCE.getCurrentPlayerID();
+        final PhaseModel.PhaseState phase = PhaseModel.INSTANCE.getPhase();
+
+        switch (phase.getEnum()) {
             case PLACE:
-                if (AttackModel.INSTANCE.getTroopsToPlace() > 0 && territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID()) {
-                    PhaseModel.INSTANCE.getPhase().territoryClicked(territory);
-                    AttackModel.INSTANCE.setTroopsToPlace(AttackModel.INSTANCE.getTroopsToPlace() - 1);
+                int troopsToPlace = AttackModel.INSTANCE.getTroopsToPlace();
+                if (troopsToPlace > 0 && territory.getOwnerID() == currentPlayerID) {
+                    phase.territoryClicked(territory);
+                    AttackModel.INSTANCE.setTroopsToPlace(--troopsToPlace);
                     for (TroopObserver observer : troopObservers)
                         observer.onTerritoryChangeNumTroops(territory);
                     for (PhaseObserver observer : phaseObservers)
-                        observer.updateRenderedVariables(PhaseModel.INSTANCE.getPhase().getEnum().toString(), AttackModel.INSTANCE.getTroopsToPlace());
+                        observer.updateRenderedVariables(phase.getEnum().toString(), troopsToPlace);
                 } else {
                     System.out.println("No troops left to place");
                 }
                 break;
 
             case ATTACK:
-                if (territory.getOwnerID() == TurnModel.INSTANCE.getCurrentPlayerID() && territory.getNumTroops() > 1) {
-                    if (AttackModel.INSTANCE.getAttack() == null || AttackModel.INSTANCE.getAttack().size() == 0) {
+                final Map<String, Integer> attack = AttackModel.INSTANCE.getAttack();
+                final Territory fromTerritory = AttackModel.INSTANCE.getFromTerritory();
+
+                if (territory.getOwnerID() == currentPlayerID && territory.getNumTroops() > 1) {
+                    if (attack == null || attack.size() == 0) {
                         AttackModel.INSTANCE.setAttackFrom(territory);
                         for (PhaseObserver observer : phaseObservers)
                             observer.addCancelButton();
                     }
                 }
-                if (AttackModel.INSTANCE.getAttack() != null) {
-                    if (AttackModel.INSTANCE.getAttack().size() == 1 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
-                        if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
+                if (attack != null) {
+                    if (attack.size() == 1 && territory.getOwnerID() != currentPlayerID) {
+                        if (fromTerritory.getNeighbors().contains(territory)) {
                             AttackModel.INSTANCE.setAttackTo(territory);
                             for (PhaseObserver observer : phaseObservers) {
-                                observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
+                                observer.onSelectedTerritoriesChange(fromTerritory, territory);
                                 observer.addAttackButton();
                             }
                         }
-                    } else if (AttackModel.INSTANCE.getAttack().size() == 2 && territory.getOwnerID() != TurnModel.INSTANCE.getCurrentPlayerID()) {
-                        if (AttackModel.INSTANCE.getFromTerritory().getNeighbors().contains(territory)) {
+                    } else if (attack.size() == 2 && territory.getOwnerID() != currentPlayerID) {
+                        if (fromTerritory.getNeighbors().contains(territory)) {
                             AttackModel.INSTANCE.setAttackTo(territory);
                             for (PhaseObserver observer : phaseObservers)
-                                observer.onSelectedTerritoriesChange(AttackModel.INSTANCE.getFromTerritory(), AttackModel.INSTANCE.getToTerritory());
+                                observer.onSelectedTerritoriesChange(fromTerritory, territory);
                         }
                     }
                 }
                 break;
 
             case FORTIFY:
-                PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
-                phase.territoryClicked(territory, TurnModel.INSTANCE.getCurrentPlayerID());
+                PhaseModel.FortifyPhase fortifyPhase = (PhaseModel.FortifyPhase)phase;
+                fortifyPhase.territoryClicked(territory, currentPlayerID);
                 //update UI
-                if (phase.getSelectedFrom() != null && phase.getSelectedTo() != null) {
+                if (fortifyPhase.getSelectedFrom() != null && fortifyPhase.getSelectedTo() != null) {
                     for (PhaseObserver observer : phaseObservers) {
                         observer.addFortifyButton();
                         observer.addCancelButton();
                     }
                 }
                 for (PhaseObserver observer : phaseObservers)
-                    observer.onSelectedTerritoriesChange(phase.getSelectedFrom(), phase.getSelectedTo());
+                    observer.onSelectedTerritoriesChange(fortifyPhase.getSelectedFrom(), fortifyPhase.getSelectedTo());
                 break;
         }
     }
 
-    public void reset() {
-        AttackModel.INSTANCE.reset();
+    public void exitToMainMenuButtonClicked() {
+        GamePresenter.INSTANCE.exitToMainMenuButtonClicked();
+    }
+
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
+        AttackModel.reset();
     }
 
     public static void addObserver(PhaseObserver observer) {

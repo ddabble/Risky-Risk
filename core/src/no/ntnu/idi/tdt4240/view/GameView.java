@@ -2,20 +2,23 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
-public class GameView implements GameObserver, Screen {
-    private final RiskyRisk game;
+public class GameView extends ScreenAdapter implements GameObserver {
     private static final float WORLD_WIDTH = 100;
-    private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
+    private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9FF);
+
+    private final RiskyRisk game;
+    private final IGPGSClient client;
 
     private Music gameThemeMusic;
 
@@ -26,27 +29,30 @@ public class GameView implements GameObserver, Screen {
 
     private OrthographicCamera camera;
 
-    public GameView(RiskyRisk game) {
+    public GameView(RiskyRisk game, IGPGSClient client) {
         this.game = game; // need this for exiting back to main menu
-        GamePresenter.addObserver(this);
+        this.client = client;
 
         boardView = new BoardView();
         troopView = new TroopView(boardView);
         phaseView = new PhaseView(boardView);
         leaderboardView = new LeaderboardView();
+
+        GamePresenter.addObserver(this);
     }
 
     @Override
     public void show() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
+        GamePresenter.init(camera, client);
 
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        GamePresenter.INSTANCE.init(camera);
-        setInputProcessors();
-
         gameThemeMusic.setLooping(true);
         gameThemeMusic.play();
+
+        setInputProcessors();
+
         Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
     }
 
@@ -70,27 +76,12 @@ public class GameView implements GameObserver, Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
         phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
         gameThemeMusic.dispose();
-        GamePresenter.INSTANCE.reset();
+        GamePresenter.reset();
     }
 
     @Override

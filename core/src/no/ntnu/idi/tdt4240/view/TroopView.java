@@ -1,5 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,14 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import no.ntnu.idi.tdt4240.util.Utils;
+import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class TroopView extends AbstractView implements TroopObserver {
+public class TroopView extends ApplicationAdapter implements TroopObserver {
     private static final float CIRCLE_SIZE_MAP_RATIO = 1 / 30f;
     private static final Color CIRCLE_COLOR_LIGHT = new Color(0xCCCCCCFF);
     private static final Color CIRCLE_COLOR_DARK = new Color(0x808080FF);
@@ -44,9 +46,9 @@ public class TroopView extends AbstractView implements TroopObserver {
     private Territory selectedTerritory;
 
     public TroopView(BoardView boardView) {
+        this.boardView = boardView;
         BoardPresenter.addObserver(this);
         PhasePresenter.addObserver(this);
-        this.boardView = boardView;
     }
 
     @Override
@@ -68,12 +70,12 @@ public class TroopView extends AbstractView implements TroopObserver {
             Vector2 circlePos = boardView.troopCirclePosToWorldPos(territory.getTroopCircleVector());
             circleSelectSprite.setOriginBasedPosition(circlePos.x, circlePos.y);
             circleSpriteMap.get(territory).setColor(CIRCLE_COLOR_LIGHT);
-            circleTextMap.get(territory).setStyle(createTextStyle(TEXT_COLOR_DARK));
+            circleTextMap.get(territory).setStyle(UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_DARK));
         }
 
         if (selectedTerritory != null && selectedTerritory != territory) {
             circleSpriteMap.get(selectedTerritory).setColor(CIRCLE_COLOR_DARK);
-            circleTextMap.get(selectedTerritory).setStyle(createTextStyle(TEXT_COLOR_LIGHT));
+            circleTextMap.get(selectedTerritory).setStyle(UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_LIGHT));
         }
         selectedTerritory = territory;
     }
@@ -85,7 +87,6 @@ public class TroopView extends AbstractView implements TroopObserver {
 
     @Override
     public void create(OrthographicCamera camera, TerritoryMap territoryMap, Texture circleTexture, Texture circleSelectTexture) {
-        super.create();
         this.camera = camera;
         batch = new SpriteBatch();
 
@@ -111,7 +112,7 @@ public class TroopView extends AbstractView implements TroopObserver {
     }
 
     private void createCircleText(List<Territory> territories) {
-        TextField.TextFieldStyle textStyle = createTextStyle(TEXT_COLOR_LIGHT);
+        TextField.TextFieldStyle textStyle = UIStyle.INSTANCE.createTroopTextStyle(TEXT_COLOR_LIGHT);
         circleTextMap = new HashMap<>();
         textField_territoryMap = new HashMap<>();
         stage = new Stage();
@@ -126,13 +127,6 @@ public class TroopView extends AbstractView implements TroopObserver {
             textField_territoryMap.put(textField, territory);
             stage.addActor(textField);
         }
-    }
-
-    private TextField.TextFieldStyle createTextStyle(Color fontColor) {
-        TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
-        textStyle.font = troopNumFont;
-        textStyle.fontColor = fontColor;
-        return textStyle;
     }
 
     @Override

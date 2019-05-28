@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class BoardModel {
     public static final BoardModel INSTANCE = new BoardModel();
 
+    private IGPGSClient client;
+
     private TerritoryMap territoryMap;
 
     private Texture mapTexture;
     private Pixmap mapPixmap;
-
-    private IGPGSClient client;
 
     private BoardModel() {}
 
@@ -30,7 +30,13 @@ public class BoardModel {
         return mapTexture;
     }
 
-    public void init() {
+    public static void init(IGPGSClient client) {
+        INSTANCE._init(client);
+    }
+
+    private void _init(IGPGSClient client) {
+        this.client = client;
+
         territoryMap = TerritoryModel.getTerritoryMap();
         mapTexture = new Texture("map/risk_game_map.png");
         prepareMapPixmap(mapTexture);
@@ -44,17 +50,9 @@ public class BoardModel {
             if (client.getmRiskyTurn().isDataInitialized()) {
                 client.getmRiskyTurn().getTerritoryMapData(territoryMap);
             } else { //init data
-                client.getmRiskyTurn().updateData(territoryMap, 0);
+                client.getmRiskyTurn().updateData(territoryMap, TurnModel.INSTANCE.getCurrentPlayerID());
             }
         }
-    }
-
-    public void setGPGSClient(IGPGSClient client) {
-        this.client = client;
-    }
-
-    public IGPGSClient getClient() {
-        return client;
     }
 
     private void prepareMapPixmap(Texture mapTexture) {
@@ -174,7 +172,11 @@ public class BoardModel {
         return territoryMap.getTerritory(color);
     }
 
-    public void reset() {
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
         if (mapTexture.getTextureData().disposePixmap())
             mapPixmap.dispose();
         mapTexture.dispose();

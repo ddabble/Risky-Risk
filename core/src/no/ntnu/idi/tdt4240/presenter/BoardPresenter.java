@@ -6,12 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
-import no.ntnu.idi.tdt4240.model.TurnModel;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
@@ -23,11 +23,13 @@ public class BoardPresenter {
 
     private BoardPresenter() {}
 
-    public void init(OrthographicCamera camera) {
-        TroopModel.INSTANCE.init();
-        TurnModel.INSTANCE.init();
-        SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
-        BoardModel.INSTANCE.init();
+    public static void init(OrthographicCamera camera, IGPGSClient client) {
+        INSTANCE._init(camera, client);
+    }
+
+    private void _init(OrthographicCamera camera, IGPGSClient client) {
+        TroopModel.init();
+        BoardModel.init(client);
 
         for (BoardObserver observer : boardObservers) {
             observer.create(camera, BoardModel.INSTANCE.getMapTexture(), TerritoryModel.getTerritoryMap().getAllTerritories(),
@@ -58,9 +60,13 @@ public class BoardPresenter {
             observer.onTerritoryChangeColor(territory, MultiplayerModel.INSTANCE.getPlayerColor(territory.getOwnerID()));
     }
 
-    public void reset() {
-        TroopModel.INSTANCE.reset();
-        BoardModel.INSTANCE.reset();
+    public static void reset() {
+        INSTANCE._reset();
+    }
+
+    private void _reset() {
+        TroopModel.reset();
+        BoardModel.reset();
     }
 
     public static void addObserver(BoardObserver observer) {

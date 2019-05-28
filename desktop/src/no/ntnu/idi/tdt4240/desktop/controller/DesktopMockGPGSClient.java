@@ -2,10 +2,15 @@ package no.ntnu.idi.tdt4240.desktop.controller;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
-import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 // TODO: make this work properly
 public class DesktopMockGPGSClient implements IGPGSClient {
+    private IRiskyTurn turnData;
+
+    public DesktopMockGPGSClient() {
+        turnData = new DesktopRiskyTurn();
+    }
+
     @Override
     public boolean matchActive() {
         return false;
@@ -28,47 +33,7 @@ public class DesktopMockGPGSClient implements IGPGSClient {
 
     @Override
     public IRiskyTurn getmRiskyTurn() {
-        return new IRiskyTurn() {
-            @Override
-            public void getTerritoryMapData(TerritoryMap map) {
-
-            }
-
-            @Override
-            public int getTurnCounter() {
-                return 0;
-            }
-
-            @Override
-            public void updateData(TerritoryMap map, int currentPlayer) {
-
-            }
-
-            @Override
-            public boolean isDataInitialized() {
-                return false;
-            }
-
-            @Override
-            public int getNumberOfPlayers() {
-                return 2;
-            }
-
-            @Override
-            public void setNumberOfPlayers(int numberOfPlayers) {
-
-            }
-
-            @Override
-            public int getCurrentPlayer() {
-                return 0;
-            }
-
-            @Override
-            public void persistNumberOfPlayers() {
-
-            }
-        };
+        return turnData;
     }
 
     @Override

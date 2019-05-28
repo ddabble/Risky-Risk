@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idi.tdt4240.data.Territory;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.presenter.BoardPresenter;
 import no.ntnu.idi.tdt4240.presenter.PhasePresenter;
