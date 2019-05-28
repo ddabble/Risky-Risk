@@ -105,8 +105,6 @@ public class SignInView extends ScreenAdapter {
 
     @Override
     public void hide() {
-        Gdx.input.setCatchBackKey(false);
-
         if (buttonFont != null)
             buttonFont.dispose();
 

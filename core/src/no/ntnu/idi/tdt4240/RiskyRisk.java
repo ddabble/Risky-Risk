@@ -77,6 +77,13 @@ public class RiskyRisk extends Game {
 
     @Override
     public void create() {
+        /*
+        Prevents exiting to the home screen when the back button is pressed,
+        which for some reason also makes the app restart when resumed, but without clearing all memory.
+        It's also currently used by the main menu sub-screens to go back to the main menu.
+         */
+        Gdx.input.setCatchBackKey(true);
+
         TerritoryModel.init();
         SettingsModel.init();
         UIStyle.init();

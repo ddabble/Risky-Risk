@@ -212,8 +212,6 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
 
     @Override
     public void hide() {
-        Gdx.input.setCatchBackKey(false);
-
         slideImage.dispose();
         stage.dispose();
         super.dispose();

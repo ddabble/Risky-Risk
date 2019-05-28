@@ -195,8 +195,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
     }
 
     public static void setInputProcessors_mainMenuSubViews(Stage stage, final RiskyRisk game) {
-        Gdx.input.setCatchBackKey(true);
-
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new InputAdapter() {
             @Override
