@@ -4,8 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
-import no.ntnu.idi.tdt4240.presenter.SettingsPresenter;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
@@ -78,7 +78,7 @@ public class RiskyRisk extends Game {
     @Override
     public void create() {
         TerritoryModel.init();
-        SettingsPresenter.INSTANCE.init();
+        SettingsModel.init();
         UIStyle.init();
 
         // Calls `show()` on views

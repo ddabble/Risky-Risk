@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 
 public class GamePresenter {
@@ -23,9 +24,12 @@ public class GamePresenter {
     }
 
     private void _init(OrthographicCamera camera, IGPGSClient client) {
-        BoardPresenter.init(camera, client);
         this.client = client;
 
+        SettingsModel.setNumPlayers(client.getmRiskyTurn().getNumPlayers());
+        MultiplayerModel.init(SettingsModel.INSTANCE.getNumPlayers());
+
+        BoardPresenter.init(camera, client);
         PhasePresenter.init(camera);
     }
 

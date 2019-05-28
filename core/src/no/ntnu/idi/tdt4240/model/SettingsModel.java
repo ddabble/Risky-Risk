@@ -2,9 +2,13 @@ package no.ntnu.idi.tdt4240.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.math.MathUtils;
 
 public class SettingsModel {
     public static final SettingsModel INSTANCE = new SettingsModel();
+    public static final int MIN_NUM_PLAYERS = 2;
+    public static final int MAX_NUM_PLAYERS = 8;
+
     private static final String FILENAME = "GAME_SETTINGS";
 
     private Preferences prefs;
@@ -25,13 +29,12 @@ public class SettingsModel {
         return numPlayers;
     }
 
-    public void setNumPlayers(int num) {
-        if (num > 6)
-            numPlayers = 6;
-        else if (num < 2)
-            numPlayers = 2;
-        else
-            numPlayers = num;
+    public static void setNumPlayers(int numPlayers) {
+        if (numPlayers != MathUtils.clamp(numPlayers, MIN_NUM_PLAYERS, MAX_NUM_PLAYERS))
+            throw new IllegalArgumentException("The number of players has to be within the range "
+                                               + "[" + MIN_NUM_PLAYERS + ", " + MAX_NUM_PLAYERS + "]!");
+
+        INSTANCE.numPlayers = numPlayers;
     }
 
     public void setString(String key, String value) {

@@ -12,7 +12,6 @@ import no.ntnu.idi.tdt4240.model.BoardModel;
 import no.ntnu.idi.tdt4240.model.MultiplayerModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
-import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.observer.BoardObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
 
@@ -30,7 +29,6 @@ public class BoardPresenter {
 
     private void _init(OrthographicCamera camera, IGPGSClient client) {
         TroopModel.init();
-        SettingsPresenter.INSTANCE.setNumPlayers(TurnModel.INSTANCE.getNumberOfPlayers());
         BoardModel.init(client);
 
         for (BoardObserver observer : boardObservers) {

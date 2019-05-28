@@ -40,6 +40,7 @@ import java.util.Arrays;
 
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class GPGSClient implements IGPGSClient {
     private static final String TAG = "GPGS";
@@ -210,7 +211,7 @@ public class GPGSClient implements IGPGSClient {
     // Open the create-game UI. You will get back an onActivityResult
     // and figure out what to do.
     public void onStartMatchClicked() {//View view) {
-        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(1, 7, true)
+        mTurnBasedMultiplayerClient.getSelectOpponentsIntent(SettingsModel.MIN_NUM_PLAYERS - 1, SettingsModel.MAX_NUM_PLAYERS - 1, true)
                                    .addOnSuccessListener(new OnSuccessListener<Intent>() {
                                        @Override
                                        public void onSuccess(Intent intent) {
