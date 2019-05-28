@@ -2,7 +2,7 @@ package no.ntnu.idi.tdt4240.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +13,7 @@ import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
-public class GameView implements GameObserver, Screen {
+public class GameView extends ScreenAdapter implements GameObserver {
     private final RiskyRisk game;
     private static final float WORLD_WIDTH = 100;
     private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
@@ -71,21 +71,6 @@ public class GameView implements GameObserver, Screen {
         troopView.render();
         phaseView.render();
         leaderboardView.render();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 
     @Override

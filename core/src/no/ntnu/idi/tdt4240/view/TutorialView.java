@@ -1,8 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,7 +22,7 @@ import no.ntnu.idi.tdt4240.observer.TutorialObserver;
 import no.ntnu.idi.tdt4240.presenter.TutorialPresenter;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class TutorialView extends ApplicationAdapter implements TutorialObserver, Screen {
+public class TutorialView extends ScreenAdapter implements TutorialObserver {
     private static final Color FONT_COLOR = new Color(0x0A0A0AFF);
 
     private final RiskyRisk game;

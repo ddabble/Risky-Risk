@@ -1,8 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,7 +18,7 @@ import no.ntnu.idi.tdt4240.observer.WinObserver;
 import no.ntnu.idi.tdt4240.presenter.WinPresenter;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class WinView extends ApplicationAdapter implements WinObserver, Screen {
+public class WinView extends ScreenAdapter implements WinObserver {
     private final RiskyRisk game;
     private final OrthographicCamera camera;
 

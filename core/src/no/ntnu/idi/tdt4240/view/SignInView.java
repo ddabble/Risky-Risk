@@ -1,8 +1,7 @@
 package no.ntnu.idi.tdt4240.view;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,7 +17,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class SignInView extends ApplicationAdapter implements Screen {
+public class SignInView extends ScreenAdapter {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
     private final OrthographicCamera camera;

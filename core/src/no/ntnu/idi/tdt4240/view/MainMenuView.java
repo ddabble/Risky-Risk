@@ -1,8 +1,6 @@
 package no.ntnu.idi.tdt4240.view;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,7 +24,7 @@ import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
-public class MainMenuView extends ApplicationAdapter implements MenuObserver, Screen {
+public class MainMenuView extends ScreenAdapter implements MenuObserver {
     public static final Color BACKGROUND_COLOR = new Color(0xE9E6B9FF);
 
     private final RiskyRisk game;
