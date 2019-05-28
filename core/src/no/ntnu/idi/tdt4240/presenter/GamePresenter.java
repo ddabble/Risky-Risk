@@ -38,10 +38,11 @@ public class GamePresenter {
             observer.exitToWinScreen();
     }
 
-    public void exitToMainMenu() {
-        for (GameObserver observer : observers) {
+    public void exitToMainMenuButtonClicked() {
+        // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
+        client.setMatchNotActive();
+        for (GameObserver observer : observers)
             observer.exitToMainMenu();
-        }
     }
 
     public static void reset() {

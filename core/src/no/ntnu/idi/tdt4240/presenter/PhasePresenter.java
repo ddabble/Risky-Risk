@@ -258,9 +258,7 @@ public class PhasePresenter {
     }
 
     public void exitToMainMenuButtonClicked() {
-        // TODO: add message view to ask the player "Are you sure you want to exit?" and "All progress will be lost"
-        GamePresenter.INSTANCE.client.setMatchNotActive();
-        GamePresenter.INSTANCE.exitToMainMenu();
+        GamePresenter.INSTANCE.exitToMainMenuButtonClicked();
     }
 
     /**
