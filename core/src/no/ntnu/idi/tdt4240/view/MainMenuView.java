@@ -88,7 +88,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         offlineButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(RiskyRisk.ScreenEnum.GAME);
+                game.setScreen(RiskyRisk.ScreenEnum.START_OFFLINE);
             }
         });
 

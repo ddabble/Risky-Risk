@@ -9,6 +9,7 @@ import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.view.GameView;
 import no.ntnu.idi.tdt4240.view.MainMenuView;
 import no.ntnu.idi.tdt4240.view.SignInView;
+import no.ntnu.idi.tdt4240.view.StartOfflineView;
 import no.ntnu.idi.tdt4240.view.TutorialView;
 import no.ntnu.idi.tdt4240.view.WinView;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
@@ -20,6 +21,7 @@ public class RiskyRisk extends Game {
     private final MainMenuView mainMenuView;
     private final TutorialView tutorialView;
     private final WinView winView;
+    private final StartOfflineView startOfflineView;
     private final GameView gameView;
     private final SignInView signInView;
 
@@ -29,6 +31,7 @@ public class RiskyRisk extends Game {
         mainMenuView = new MainMenuView(this, gpgsClient);
         tutorialView = new TutorialView(this);
         winView = new WinView(this);
+        startOfflineView = new StartOfflineView(this, gpgsClient);
         gameView = new GameView(this, gpgsClient); // the game should not be handing out the client, instead the
         // client should be its own singleton model
 
@@ -59,6 +62,10 @@ public class RiskyRisk extends Game {
 
             case TUTORIAL:
                 setScreen(tutorialView);
+                break;
+
+            case START_OFFLINE:
+                setScreen(startOfflineView);
                 break;
 
             case GAME:
@@ -113,6 +120,7 @@ public class RiskyRisk extends Game {
     public enum ScreenEnum {
         MAIN_MENU,
         TUTORIAL,
+        START_OFFLINE,
         GAME,
         SIGN_IN,
         WIN,

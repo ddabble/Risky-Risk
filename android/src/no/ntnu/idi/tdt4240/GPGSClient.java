@@ -91,6 +91,8 @@ public class GPGSClient implements IGPGSClient {
         mActivity = activity;
         mView = view;
         mGoogleSignInClient = GoogleSignIn.getClient(mActivity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+
+        mTurnData = new RiskyTurn();
     }
 
     protected void onResume() {
