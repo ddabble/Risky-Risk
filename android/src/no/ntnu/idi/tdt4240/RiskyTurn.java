@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.model.TurnModel;
 import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
@@ -36,7 +37,7 @@ public class RiskyTurn implements IRiskyTurn {
         if (byteArray.length == 1) {
             Log.d(TAG, "Initial setup data was transferred, this game has " + byteArray[0] + " players");
             riskyTurn.numPlayers = byteArray[0];
-            riskyTurn.currentPlayer = 0;
+            riskyTurn.currentPlayer = TurnModel.INSTANCE.getCurrentPlayerID();
         } else { // not initial setup, so just read last two bytes
             riskyTurn.currentPlayer = byteArray[byteArray.length - 2];
             riskyTurn.numPlayers = byteArray[byteArray.length - 1];

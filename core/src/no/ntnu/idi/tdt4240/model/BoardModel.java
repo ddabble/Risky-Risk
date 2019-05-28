@@ -50,7 +50,7 @@ public class BoardModel {
             if (client.getmRiskyTurn().isDataInitialized()) {
                 client.getmRiskyTurn().getTerritoryMapData(territoryMap);
             } else { //init data
-                client.getmRiskyTurn().updateData(territoryMap, 0);
+                client.getmRiskyTurn().updateData(territoryMap, TurnModel.INSTANCE.getCurrentPlayerID());
             }
         }
     }
