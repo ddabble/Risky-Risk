@@ -27,8 +27,8 @@ public class WinView extends ScreenAdapter implements WinObserver {
     private BitmapFont buttonFont;
 
     public WinView(RiskyRisk game) {
-        WinPresenter.addObserver(this);
         this.game = game;
+        WinPresenter.addObserver(this);
     }
 
     @Override

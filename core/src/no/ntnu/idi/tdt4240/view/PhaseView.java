@@ -55,8 +55,8 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
     private Sprite spriteArrowHead;
 
     public PhaseView(BoardView boardView) {
-        PhasePresenter.addObserver(this);
         this.boardView = boardView;
+        PhasePresenter.addObserver(this);
     }
 
     @Override

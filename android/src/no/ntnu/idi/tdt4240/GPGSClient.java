@@ -602,13 +602,13 @@ public class GPGSClient implements IGPGSClient {
     // callback to OnTurnBasedMatchUpdated(), which will show the game
     // UI.
     private void startMatch(TurnBasedMatch match) {
+        mMatch = match;
         mTurnData = new RiskyTurn();
         // Some basic turn data
         mTurnData.data = null;
         Log.d(TAG, "Number of players in this match: " + (match.getParticipantIds().size() + match.getAvailableAutoMatchSlots()));
         mTurnData.setNumPlayers(match.getParticipantIds().size() + match.getAvailableAutoMatchSlots());
         mTurnData.persistNumPlayers();
-        mMatch = match;
 
         String myParticipantId = mMatch.getParticipantId(mPlayerId);
 

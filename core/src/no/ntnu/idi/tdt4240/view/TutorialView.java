@@ -56,24 +56,6 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Render the tutorial slide image
-        int imageWidth = this.stageWidth / 2 - this.stageWidth / 20;
-        int imageHeight = 2 * imageWidth / 3;
-        stage.getBatch().begin();
-        stage.getBatch().draw(this.slideImage,
-                              this.stageWidth - (imageWidth + this.stageWidth / 40f),
-                              this.slideHeader.getTop() - imageHeight,
-                              imageWidth, imageHeight);
-        stage.getBatch().end();
-
-        stage.act(delta);
-        stage.draw();
-    }
-
-    @Override
     public void show() {
         TutorialPresenter.init();
         stage = new Stage(new ScreenViewport());
@@ -90,17 +72,6 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
 
         Color backgroundColor = MainMenuView.BACKGROUND_COLOR;
         Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-    }
-
-    private void updateCurrentSlide(boolean increment) {
-        // Updates and controls the value of updateCurrentSlide
-
-        if (increment && this.currentSlideCounter < this.tutorialSlides.size() - 1) {
-            this.currentSlideCounter += 1;
-        } else if (!increment && this.currentSlideCounter > 0) {
-            this.currentSlideCounter -= 1;
-        }
-        this.updateButtonState();
     }
 
     private void createButtons(Stage stage) {
@@ -168,6 +139,17 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
         });
     }
 
+    private void updateCurrentSlide(boolean increment) {
+        // Updates and controls the value of updateCurrentSlide
+
+        if (increment && this.currentSlideCounter < this.tutorialSlides.size() - 1) {
+            this.currentSlideCounter += 1;
+        } else if (!increment && this.currentSlideCounter > 0) {
+            this.currentSlideCounter -= 1;
+        }
+        this.updateButtonState();
+    }
+
     private void updateButtonState() {
         // Disables the buttons when at the beginning/end of the slides
 
@@ -211,6 +193,24 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
         stage.addActor(header);
         stage.addActor(slideHeader);
         stage.addActor(slideText);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Render the tutorial slide image
+        int imageWidth = this.stageWidth / 2 - this.stageWidth / 20;
+        int imageHeight = 2 * imageWidth / 3;
+        stage.getBatch().begin();
+        stage.getBatch().draw(this.slideImage,
+                              this.stageWidth - (imageWidth + this.stageWidth / 40f),
+                              this.slideHeader.getTop() - imageHeight,
+                              imageWidth, imageHeight);
+        stage.getBatch().end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override

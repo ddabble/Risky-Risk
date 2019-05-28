@@ -25,16 +25,16 @@ public class SettingsModel {
         prefs = Gdx.app.getPreferences(FILENAME);
     }
 
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
     public static void setNumPlayers(int numPlayers) {
         if (numPlayers != MathUtils.clamp(numPlayers, MIN_NUM_PLAYERS, MAX_NUM_PLAYERS))
             throw new IllegalArgumentException("The number of players has to be within the range "
                                                + "[" + MIN_NUM_PLAYERS + ", " + MAX_NUM_PLAYERS + "]!");
 
         INSTANCE.numPlayers = numPlayers;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
     }
 
     public void setString(String key, String value) {

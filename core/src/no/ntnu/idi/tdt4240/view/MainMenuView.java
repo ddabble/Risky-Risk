@@ -40,9 +40,10 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
     private boolean shouldStopMusicOnHide = true;
 
     public MainMenuView(RiskyRisk game, IGPGSClient gpgsClient) {
-        MenuPresenter.addObserver(this);
         this.game = game;
         this.gpgsClient = gpgsClient;
+
+        MenuPresenter.addObserver(this);
     }
 
     @Override

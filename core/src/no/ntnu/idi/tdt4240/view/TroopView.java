@@ -46,9 +46,9 @@ public class TroopView extends ApplicationAdapter implements TroopObserver {
     private Territory selectedTerritory;
 
     public TroopView(BoardView boardView) {
+        this.boardView = boardView;
         BoardPresenter.addObserver(this);
         PhasePresenter.addObserver(this);
-        this.boardView = boardView;
     }
 
     @Override

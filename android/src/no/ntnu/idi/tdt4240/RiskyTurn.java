@@ -39,8 +39,8 @@ public class RiskyTurn implements IRiskyTurn {
             riskyTurn.numPlayers = byteArray[0];
             riskyTurn.currentPlayer = TurnModel.INSTANCE.getCurrentPlayerID();
         } else { // not initial setup, so just read last two bytes
-            riskyTurn.currentPlayer = byteArray[byteArray.length - 2];
             riskyTurn.numPlayers = byteArray[byteArray.length - 1];
+            riskyTurn.currentPlayer = byteArray[byteArray.length - 2];
         }
         System.out.println("Byte array received looks like this:");
         System.out.println(Arrays.toString(byteArray));

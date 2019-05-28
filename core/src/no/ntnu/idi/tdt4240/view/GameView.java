@@ -14,10 +14,10 @@ import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 
 public class GameView extends ScreenAdapter implements GameObserver {
-    private final RiskyRisk game;
     private static final float WORLD_WIDTH = 100;
     private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9FF);
 
+    private final RiskyRisk game;
     private final IGPGSClient client;
 
     private Music gameThemeMusic;
@@ -31,26 +31,28 @@ public class GameView extends ScreenAdapter implements GameObserver {
 
     public GameView(RiskyRisk game, IGPGSClient client) {
         this.game = game; // need this for exiting back to main menu
-        GamePresenter.addObserver(this);
         this.client = client;
 
         boardView = new BoardView();
         troopView = new TroopView(boardView);
         phaseView = new PhaseView(boardView);
         leaderboardView = new LeaderboardView();
+
+        GamePresenter.addObserver(this);
     }
 
     @Override
     public void show() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
+        GamePresenter.init(camera, client);
 
         gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        GamePresenter.init(camera, client);
-        setInputProcessors();
-
         gameThemeMusic.setLooping(true);
         gameThemeMusic.play();
+
+        setInputProcessors();
+
         Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
     }
 

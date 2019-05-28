@@ -24,15 +24,15 @@ public class TurnModel {
         currentPlayerIndex %= playerIDs.size();
     }
 
+    public int getCurrentPlayerID() {
+        return playerIDs.get(currentPlayerIndex);
+    }
+
     public void removePlayer(Integer playerID) {
         playerIDs.remove(playerID);
     }
 
     public int getNumPlayingPlayers() {
         return playerIDs.size();
-    }
-
-    public int getCurrentPlayerID() {
-        return playerIDs.get(currentPlayerIndex);
     }
 }

@@ -68,6 +68,37 @@ public class PhasePresenter {
         }
     }
 
+    private void updateRenderedCurrentPlayer() {
+        // update rendered current player label and color
+        for (PhaseObserver observer : phaseObservers) {
+            observer.onNextPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
+                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
+        }
+    }
+
+    /**
+     * Updates the leaderboard when a player has conquered another player's territory.
+     */
+    private void updateLeaderboard() {
+        Map<Integer, Set<Territory>> territoriesPerPlayer = MultiplayerModel.INSTANCE.getTerritoriesPerPlayer();
+
+        Map<Integer, Integer> numTerritoriesPerPlayer = new HashMap<>(territoriesPerPlayer.size());
+        for (Map.Entry<Integer, Set<Territory>> entry : territoriesPerPlayer.entrySet())
+            numTerritoriesPerPlayer.put(entry.getKey(), entry.getValue().size());
+
+        List<Map.Entry<Integer, Integer>> numTerritoriesPerPlayer_sorted = new ArrayList<>(numTerritoriesPerPlayer.entrySet());
+        Collections.sort(numTerritoriesPerPlayer_sorted, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                // Sort with decreasing order
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        for (LeaderboardObserver observer : leaderboardObservers)
+            observer.updateLeaderboard(numTerritoriesPerPlayer_sorted);
+    }
+
     public void onMapRenderingChanged() {
         for (TroopObserver observer : troopObservers)
             observer.onMapRenderingChanged();
@@ -113,6 +144,12 @@ public class PhasePresenter {
         deselectTerritories();
     }
 
+    private void removePhaseButtons() {
+        for (PhaseObserver observer : phaseObservers) {
+            observer.removePhaseButtons();
+        }
+    }
+
     public void nextPhaseButtonClicked() {
         removePhaseButtons();
         if (PhaseModel.INSTANCE.getPhase().getEnum() == PhaseEnum.ATTACK)
@@ -147,14 +184,6 @@ public class PhasePresenter {
         deselectTerritories();
     }
 
-    private void updateRenderedCurrentPlayer() {
-        // update rendered current player label and color
-        for (PhaseObserver observer : phaseObservers) {
-            observer.onNextPlayer(TurnModel.INSTANCE.getCurrentPlayerID(),
-                                  MultiplayerModel.INSTANCE.getPlayerColor(TurnModel.INSTANCE.getCurrentPlayerID()));
-        }
-    }
-
     private void cancelFortify() {
         PhaseModel.FortifyPhase phase = (PhaseModel.FortifyPhase)PhaseModel.INSTANCE.getPhase();
         phase.clearTerritorySelection();
@@ -178,12 +207,6 @@ public class PhasePresenter {
                 removePhaseButtons();
                 deselectTerritories();
             }
-        }
-    }
-
-    private void removePhaseButtons() {
-        for (PhaseObserver observer : phaseObservers) {
-            observer.removePhaseButtons();
         }
     }
 
@@ -255,33 +278,6 @@ public class PhasePresenter {
         System.out.println(" - Player" + winner[0] + " won this fight. - ");
     }
 
-    public void exitToMainMenuButtonClicked() {
-        GamePresenter.INSTANCE.exitToMainMenuButtonClicked();
-    }
-
-    /**
-     * Updates the leaderboard when a player has conquered another player's territory.
-     */
-    private void updateLeaderboard() {
-        Map<Integer, Set<Territory>> territoriesPerPlayer = MultiplayerModel.INSTANCE.getTerritoriesPerPlayer();
-
-        Map<Integer, Integer> numTerritoriesPerPlayer = new HashMap<>(territoriesPerPlayer.size());
-        for (Map.Entry<Integer, Set<Territory>> entry : territoriesPerPlayer.entrySet())
-            numTerritoriesPerPlayer.put(entry.getKey(), entry.getValue().size());
-
-        List<Map.Entry<Integer, Integer>> numTerritoriesPerPlayer_sorted = new ArrayList<>(numTerritoriesPerPlayer.entrySet());
-        Collections.sort(numTerritoriesPerPlayer_sorted, new Comparator<Map.Entry<Integer, Integer>>() {
-            @Override
-            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-                // Sort with decreasing order
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
-
-        for (LeaderboardObserver observer : leaderboardObservers)
-            observer.updateLeaderboard(numTerritoriesPerPlayer_sorted);
-    }
-
     public void onTerritoryClicked(Territory territory) {
         //PhaseModel.INSTANCE.getPhase().territoryClicked(territory); //update the model
         // update the view
@@ -347,6 +343,10 @@ public class PhasePresenter {
                     observer.onSelectedTerritoriesChange(fortifyPhase.getSelectedFrom(), fortifyPhase.getSelectedTo());
                 break;
         }
+    }
+
+    public void exitToMainMenuButtonClicked() {
+        GamePresenter.INSTANCE.exitToMainMenuButtonClicked();
     }
 
     public static void reset() {

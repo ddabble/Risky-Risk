@@ -39,72 +39,6 @@ public class UIStyle {
         return Gdx.graphics.getHeight() / 24;
     }
 
-    public TextButton createTutorialButton(String text, Color fontColor) {
-        return createTextButton(text, tutorialSlideTextFont, fontColor);
-    }
-
-    public TextButton createTextButton(String text) {
-        return createTextButton(text, standardButtonFont);
-    }
-
-    public TextButton createTextButton(String text, BitmapFont font) {
-        return createTextButton(text, font, null);
-    }
-
-    public TextButton createTextButton(String text, BitmapFont font, Color fontColor) {
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(this.textButtonStyle);
-        if (fontColor != null)
-            textButtonStyle.fontColor = fontColor;
-
-        TextButton textButton = new TextButton(text, textButtonStyle);
-        textButton.setLabel(createLabel(text, font, null));
-        return textButton;
-    }
-
-    public Label createTutorialHeaderLabel(String text, Color fontColor) {
-        return createLabel(text, tutorialHeaderFont, fontColor);
-    }
-
-    public Label createTutorialSlideHeaderLabel(String text, Color fontColor) {
-        return createLabel(text, tutorialSlideHeaderFont, fontColor);
-    }
-
-    public Label createTutorialSlideTextLabel(String text, Color fontColor) {
-        return createLabel(text, tutorialSlideTextFont, fontColor);
-    }
-
-    public Label createLeaderboardLabel(String text) {
-        return createLabel(text, leaderboardFont, null);
-    }
-
-    public Label createInGameLabel(String text) {
-        return createLabel(text, inGameLabelFont, null);
-    }
-
-    public Label createPlayerColorableLabel(String text) {
-        return createLabel(text, inGamePlayerColorableFont, null);
-    }
-
-    public Label createLabel(String text) {
-        return createLabel(text, null, null);
-    }
-
-    private Label createLabel(String text, BitmapFont font, Color fontColor) {
-        Label.LabelStyle labelStyle = new Label.LabelStyle(this.labelStyle);
-        if (font != null)
-            labelStyle.font = font;
-        if (fontColor != null)
-            labelStyle.fontColor = fontColor;
-
-        return createLabel(text, labelStyle);
-    }
-
-    public Label createLabel(String text, Label.LabelStyle style) {
-        Label label = new Label(text, style);
-        label.setAlignment(Align.center);
-        return label;
-    }
-
     public static void init() {
         INSTANCE._init();
     }
@@ -174,6 +108,72 @@ public class UIStyle {
         textStyle.font = troopNumFont;
         textStyle.fontColor = fontColor;
         return textStyle;
+    }
+
+    public Label createTutorialHeaderLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialHeaderFont, fontColor);
+    }
+
+    public Label createTutorialSlideHeaderLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialSlideHeaderFont, fontColor);
+    }
+
+    public Label createTutorialSlideTextLabel(String text, Color fontColor) {
+        return createLabel(text, tutorialSlideTextFont, fontColor);
+    }
+
+    public Label createLeaderboardLabel(String text) {
+        return createLabel(text, leaderboardFont, null);
+    }
+
+    public Label createInGameLabel(String text) {
+        return createLabel(text, inGameLabelFont, null);
+    }
+
+    public Label createPlayerColorableLabel(String text) {
+        return createLabel(text, inGamePlayerColorableFont, null);
+    }
+
+    public Label createLabel(String text) {
+        return createLabel(text, null, null);
+    }
+
+    private Label createLabel(String text, BitmapFont font, Color fontColor) {
+        Label.LabelStyle labelStyle = new Label.LabelStyle(this.labelStyle);
+        if (font != null)
+            labelStyle.font = font;
+        if (fontColor != null)
+            labelStyle.fontColor = fontColor;
+
+        return createLabel(text, labelStyle);
+    }
+
+    public Label createLabel(String text, Label.LabelStyle style) {
+        Label label = new Label(text, style);
+        label.setAlignment(Align.center);
+        return label;
+    }
+
+    public TextButton createTutorialButton(String text, Color fontColor) {
+        return createTextButton(text, tutorialSlideTextFont, fontColor);
+    }
+
+    public TextButton createTextButton(String text) {
+        return createTextButton(text, standardButtonFont);
+    }
+
+    public TextButton createTextButton(String text, BitmapFont font) {
+        return createTextButton(text, font, null);
+    }
+
+    public TextButton createTextButton(String text, BitmapFont font, Color fontColor) {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(this.textButtonStyle);
+        if (fontColor != null)
+            textButtonStyle.fontColor = fontColor;
+
+        TextButton textButton = new TextButton(text, textButtonStyle);
+        textButton.setLabel(createLabel(text, font, null));
+        return textButton;
     }
 
     public static void dispose() {
