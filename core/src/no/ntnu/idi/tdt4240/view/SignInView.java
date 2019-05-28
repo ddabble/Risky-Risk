@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,7 +19,6 @@ import no.ntnu.idi.tdt4240.view.data.UIStyle;
 public class SignInView extends ScreenAdapter {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
-    private final OrthographicCamera camera;
 
     private Stage stage;
     private Table table;
@@ -31,7 +29,6 @@ public class SignInView extends ScreenAdapter {
 
     public SignInView(RiskyRisk game, IGPGSClient gpgsClient) {
         this.game = game;
-        camera = new OrthographicCamera();
         this.gpgsClient = gpgsClient;
 
         //set the sign in attempt handler to handle what happens if sign in fails or succeeds
@@ -56,8 +53,7 @@ public class SignInView extends ScreenAdapter {
     @Override
     public void show() {
         isSignedIn = false;
-        camera.setToOrtho(false, 800, 480);
-        stage = new Stage(new StretchViewport(800, 480, camera));
+        stage = new Stage(new StretchViewport(800, 480));
         table = new Table();
         //table.setDebug(true);
         table.setFillParent(true);

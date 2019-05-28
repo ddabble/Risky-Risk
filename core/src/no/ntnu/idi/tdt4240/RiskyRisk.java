@@ -17,11 +17,11 @@ import no.ntnu.idi.tdt4240.view.data.UIStyle;
 public class RiskyRisk extends Game {
     private final IGPGSClient gpgsClient;
 
-    private MainMenuView mainMenuView;
-    private TutorialView tutorialView;
-    private WinView winView;
-    private GameView gameView;
-    private SignInView signInView;
+    private final MainMenuView mainMenuView;
+    private final TutorialView tutorialView;
+    private final WinView winView;
+    private final GameView gameView;
+    private final SignInView signInView;
 
     public RiskyRisk(IGPGSClient gpgsClient) {
         this.gpgsClient = gpgsClient;
@@ -31,7 +31,6 @@ public class RiskyRisk extends Game {
         winView = new WinView(this);
         gameView = new GameView(this, gpgsClient); // the game should not be handing out the client, instead the
         // client should be its own singleton model
-        signInView = null;
 
         //gpgsClient needs several callbacks to be hooked up to properly function
         //these are added here and inside signInView.
@@ -48,7 +47,8 @@ public class RiskyRisk extends Game {
                     //setScreen(ScreenEnum.GAME);
                 }
             });
-        }
+        } else
+            signInView = null;
     }
 
     public void setScreen(ScreenEnum screen) {
@@ -90,11 +90,11 @@ public class RiskyRisk extends Game {
 
         // Calls `show()` on views
         switch (Gdx.app.getType()) {
-            case Android: // android specific code
+            case Android:
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
 
-            case Desktop: // desktop specific code
+            case Desktop:
                 setScreen(ScreenEnum.MAIN_MENU);
                 break;
 

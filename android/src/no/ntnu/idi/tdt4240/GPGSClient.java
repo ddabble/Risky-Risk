@@ -723,6 +723,7 @@ public class GPGSClient implements IGPGSClient {
                 // so we allow this to continue.
                 showWarning("Complete!",
                             "This game is over; someone finished it!  You can only finish it now.");
+                break;
         }
 
         // OK, it's active. Check on turn status.
@@ -740,6 +741,7 @@ public class GPGSClient implements IGPGSClient {
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good initiative!",
                             "Still waiting for invitations.\n\nBe patient!");
+                break;
         }
 
         mTurnData = null;
@@ -863,6 +865,7 @@ public class GPGSClient implements IGPGSClient {
                 showErrorMessage("unexpected_status");
                 Log.d(TAG, "Did not have warning or string to deal with: "
                            + statusCode);
+                break;
         }
 
         return false;

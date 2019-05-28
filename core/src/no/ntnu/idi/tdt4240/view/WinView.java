@@ -3,7 +3,6 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,7 +19,6 @@ import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 public class WinView extends ScreenAdapter implements WinObserver {
     private final RiskyRisk game;
-    private final OrthographicCamera camera;
 
     private Texture background;
     private Stage stage;
@@ -31,13 +29,11 @@ public class WinView extends ScreenAdapter implements WinObserver {
     public WinView(RiskyRisk game) {
         WinPresenter.addObserver(this);
         this.game = game;
-        camera = new OrthographicCamera();
     }
 
     @Override
     public void show() {
-        camera.setToOrtho(false, 800, 400);
-        stage = new Stage(new StretchViewport(800, 400, camera));
+        stage = new Stage(new StretchViewport(800, 400));
         background = new Texture("youwin.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
@@ -56,8 +52,7 @@ public class WinView extends ScreenAdapter implements WinObserver {
         table = new Table();
         //table.setDebug(true);
         table.setFillParent(true);
-        table.setX(0);
-        table.setY(0);
+        table.setPosition(0, 0);
         stage.addActor(table);
         table.add(winButton).width(150).height(50).pad(20);
         // Sign out

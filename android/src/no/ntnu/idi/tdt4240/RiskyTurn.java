@@ -47,6 +47,7 @@ public class RiskyTurn implements IRiskyTurn {
         return riskyTurn;
     }
 
+    @Override
     public void updateData(TerritoryMap map, int currentPlayer) {
         int index = 0;
         //this technically only needs to happen for the first player
@@ -61,24 +62,29 @@ public class RiskyTurn implements IRiskyTurn {
         data[map.getAllTerritories().size() * 2 + 1] = (byte)numPlayers;
     }
 
+    @Override
     public int getNumPlayers() {
         return numPlayers;
     }
 
+    @Override
     public void setNumPlayers(int numPlayers) {
         this.numPlayers = numPlayers;
     }
 
+    @Override
     public void persistNumPlayers() {
         data = new byte[1];
         data[0] = (byte)numPlayers;
     }
 
+    @Override
     public int getCurrentPlayer() {
         return currentPlayer;
     }
 
     //this gets a reference to TerritoryMap and it just changes that reference, so no need to return a value ;^)
+    @Override
     public void getTerritoryMapData(TerritoryMap map) {
         int index = 0;
         for (Territory territory : map.getAllTerritories()) {
@@ -88,10 +94,12 @@ public class RiskyTurn implements IRiskyTurn {
         }
     }
 
+    @Override
     public boolean isDataInitialized() {
         return data != null && data.length != 0 && data.length != 1;
     }
 
+    @Override
     public int getTurnCounter() {
         return turnCounter;
     }

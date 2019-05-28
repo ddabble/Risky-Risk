@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import no.ntnu.idi.tdt4240.model.data.Continent;
-import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.model.AttackModel;
 import no.ntnu.idi.tdt4240.model.BattleModel;
 import no.ntnu.idi.tdt4240.model.BoardModel;
@@ -22,6 +20,8 @@ import no.ntnu.idi.tdt4240.model.PhaseModel;
 import no.ntnu.idi.tdt4240.model.TerritoryModel;
 import no.ntnu.idi.tdt4240.model.TroopModel;
 import no.ntnu.idi.tdt4240.model.TurnModel;
+import no.ntnu.idi.tdt4240.model.data.Continent;
+import no.ntnu.idi.tdt4240.model.data.Territory;
 import no.ntnu.idi.tdt4240.observer.LeaderboardObserver;
 import no.ntnu.idi.tdt4240.observer.PhaseObserver;
 import no.ntnu.idi.tdt4240.observer.TroopObserver;
@@ -51,9 +51,8 @@ public class PhasePresenter {
             updatePhase(observer);
         }
 
-        for (LeaderboardObserver observer : leaderboardObservers) {
+        for (LeaderboardObserver observer : leaderboardObservers)
             observer.create();
-        }
 
         updateRenderedCurrentPlayer();
         updateLeaderboard();
@@ -192,10 +191,9 @@ public class PhasePresenter {
         int currentPlayerID = TurnModel.INSTANCE.getCurrentPlayerID();
         Set<Territory> possibleContinent = MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(currentPlayerID);
 
-        boolean hasContinent;
         int extraTroops = 0;
         for (Continent continent : TerritoryModel.getTerritoryMap().getAllContinents()) {
-            hasContinent = true;
+            boolean hasContinent = true;
             for (Territory territory : continent.getTerritories()) {
                 if (!possibleContinent.contains(territory))
                     hasContinent = false;
@@ -230,11 +228,11 @@ public class PhasePresenter {
         toTerritory.setNumTroops(winner[1]);
         fromTerritory.setNumTroops(1);
 
-        // update leaderboard
-        // if the attacker won the fight.
+        // update leaderboard if the attacker won the fight
         if (toTerritory.getOwnerID() == fromTerritory.getOwnerID()) {
             MultiplayerModel.INSTANCE.onTerritoryChangedOwner(defenderID, winner[0], toTerritory);
             updateLeaderboard();
+            BoardPresenter.INSTANCE.onTerritoryChangedOwner(toTerritory);
 
             // Remove player from taking turns if they own 0 territories
             if (MultiplayerModel.INSTANCE.getTerritoriesOwnedByPlayer(defenderID).size() == 0) {
@@ -250,7 +248,7 @@ public class PhasePresenter {
             observer.onTerritoryChangeNumTroops(fromTerritory);
             observer.onTerritoryChangeNumTroops(toTerritory);
         }
-        BoardPresenter.INSTANCE.onTerritoryChangedOwner(toTerritory);
+
         //Clears the attack HashMap after the attack has gone through.
         AttackModel.INSTANCE.cancelAttack();
         deselectTerritories();

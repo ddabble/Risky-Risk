@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import no.ntnu.idi.tdt4240.model.data.Territory;
-import no.ntnu.idi.tdt4240.util.TerritoryMap;
 
 public class MultiplayerModel {
     public static final MultiplayerModel INSTANCE = new MultiplayerModel();
@@ -69,13 +68,14 @@ public class MultiplayerModel {
             throw new IllegalArgumentException("Number of players can't be greater than the number of defined colors!");
         this.numPlayers = numPlayers;
 
-        playerIDs = generatePlayerIDs();
+        playerIDs = generatePlayerIDs(numPlayers);
         assignPlayerColors();
-        assignTerritoryOwners(TerritoryModel.getTerritoryMap());
-        initLeaderboard();
+        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
+        assignTerritoryOwners(territories);
+        initLeaderboard(territories);
     }
 
-    private List<Integer> generatePlayerIDs() {
+    private static List<Integer> generatePlayerIDs(int numPlayers) {
         List<Integer> playerIDs = new ArrayList<>(numPlayers);
         for (int i = 0; i < numPlayers; i++)
             playerIDs.add(i);
@@ -100,8 +100,7 @@ public class MultiplayerModel {
         return colorList;
     }
 
-    private void assignTerritoryOwners(TerritoryMap territoryMap) {
-        List<Territory> territories = territoryMap.getAllTerritories();
+    private void assignTerritoryOwners(List<Territory> territories) {
         final int numTerritories = territories.size();
 
         // Fill the list with an approximately equal amount of each player ID, then shuffle the list
@@ -116,10 +115,9 @@ public class MultiplayerModel {
         }
     }
 
-    private void initLeaderboard() {
+    private void initLeaderboard(List<Territory> territories) {
         playerID_territoriesMap = new HashMap<>(numPlayers);
 
-        List<Territory> territories = TerritoryModel.getTerritoryMap().getAllTerritories();
         for (Territory territory : territories) {
             Set<Territory> ownerTerritories = playerID_territoriesMap.get(territory.getOwnerID());
             if (ownerTerritories != null)

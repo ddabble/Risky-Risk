@@ -8,7 +8,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -29,7 +28,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
-    private final OrthographicCamera camera;
 
     private Music mainMenuTheme;
 
@@ -45,13 +43,11 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         MenuPresenter.addObserver(this);
         this.game = game;
         this.gpgsClient = gpgsClient;
-        camera = new OrthographicCamera();
     }
 
     @Override
     public void show() {
-        camera.setToOrtho(false, 800, 480);
-        stage = new Stage(new StretchViewport(800, 480, camera));
+        stage = new Stage(new StretchViewport(800, 480));
         background = new Texture("background.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
@@ -59,8 +55,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         table = new Table();
         //table.setDebug(true);
         table.setFillParent(true);
-        table.setX(0);
-        table.setY(0);
+        table.setPosition(0, 0);
 
         createButtons();
 
@@ -160,8 +155,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         } else {
             table.add(signInButton).width(150).height(50).pad(20);
         }
-
-        //table.row();
     }
 
     @Override

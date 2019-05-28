@@ -16,7 +16,7 @@ import no.ntnu.idi.tdt4240.presenter.GamePresenter;
 public class GameView extends ScreenAdapter implements GameObserver {
     private final RiskyRisk game;
     private static final float WORLD_WIDTH = 100;
-    private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9 << 8);
+    private static final Color BACKGROUND_COLOR = new Color(0xBBD3F9FF);
 
     private final IGPGSClient client;
 

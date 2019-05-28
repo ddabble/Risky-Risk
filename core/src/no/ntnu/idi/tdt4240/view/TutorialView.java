@@ -107,7 +107,7 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
         final float btnHeight = stageHeight / 11f;
         final float btnWidth = stageWidth / 5.5f;
 
-        Color fontColor = new Color(Color.BLACK);
+        final Color fontColor = new Color(Color.BLACK);
 
         // Main menu button
         this.mainMenuButton = UIStyle.INSTANCE.createTutorialButton("Back to Main Menu", fontColor);

@@ -55,9 +55,8 @@ public class Utils {
     }
 
     public static void setSizeOfSprite(Sprite sprite, float spriteSize_mapRatio) {
-        final float spriteWidth = GameView.getWorldWidth() * spriteSize_mapRatio;
-        final float spriteHeight = spriteWidth;
-        sprite.setSize(spriteWidth, spriteHeight);
+        final float spriteSize = GameView.getWorldWidth() * spriteSize_mapRatio;
+        sprite.setSize(spriteSize, spriteSize);
         sprite.setOriginCenter();
     }
 
