@@ -80,6 +80,7 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
         MainMenuView.setInputProcessors_mainMenuSubViews(stage, game);
 
         this.slideImage = new Texture(this.tutorialSlides.get(0).get("image"));
+        this.currentSlideCounter = 0;
 
         this.stageWidth = Gdx.graphics.getWidth();
         this.stageHeight = Gdx.graphics.getHeight();
@@ -120,7 +121,6 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
         this.previousButton.setPosition(this.stageWidth - 2 * (btnWidth + this.stageWidth / 100f),
                                         this.stageHeight / 50f);
         this.previousButton.setSize(btnWidth, btnHeight);
-        this.previousButton.setTouchable(Touchable.disabled);
 
         // Next button
         this.nextButton = UIStyle.INSTANCE.createTutorialButton("Next", fontColor);
@@ -128,7 +128,18 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
                                     this.stageHeight / 50f);
         this.nextButton.setSize(btnWidth, btnHeight);
 
-        // Add event listeners to buttons
+
+        this.updateButtonState();
+        this.setButtonListeners();
+
+        // Add buttons to stage
+        stage.addActor(mainMenuButton);
+        stage.addActor(previousButton);
+        stage.addActor(nextButton);
+
+    } // End createButtons()
+
+    private void setButtonListeners() {
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -155,13 +166,7 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
                 slideImage = new Texture(tutorialSlides.get(currentSlideCounter).get("image"));
             }
         });
-
-        // Add buttons to stage
-        stage.addActor(mainMenuButton);
-        stage.addActor(previousButton);
-        stage.addActor(nextButton);
-
-    } // End createButtons()
+    }
 
     private void updateButtonState() {
         // Disables the buttons when at the beginning/end of the slides
@@ -177,8 +182,6 @@ public class TutorialView extends ScreenAdapter implements TutorialObserver {
     }
 
     private void createTextFields(Stage stage) {
-        this.currentSlideCounter = 0;
-
         // Header text
         this.header = UIStyle.INSTANCE.createTutorialHeaderLabel("Tutorial", FONT_COLOR);
         this.header.setPosition(this.stageWidth / 2f,
