@@ -39,6 +39,8 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     private BitmapFont buttonFont;
 
+    private boolean shouldStopMusicOnHide = true;
+
     public MainMenuView(RiskyRisk game, IGPGSClient gpgsClient) {
         MenuPresenter.addObserver(this);
         this.game = game;
@@ -64,6 +66,11 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
         stage.addActor(table);
 
+        if (mainMenuTheme == null || !mainMenuTheme.isPlaying()) {
+            mainMenuTheme = Gdx.audio.newMusic(Gdx.files.internal("menutheme.mp3"));
+            mainMenuTheme.setLooping(true);
+            mainMenuTheme.play();
+        }
 
         Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
     }
@@ -85,7 +92,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         offlineButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                mainMenuTheme.dispose();
                 game.setScreen(RiskyRisk.ScreenEnum.GAME);
             }
         });
@@ -96,6 +102,8 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
             public void clicked(InputEvent event, float x, float y) {
                 if (gpgsClient != null) {
                     gpgsClient.signOut();
+                    shouldStopMusicOnHide = false;
+                    // Reload main menu to update buttons
                     game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
                 }
             }
@@ -104,6 +112,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         //sign in
         signInButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                shouldStopMusicOnHide = false;
                 game.setScreen(RiskyRisk.ScreenEnum.SIGN_IN);
             }
         });
@@ -132,6 +141,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                shouldStopMusicOnHide = false;
                 game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
             }
         });
@@ -150,9 +160,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         } else {
             table.add(signInButton).width(150).height(50).pad(20);
         }
-        mainMenuTheme = Gdx.audio.newMusic(Gdx.files.internal("menutheme.mp3"));
-        mainMenuTheme.setLooping(true);
-        mainMenuTheme.play();
 
         //table.row();
     }
@@ -175,6 +182,11 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     @Override
     public void hide() {
+        if (shouldStopMusicOnHide)
+            mainMenuTheme.dispose();
+        else
+            shouldStopMusicOnHide = true;
+
         buttonFont.dispose();
         table.clear();
         stage.dispose();
