@@ -13,9 +13,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter implements BoardObserver {
     private static final float CAMERA_MIN_ZOOM = 0.1f;
+    private static final float CAMERA_FRICTION_COEFFICIENT = GameView.getWorldWidth() * 0.5f;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -38,6 +41,10 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     private ShaderProgram mapShader;
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
+
+    private Vector2 flingVelocity;
+    private long flingStartTime;
+    private float flingDuration;
 
     public BoardView() {
         BoardPresenter.addObserver(this);
@@ -89,6 +96,17 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             float initialPinchZoom;
             float initialPinchPointerWorldDistance;
 
+            long lastPinchStop = TimeUtils.millis();
+
+            @Override
+            public boolean touchDown(float touchX, float touchY, int pointer, int button) {
+                if (button != Input.Buttons.LEFT) // Only for desktop
+                    return false;
+                stopFling();
+
+                return true;
+            }
+
             @Override
             public boolean tap(float touchX, float touchY, int count, int button) {
                 if (button != Input.Buttons.LEFT) // Only for desktop
@@ -105,6 +123,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
             @Override
             public boolean pan(float touchX, float touchY, float deltaX, float deltaY) {
+                stopFling();
+
                 Vector2 touchWorldDelta = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
                 ensureCameraIsWithinMap();
@@ -115,8 +135,16 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
-                System.out.println("Fling: " + velocityX + ",\t" + velocityY);
-                return false;
+                if (button != Input.Buttons.LEFT) // Only for desktop
+                    return false;
+                // Eliminates jerky flings right after stopping pinching
+                if (TimeUtils.timeSinceMillis(lastPinchStop) < 100)
+                    return false;
+
+                flingVelocity = Utils.touchDistToWorldDist(velocityX, velocityY, camera);
+                flingStartTime = TimeUtils.millis();
+                flingDuration = flingVelocity.len() / CAMERA_FRICTION_COEFFICIENT;
+                return true;
             }
 
             @Override
@@ -126,6 +154,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     lastPinchPointer2 = initialPointer2;
                     initialPinchZoom = camera.zoom;
                     initialPinchPointerWorldDistance = Utils.touchToWorldPos(initialPointer1, camera).dst(Utils.touchToWorldPos(initialPointer2, camera));
+
+                    stopFling();
                 }
 
                 float currentPinchPointerWorldDistance = Utils.touchToWorldPos(currentPointer1, camera).dst(Utils.touchToWorldPos(currentPointer2, camera));
@@ -152,6 +182,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             public void pinchStop() {
                 lastPinchPointer1 = null;
                 lastPinchPointer2 = null;
+                lastPinchStop = TimeUtils.millis();
             }
         }));
 
@@ -159,6 +190,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean scrolled(int amount) {
+                stopFling();
+
                 camera.zoom += amount / 10f;
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
                 camera.update();
@@ -166,6 +199,11 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 return true;
             }
         });
+    }
+
+    private void stopFling() {
+        if (flingVelocity != null)
+            flingVelocity = null;
     }
 
     private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
@@ -190,15 +228,17 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         Vector3 frustumCorner_distFromMapEdge = new Vector3(mapSprite.getWidth(), mapSprite.getHeight(), 0)
                 .sub(camera.frustum.planePoints[2]);
 
-        if (frustumCorner_distToOrigin.x > 0)
+        if (frustumCorner_distToOrigin.x > 0) {
             camera.translate(frustumCorner_distToOrigin.x, 0);
-        if (frustumCorner_distToOrigin.y > 0)
-            camera.translate(0, frustumCorner_distToOrigin.y);
-
-        if (frustumCorner_distFromMapEdge.x < 0)
+        } else if (frustumCorner_distFromMapEdge.x < 0) {
             camera.translate(frustumCorner_distFromMapEdge.x, 0);
-        if (frustumCorner_distFromMapEdge.y < 0)
+        }
+
+        if (frustumCorner_distToOrigin.y > 0) {
+            camera.translate(0, frustumCorner_distToOrigin.y);
+        } else if (frustumCorner_distFromMapEdge.y < 0) {
             camera.translate(0, frustumCorner_distFromMapEdge.y);
+        }
 
         camera.update();
     }
@@ -227,12 +267,31 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
     @Override
     public void render() {
+        if (flingVelocity != null)
+            handleCameraFling();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         float[] playerColorLookup = PLAYER_COLOR_LOOKUP.getFloatArray();
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
+    }
+
+    private void handleCameraFling() {
+        final float deltaTime = Gdx.graphics.getDeltaTime();
+        camera.translate(new Vector2(-flingVelocity.x * deltaTime,
+                                     -flingVelocity.y * deltaTime));
+
+        ensureCameraIsWithinMap();
+        PhasePresenter.INSTANCE.onMapRenderingChanged();
+
+        float timeSinceFlingStart = TimeUtils.timeSinceMillis(flingStartTime) / 1000f;
+        float flingDurationPercentage = timeSinceFlingStart / flingDuration;
+        flingVelocity.interpolate(Vector2.Zero, flingDurationPercentage, Interpolation.smooth);
+
+        if (flingDurationPercentage >= 1f)
+            flingVelocity = null;
     }
 
     @Override
