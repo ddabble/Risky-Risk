@@ -31,6 +31,10 @@ import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter implements BoardObserver {
+    enum OffsetDirection {
+        HORIZONTAL, VERTICAL
+    }
+
     private static final float CAMERA_MIN_ZOOM = 0.1f;
     private static final float CAMERA_FRICTION_COEFFICIENT = GameView.getWorldWidth() * 0.5f;
 
@@ -221,26 +225,35 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         return texturePos;
     }
 
-    private void ensureCameraIsWithinMap() {
+    private OffsetDirection ensureCameraIsWithinMap() {
         camera.update();
 
         Vector3 frustumCorner_distToOrigin = new Vector3().sub(camera.frustum.planePoints[0]);
         Vector3 frustumCorner_distFromMapEdge = new Vector3(mapSprite.getWidth(), mapSprite.getHeight(), 0)
                 .sub(camera.frustum.planePoints[2]);
 
+        OffsetDirection offsetDirection = null;
+
         if (frustumCorner_distToOrigin.x > 0) {
             camera.translate(frustumCorner_distToOrigin.x, 0);
+            offsetDirection = OffsetDirection.HORIZONTAL;
         } else if (frustumCorner_distFromMapEdge.x < 0) {
             camera.translate(frustumCorner_distFromMapEdge.x, 0);
+            offsetDirection = OffsetDirection.HORIZONTAL;
         }
 
         if (frustumCorner_distToOrigin.y > 0) {
             camera.translate(0, frustumCorner_distToOrigin.y);
+            offsetDirection = OffsetDirection.VERTICAL;
         } else if (frustumCorner_distFromMapEdge.y < 0) {
             camera.translate(0, frustumCorner_distFromMapEdge.y);
+            offsetDirection = OffsetDirection.VERTICAL;
         }
 
-        camera.update();
+        if (offsetDirection != null)
+            camera.update();
+
+        return offsetDirection;
     }
 
     private void initShader() {
@@ -283,8 +296,23 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         camera.translate(new Vector2(-flingVelocity.x * deltaTime,
                                      -flingVelocity.y * deltaTime));
 
-        ensureCameraIsWithinMap();
+        OffsetDirection offsetDirection = ensureCameraIsWithinMap();
         PhasePresenter.INSTANCE.onMapRenderingChanged();
+        if (offsetDirection != null) {
+            switch (offsetDirection) {
+                case HORIZONTAL:
+                    flingVelocity.x = 0;
+                    break;
+
+                case VERTICAL:
+                    flingVelocity.y = 0;
+                    break;
+            }
+            if (flingVelocity.isZero()) {
+                flingVelocity = null;
+                return;
+            }
+        }
 
         float timeSinceFlingStart = TimeUtils.timeSinceMillis(flingStartTime) / 1000f;
         float flingDurationPercentage = timeSinceFlingStart / flingDuration;
