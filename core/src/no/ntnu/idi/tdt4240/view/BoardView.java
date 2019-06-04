@@ -169,6 +169,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 camera.zoom = initialPinchZoom * initialPinchPointerDistance / currentPinchPointerDistance;
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
 
+                handleOffCenteredZooming(Utils.avg(currentPointer1, currentPointer2));
+
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
                 Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
@@ -198,7 +200,11 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
                 camera.zoom += amount / 10f;
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
-                camera.update();
+
+                handleOffCenteredZooming(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+
+                ensureCameraIsWithinMap();
+
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
                 return true;
             }
@@ -254,6 +260,25 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             camera.update();
 
         return offsetDirection;
+    }
+
+    private void handleOffCenteredZooming(Vector2 zoomPoint) {
+        // Note: camera always zooms in/out from the camera's center
+        Vector3 prevBottomLeftFrustumCorner = Utils.getBottomLeftFrustumCorner(camera);
+        Vector2 zoomPoint_world = Utils.touchToWorldPos(zoomPoint, camera);
+        camera.update();
+        Vector3 frustumEdgeDelta = Utils.getBottomLeftFrustumCorner(camera).sub(prevBottomLeftFrustumCorner);
+
+        Vector3 cameraPos = camera.position;
+        // Has a value in the range [-1, 1];
+        // -1 is on the left frustum edge, 0 is in the camera center, and +1 is on the right frustum edge
+        Vector2 zoomPointOffCenterPercentage = new Vector2((zoomPoint_world.x - prevBottomLeftFrustumCorner.x)
+                                                           / (cameraPos.x - prevBottomLeftFrustumCorner.x) - 1,
+                                                           (zoomPoint_world.y - prevBottomLeftFrustumCorner.y)
+                                                           / (cameraPos.y - prevBottomLeftFrustumCorner.y) - 1);
+
+        camera.translate(zoomPointOffCenterPercentage.x * frustumEdgeDelta.x,
+                         zoomPointOffCenterPercentage.y * frustumEdgeDelta.y);
     }
 
     private void initShader() {
