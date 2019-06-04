@@ -3,7 +3,6 @@ package no.ntnu.idi.tdt4240.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +11,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
+import no.ntnu.idi.tdt4240.sound.MusicController;
 
 public class GameView extends ScreenAdapter implements GameObserver {
     private static final float WORLD_WIDTH = 100;
@@ -19,8 +19,6 @@ public class GameView extends ScreenAdapter implements GameObserver {
 
     private final RiskyRisk game;
     private final IGPGSClient client;
-
-    private Music gameThemeMusic;
 
     private final PhaseView phaseView;
     private final BoardView boardView;
@@ -47,9 +45,7 @@ public class GameView extends ScreenAdapter implements GameObserver {
         camera.setToOrtho(false, getWorldWidth(), getWorldHeight());
         GamePresenter.init(camera, client);
 
-        gameThemeMusic = Gdx.audio.newMusic(Gdx.files.internal("gametheme.mp3"));
-        gameThemeMusic.setLooping(true);
-        gameThemeMusic.play();
+        MusicController.INSTANCE.playGameTheme();
 
         setInputProcessors();
 
@@ -80,13 +76,7 @@ public class GameView extends ScreenAdapter implements GameObserver {
         phaseView.dispose();
         troopView.dispose();
         boardView.dispose();
-        gameThemeMusic.dispose();
         GamePresenter.reset();
-    }
-
-    @Override
-    public void dispose() {
-        gameThemeMusic.dispose();
     }
 
     @Override

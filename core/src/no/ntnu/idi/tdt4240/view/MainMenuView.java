@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +20,7 @@ import no.ntnu.idi.tdt4240.RiskyRisk;
 import no.ntnu.idi.tdt4240.controller.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
+import no.ntnu.idi.tdt4240.sound.MusicController;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 public class MainMenuView extends ScreenAdapter implements MenuObserver {
@@ -29,15 +29,11 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
     private final RiskyRisk game;
     private final IGPGSClient gpgsClient;
 
-    private Music mainMenuTheme;
-
     private Texture background;
     private Stage stage;
     private Table table;
 
     private BitmapFont buttonFont;
-
-    private boolean shouldStopMusicOnHide = true;
 
     public MainMenuView(RiskyRisk game, IGPGSClient gpgsClient) {
         this.game = game;
@@ -62,11 +58,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
         stage.addActor(table);
 
-        if (mainMenuTheme == null || !mainMenuTheme.isPlaying()) {
-            mainMenuTheme = Gdx.audio.newMusic(Gdx.files.internal("menutheme.mp3"));
-            mainMenuTheme.setLooping(true);
-            mainMenuTheme.play();
-        }
+        MusicController.INSTANCE.playMainMenuTheme();
 
         Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
     }
@@ -98,7 +90,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
             public void clicked(InputEvent event, float x, float y) {
                 if (gpgsClient != null) {
                     gpgsClient.signOut();
-                    shouldStopMusicOnHide = false;
                     // Reload main menu to update buttons
                     game.setScreen(RiskyRisk.ScreenEnum.MAIN_MENU);
                 }
@@ -108,7 +99,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         //sign in
         signInButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                shouldStopMusicOnHide = false;
                 game.setScreen(RiskyRisk.ScreenEnum.SIGN_IN);
             }
         });
@@ -137,7 +127,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                shouldStopMusicOnHide = false;
                 game.setScreen(RiskyRisk.ScreenEnum.TUTORIAL);
             }
         });
@@ -176,11 +165,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     @Override
     public void hide() {
-        if (shouldStopMusicOnHide)
-            mainMenuTheme.dispose();
-        else
-            shouldStopMusicOnHide = true;
-
         buttonFont.dispose();
         table.clear();
         stage.dispose();
