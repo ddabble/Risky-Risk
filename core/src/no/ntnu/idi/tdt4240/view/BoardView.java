@@ -98,7 +98,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             Vector2 lastPinchPointer1;
             Vector2 lastPinchPointer2;
             float initialPinchZoom;
-            float initialPinchPointerWorldDistance;
+            float initialPinchPointerDistance;
 
             long lastPinchStop = TimeUtils.millis();
 
@@ -157,16 +157,16 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     lastPinchPointer1 = initialPointer1;
                     lastPinchPointer2 = initialPointer2;
                     initialPinchZoom = camera.zoom;
-                    initialPinchPointerWorldDistance = Utils.touchToWorldPos(initialPointer1, camera).dst(Utils.touchToWorldPos(initialPointer2, camera));
+                    initialPinchPointerDistance = initialPointer1.dst(initialPointer2);
 
                     stopFling();
                 }
 
-                float currentPinchPointerWorldDistance = Utils.touchToWorldPos(currentPointer1, camera).dst(Utils.touchToWorldPos(currentPointer2, camera));
+                float currentPinchPointerDistance = currentPointer1.dst(currentPointer2);
 
                 // initialZoom * initialDistance = newZoom * currentDistance
                 //                       newZoom = initialZoom * initialDistance / currentDistance
-                camera.zoom = initialPinchZoom * initialPinchPointerWorldDistance / currentPinchPointerWorldDistance;
+                camera.zoom = initialPinchZoom * initialPinchPointerDistance / currentPinchPointerDistance;
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
 
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
