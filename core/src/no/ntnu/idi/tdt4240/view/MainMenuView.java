@@ -9,11 +9,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
@@ -35,6 +39,10 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     private BitmapFont buttonFont;
 
+    private Texture unmuteIcon;
+    private Texture muteIcon;
+    private TextureRegionDrawable muteButtonImage;
+
     public MainMenuView(RiskyRisk game, IGPGSClient gpgsClient) {
         this.game = game;
         this.gpgsClient = gpgsClient;
@@ -48,6 +56,13 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         background = new Texture("background.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
         Gdx.input.setInputProcessor(stage);
+
+        unmuteIcon = new Texture(Gdx.files.internal("octicons/unmute.png"));
+        muteIcon = new Texture(Gdx.files.internal("octicons/mute.png"));
+        if (MusicController.INSTANCE.isMuted())
+            muteButtonImage = new TextureRegionDrawable(muteIcon);
+        else
+            muteButtonImage = new TextureRegionDrawable(unmuteIcon);
 
         table = new Table();
         //table.setDebug(true);
@@ -64,6 +79,10 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
     }
 
     private void createButtons() {
+        final float buttonWidth = 150;
+        final float buttonHeight = 50;
+        final float buttonPadding = 20;
+
         buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
         float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
         buttonFont.getData().setScale(heightRatio);
@@ -75,6 +94,11 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         Button tutorialButton = UIStyle.INSTANCE.createTextButton("Tutorial", buttonFont);
 
         Button offlineButton = UIStyle.INSTANCE.createTextButton("Offline Game", buttonFont);
+
+        final float muteButtonSize = buttonHeight * 1.25f;
+        ImageButton muteButton = UIStyle.INSTANCE.createImageButton(muteButtonImage, muteButtonSize / 10f);
+        muteButton.setSize(muteButtonSize, muteButtonSize);
+        muteButton.setPosition(stage.getWidth() - buttonPadding, stage.getHeight() - buttonPadding, Align.topRight);
 
         // Sign out
         offlineButton.addListener(new ClickListener() {
@@ -131,6 +155,19 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
             }
         });
 
+        muteButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (MusicController.INSTANCE.isMuted()) {
+                    MusicController.INSTANCE.unmute();
+                    muteButtonImage.setRegion(new TextureRegion(unmuteIcon));
+                } else {
+                    MusicController.INSTANCE.mute();
+                    muteButtonImage.setRegion(new TextureRegion(muteIcon));
+                }
+            }
+        });
+
 
         table.add(offlineButton).width(150).height(50).pad(20);
         table.row();
@@ -145,6 +182,8 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         } else {
             table.add(signInButton).width(150).height(50).pad(20);
         }
+
+        stage.addActor(muteButton);
     }
 
     @Override
@@ -165,6 +204,8 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
     @Override
     public void hide() {
+        muteIcon.dispose();
+        unmuteIcon.dispose();
         buttonFont.dispose();
         table.clear();
         stage.dispose();
