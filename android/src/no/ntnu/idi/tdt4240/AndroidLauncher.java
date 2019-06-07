@@ -16,6 +16,8 @@ public class AndroidLauncher extends AndroidApplication {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        // Keep the screen on
+        config.useWakelock = true;
 
         //For popups
         View view = findViewById(android.R.id.content);
