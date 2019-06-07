@@ -21,6 +21,8 @@ public class MusicController {
     private GameMusic currentlyPlaying;
     private Music currentlyPlayingMusic;
 
+    private boolean isMuted = false;
+
     private MusicController() {}
 
     public void playMainMenuTheme() {
@@ -41,7 +43,22 @@ public class MusicController {
             currentlyPlaying = music;
         }
 
+        if (!isMuted)
+            currentlyPlayingMusic.play();
+    }
+
+    public boolean isMuted() {
+        return isMuted;
+    }
+
+    public void mute() {
+        currentlyPlayingMusic.pause();
+        isMuted = true;
+    }
+
+    public void unmute() {
         currentlyPlayingMusic.play();
+        isMuted = false;
     }
 
     public static void dispose() {
