@@ -55,7 +55,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         stage = new Stage(new StretchViewport(800, 480));
         background = new Texture("background.png");
         background.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
-        Gdx.input.setInputProcessor(stage);
 
         unmuteIcon = new Texture(Gdx.files.internal("octicons/unmute.png"));
         muteIcon = new Texture(Gdx.files.internal("octicons/mute.png"));
@@ -75,6 +74,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
 
         MusicController.INSTANCE.playMainMenuTheme();
 
+        Gdx.input.setInputProcessor(stage);
         Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
     }
 
