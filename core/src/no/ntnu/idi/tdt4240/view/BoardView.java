@@ -162,6 +162,18 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     stopFling();
                 }
 
+                handleZooming(currentPointer1, currentPointer2);
+                handlePanning(currentPointer1, currentPointer2);
+                ensureCameraIsWithinMap();
+
+                PhasePresenter.INSTANCE.onMapRenderingChanged();
+
+                lastPinchPointer1 = currentPointer1.cpy();
+                lastPinchPointer2 = currentPointer2.cpy();
+                return true;
+            }
+
+            private void handleZooming(Vector2 currentPointer1, Vector2 currentPointer2) {
                 float currentPinchPointerDistance = currentPointer1.dst(currentPointer2);
 
                 // initialZoom * initialDistance = newZoom * currentDistance
@@ -170,18 +182,13 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
 
                 handleOffCenteredZooming(Utils.avg(currentPointer1, currentPointer2));
+            }
 
+            private void handlePanning(Vector2 currentPointer1, Vector2 currentPointer2) {
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
                 Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
                 camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
-                ensureCameraIsWithinMap();
-
-                PhasePresenter.INSTANCE.onMapRenderingChanged();
-
-                lastPinchPointer1 = currentPointer1.cpy();
-                lastPinchPointer2 = currentPointer2.cpy();
-                return true;
             }
 
             @Override
