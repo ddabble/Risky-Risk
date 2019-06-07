@@ -29,8 +29,8 @@ public class BattleModel {
             Arrays.sort(attDice);
 
             if (mostDice(attDice, defDice) == 1) {
-                System.out.println("attTroops: " + attackerTroops + " attRoll: " + attDice[attDice.length - 1] +
-                                   " defTroops: " + defenderTroops + " defRoll: " + defDice[defDice.length - 1]);
+                System.out.println("attTroops: " + attackerTroops + " attRoll: " + attDice[attDice.length - 1]
+                                   + " defTroops: " + defenderTroops + " defRoll: " + defDice[defDice.length - 1]);
 
                 if (attDice[attDice.length - 1] > defDice[defDice.length - 1]) {
                     defenderTroops--;
@@ -51,8 +51,8 @@ public class BattleModel {
             // Max of 2 fights per dice roll.
             else {
                 for (int roll = 1; roll < mostDice(attDice, defDice) + 1; roll++) {
-                    System.out.println("attTroops: " + attackerTroops + " attRoll: " + attDice[attDice.length - roll] +
-                                       " defTroops: " + defenderTroops + " defRoll: " + defDice[defDice.length - roll]);
+                    System.out.println("attTroops: " + attackerTroops + " attRoll: " + attDice[attDice.length - roll]
+                                       + " defTroops: " + defenderTroops + " defRoll: " + defDice[defDice.length - roll]);
 
                     if (attDice[attDice.length - roll] > defDice[defDice.length - roll]) {
                         defenderTroops--;

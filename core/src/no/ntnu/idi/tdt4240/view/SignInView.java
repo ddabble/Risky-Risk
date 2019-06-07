@@ -64,7 +64,7 @@ public class SignInView extends ScreenAdapter {
             isSignedIn = true;
         } else { //show sign in button
             buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
-            float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+            final float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
             buttonFont.getData().setScale(heightRatio);
             Button signInButton = UIStyle.INSTANCE.createTextButton("Sign in to Google Play", buttonFont);
 

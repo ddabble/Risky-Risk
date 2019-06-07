@@ -716,8 +716,8 @@ public class GPGSClient implements IGPGSClient {
                 matchActive = false;
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
                     showWarning("Complete!",
-                                "This game is over; someone finished it, and so did you!  " +
-                                "There is nothing to be done.");
+                                "This game is over; someone finished it, and so did you!  "
+                                + "There is nothing to be done.");
                     break;
                 }
 
@@ -756,8 +756,8 @@ public class GPGSClient implements IGPGSClient {
 
         matchActive = false;
 
-        showWarning("Match", "This match (" + matchId + ") was canceled.  " +
-                             "All other players will have their game ended.");
+        showWarning("Match", "This match (" + matchId + ") was canceled.  "
+                             + "All other players will have their game ended.");
     }
 
     private void onInitiateMatch(TurnBasedMatch match) {
