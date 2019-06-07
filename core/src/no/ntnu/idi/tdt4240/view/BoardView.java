@@ -205,9 +205,12 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             public boolean scrolled(int amount) {
                 stopFling();
 
-                camera.zoom += amount / 10f;
-                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
+                float newZoom = camera.zoom + amount / 10f;
+                newZoom = MathUtils.clamp(newZoom, CAMERA_MIN_ZOOM, 1f);
+                if (newZoom == camera.zoom)
+                    return true;
 
+                camera.zoom = newZoom;
                 handleOffCenteredZooming(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
                 ensureCameraIsWithinMap();
