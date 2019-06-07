@@ -36,6 +36,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     }
 
     private static final float CAMERA_MIN_ZOOM = 0.1f;
+    private static final float CAMERA_MAX_ZOOM = 1f; // 1:1 pixel size
     private static final float CAMERA_FRICTION_COEFFICIENT = GameView.getWorldWidth() * 0.5f;
 
     private OrthographicCamera camera;
@@ -116,11 +117,11 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 if (button != Input.Buttons.LEFT) // Only for desktop
                     return false;
 
-                Vector2 touchWorldPos = Utils.touchToWorldPos(touchX, touchY, camera);
-                if (!mapSprite.getBoundingRectangle().contains(touchWorldPos))
+                Vector2 touchPos_world = Utils.touchToWorldPos(touchX, touchY, camera);
+                if (!mapSprite.getBoundingRectangle().contains(touchPos_world))
                     return false;
 
-                Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
+                Vector2 mapPos = worldPosToMapTexturePos(touchPos_world);
                 BoardPresenter.INSTANCE.onBoardClicked(mapPos);
                 return true;
             }
@@ -144,8 +145,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             public boolean pan(float touchX, float touchY, float deltaX, float deltaY) {
                 stopFling();
 
-                Vector2 touchWorldDelta = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
-                camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
+                Vector2 touchDelta_world = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
+                camera.translate(-touchDelta_world.x, -touchDelta_world.y);
                 ensureCameraIsWithinMap();
 
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
@@ -194,7 +195,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 // initialZoom * initialDistance = newZoom * currentDistance
                 //                       newZoom = initialZoom * initialDistance / currentDistance
                 camera.zoom = initialPinchZoom * initialPinchPointerDistance / currentPinchPointerDistance;
-                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
+                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM);
 
                 handleOffCenteredZooming(Utils.avg(currentPointer1, currentPointer2));
             }
@@ -202,8 +203,8 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             private void handlePanning(Vector2 currentPointer1, Vector2 currentPointer2) {
                 Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
                 Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
-                Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
-                camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
+                Vector2 touchDelta_world = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
+                camera.translate(-touchDelta_world.x, -touchDelta_world.y);
             }
 
             @Override
@@ -221,7 +222,7 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 stopFling();
 
                 float newZoom = camera.zoom + amount / 10f;
-                newZoom = MathUtils.clamp(newZoom, CAMERA_MIN_ZOOM, 1f);
+                newZoom = MathUtils.clamp(newZoom, CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM);
                 if (newZoom == camera.zoom)
                     return true;
 

@@ -39,7 +39,7 @@ public class WinView extends ScreenAdapter implements WinObserver {
         Gdx.input.setInputProcessor(stage);
 
         buttonFont = UIStyle.INSTANCE.createBoldFont(UIStyle.getStandardButtonFontSize());
-        float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+        final float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
         buttonFont.getData().setScale(heightRatio);
         Button winButton = UIStyle.INSTANCE.createTextButton("You won!", buttonFont);
 

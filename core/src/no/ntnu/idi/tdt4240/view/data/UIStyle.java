@@ -176,9 +176,9 @@ public class UIStyle {
         if (fontColor != null)
             textButtonStyle.fontColor = fontColor;
 
-        TextButton textButton = new TextButton(text, textButtonStyle);
-        textButton.setLabel(createLabel(text, font, null));
-        return textButton;
+        TextButton button = new TextButton(text, textButtonStyle);
+        button.setLabel(createLabel(text, font, null));
+        return button;
     }
 
     public ImageButton createImageButton(TextureRegionDrawable image, float pad) {

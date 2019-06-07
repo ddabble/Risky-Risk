@@ -212,8 +212,8 @@ public class PhaseView extends ApplicationAdapter implements PhaseObserver {
 
     @Override
     public void updateRenderedVariables(String phase, int troopsToPlace) {
-        phaseLabel.setText("Current Phase: " + phase + " " +
-                           "\nNumber of Troops to place: " + troopsToPlace);
+        phaseLabel.setText("Current Phase: " + phase + " "
+                           + "\nNumber of Troops to place: " + troopsToPlace);
     }
 
     @Override

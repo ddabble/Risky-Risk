@@ -69,7 +69,6 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         table.setPosition(0, 0);
 
         createButtons();
-
         stage.addActor(table);
 
         MusicController.INSTANCE.playMainMenuTheme();
@@ -84,7 +83,7 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         final float buttonPadding = 20;
 
         buttonFont = UIStyle.INSTANCE.createStandardButtonFont();
-        float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
+        final float heightRatio = stage.getHeight() / Gdx.graphics.getHeight();
         buttonFont.getData().setScale(heightRatio);
 
         Button signOutButton = UIStyle.INSTANCE.createTextButton("Sign out", buttonFont);
@@ -169,18 +168,18 @@ public class MainMenuView extends ScreenAdapter implements MenuObserver {
         });
 
 
-        table.add(offlineButton).width(150).height(50).pad(20);
+        table.add(offlineButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
         table.row();
-        table.add(tutorialButton).width(150).height(50).pad(20);
+        table.add(tutorialButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
         table.row();
         if (gpgsClient != null && gpgsClient.isSignedIn()) {
-            table.add(startMatchButton).width(150).height(50).pad(20);
+            table.add(startMatchButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
             table.row();
-            table.add(checkGamesButton).width(150).height(50).pad(20);
+            table.add(checkGamesButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
             table.row();
-            table.add(signOutButton).width(150).height(50).pad(20);
+            table.add(signOutButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
         } else {
-            table.add(signInButton).width(150).height(50).pad(20);
+            table.add(signInButton).width(buttonWidth).height(buttonHeight).pad(buttonPadding);
         }
 
         stage.addActor(muteButton);
