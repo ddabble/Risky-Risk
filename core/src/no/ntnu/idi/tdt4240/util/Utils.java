@@ -54,6 +54,14 @@ public class Utils {
         return worldToScreenPos(xDist, yDist, camera).sub(worldToScreenPos(0, 0, camera));
     }
 
+    public static Vector3 getBottomLeftFrustumCorner(Camera camera) {
+        return camera.frustum.planePoints[0].cpy();
+    }
+
+    public static Vector3 getTopRightFrustumCorner(Camera camera) {
+        return camera.frustum.planePoints[2].cpy();
+    }
+
     public static void setSizeOfSprite(Sprite sprite, float spriteSize_mapRatio) {
         final float spriteSize = GameView.getWorldWidth() * spriteSize_mapRatio;
         sprite.setSize(spriteSize, spriteSize);

@@ -125,6 +125,21 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 return true;
             }
 
+            private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
+                Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
+                // Invert y coord, because the texture's origin is in the upper left corner
+                mapPos.y = mapSprite.getHeight() - mapPos.y;
+
+                Texture mapTexture = mapSprite.getTexture();
+                Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
+                                                 mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
+
+                // Round the coords, because it's needed for getting texture pixels
+                texturePos.x = MathUtils.roundPositive(texturePos.x);
+                texturePos.y = MathUtils.roundPositive(texturePos.y);
+                return texturePos;
+            }
+
             @Override
             public boolean pan(float touchX, float touchY, float deltaX, float deltaY) {
                 stopFling();
@@ -226,27 +241,12 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             flingVelocity = null;
     }
 
-    private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
-        Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
-        // Invert y coord, because the texture's origin is in the upper left corner
-        mapPos.y = mapSprite.getHeight() - mapPos.y;
-
-        Texture mapTexture = mapSprite.getTexture();
-        Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
-                                         mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
-
-        // Round the coords, because it's needed for getting texture pixels
-        texturePos.x = MathUtils.roundPositive(texturePos.x);
-        texturePos.y = MathUtils.roundPositive(texturePos.y);
-        return texturePos;
-    }
-
     private OffsetDirection ensureCameraIsWithinMap() {
         camera.update();
 
-        Vector3 frustumCorner_distToOrigin = new Vector3().sub(camera.frustum.planePoints[0]);
+        Vector3 frustumCorner_distToOrigin = new Vector3().sub(Utils.getBottomLeftFrustumCorner(camera));
         Vector3 frustumCorner_distFromMapEdge = new Vector3(mapSprite.getWidth(), mapSprite.getHeight(), 0)
-                .sub(camera.frustum.planePoints[2]);
+                .sub(Utils.getTopRightFrustumCorner(camera));
 
         OffsetDirection offsetDirection = null;
 
