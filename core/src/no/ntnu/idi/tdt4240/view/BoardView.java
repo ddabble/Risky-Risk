@@ -13,9 +13,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,13 @@ import no.ntnu.idi.tdt4240.util.gl.ColorArray;
 import no.ntnu.idi.tdt4240.util.gl.GLSLshaders;
 
 public class BoardView extends ApplicationAdapter implements BoardObserver {
+    enum OffsetDirection {
+        HORIZONTAL, VERTICAL
+    }
+
     private static final float CAMERA_MIN_ZOOM = 0.1f;
+    private static final float CAMERA_MAX_ZOOM = 1f; // 1:1 pixel size
+    private static final float CAMERA_FRICTION_COEFFICIENT = GameView.getWorldWidth() * 0.5f;
 
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -38,6 +46,10 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
     private ShaderProgram mapShader;
 
     private final ColorArray PLAYER_COLOR_LOOKUP = new ColorArray(0xFF + 1, 3);
+
+    private Vector2 flingVelocity;
+    private long flingStartTime;
+    private float flingDuration;
 
     public BoardView() {
         BoardPresenter.addObserver(this);
@@ -87,26 +99,54 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
             Vector2 lastPinchPointer1;
             Vector2 lastPinchPointer2;
             float initialPinchZoom;
-            float initialPinchPointerWorldDistance;
+            float initialPinchPointerDistance;
+
+            long lastPinchStop = TimeUtils.millis();
+
+            @Override
+            public boolean touchDown(float touchX, float touchY, int pointer, int button) {
+                if (button != Input.Buttons.LEFT) // Only for desktop
+                    return false;
+                stopFling();
+
+                return true;
+            }
 
             @Override
             public boolean tap(float touchX, float touchY, int count, int button) {
                 if (button != Input.Buttons.LEFT) // Only for desktop
                     return false;
 
-                Vector2 touchWorldPos = Utils.touchToWorldPos(touchX, touchY, camera);
-                if (!mapSprite.getBoundingRectangle().contains(touchWorldPos))
+                Vector2 touchPos_world = Utils.touchToWorldPos(touchX, touchY, camera);
+                if (!mapSprite.getBoundingRectangle().contains(touchPos_world))
                     return false;
 
-                Vector2 mapPos = worldPosToMapTexturePos(touchWorldPos);
+                Vector2 mapPos = worldPosToMapTexturePos(touchPos_world);
                 BoardPresenter.INSTANCE.onBoardClicked(mapPos);
                 return true;
             }
 
+            private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
+                Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
+                // Invert y coord, because the texture's origin is in the upper left corner
+                mapPos.y = mapSprite.getHeight() - mapPos.y;
+
+                Texture mapTexture = mapSprite.getTexture();
+                Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
+                                                 mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
+
+                // Round the coords, because it's needed for getting texture pixels
+                texturePos.x = MathUtils.roundPositive(texturePos.x);
+                texturePos.y = MathUtils.roundPositive(texturePos.y);
+                return texturePos;
+            }
+
             @Override
             public boolean pan(float touchX, float touchY, float deltaX, float deltaY) {
-                Vector2 touchWorldDelta = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
-                camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
+                stopFling();
+
+                Vector2 touchDelta_world = Utils.touchDistToWorldDist(deltaX, deltaY, camera);
+                camera.translate(-touchDelta_world.x, -touchDelta_world.y);
                 ensureCameraIsWithinMap();
 
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
@@ -115,8 +155,16 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
-                System.out.println("Fling: " + velocityX + ",\t" + velocityY);
-                return false;
+                if (button != Input.Buttons.LEFT) // Only for desktop
+                    return false;
+                // Eliminates jerky flings right after stopping pinching
+                if (TimeUtils.timeSinceMillis(lastPinchStop) < 100)
+                    return false;
+
+                flingVelocity = Utils.touchDistToWorldDist(velocityX, velocityY, camera);
+                flingStartTime = TimeUtils.millis();
+                flingDuration = flingVelocity.len() / CAMERA_FRICTION_COEFFICIENT;
+                return true;
             }
 
             @Override
@@ -125,20 +173,13 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                     lastPinchPointer1 = initialPointer1;
                     lastPinchPointer2 = initialPointer2;
                     initialPinchZoom = camera.zoom;
-                    initialPinchPointerWorldDistance = Utils.touchToWorldPos(initialPointer1, camera).dst(Utils.touchToWorldPos(initialPointer2, camera));
+                    initialPinchPointerDistance = initialPointer1.dst(initialPointer2);
+
+                    stopFling();
                 }
 
-                float currentPinchPointerWorldDistance = Utils.touchToWorldPos(currentPointer1, camera).dst(Utils.touchToWorldPos(currentPointer2, camera));
-
-                // initialZoom * initialDistance = newZoom * currentDistance
-                //                       newZoom = initialZoom * initialDistance / currentDistance
-                camera.zoom = initialPinchZoom * initialPinchPointerWorldDistance / currentPinchPointerWorldDistance;
-                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
-
-                Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
-                Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
-                Vector2 touchWorldDelta = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
-                camera.translate(-touchWorldDelta.x, -touchWorldDelta.y);
+                handleZooming(currentPointer1, currentPointer2);
+                handlePanning(currentPointer1, currentPointer2);
                 ensureCameraIsWithinMap();
 
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
@@ -148,10 +189,29 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
                 return true;
             }
 
+            private void handleZooming(Vector2 currentPointer1, Vector2 currentPointer2) {
+                float currentPinchPointerDistance = currentPointer1.dst(currentPointer2);
+
+                // initialZoom * initialDistance = newZoom * currentDistance
+                //                       newZoom = initialZoom * initialDistance / currentDistance
+                camera.zoom = initialPinchZoom * initialPinchPointerDistance / currentPinchPointerDistance;
+                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM);
+
+                handleOffCenteredZooming(Utils.avg(currentPointer1, currentPointer2));
+            }
+
+            private void handlePanning(Vector2 currentPointer1, Vector2 currentPointer2) {
+                Vector2 currentMidpoint = Utils.avg(currentPointer1, currentPointer2);
+                Vector2 lastMidpoint = Utils.avg(lastPinchPointer1, lastPinchPointer2);
+                Vector2 touchDelta_world = Utils.touchToWorldPos(currentMidpoint, camera).sub(Utils.touchToWorldPos(lastMidpoint, camera));
+                camera.translate(-touchDelta_world.x, -touchDelta_world.y);
+            }
+
             @Override
             public void pinchStop() {
                 lastPinchPointer1 = null;
                 lastPinchPointer2 = null;
+                lastPinchStop = TimeUtils.millis();
             }
         }));
 
@@ -159,48 +219,77 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
         multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean scrolled(int amount) {
-                camera.zoom += amount / 10f;
-                camera.zoom = MathUtils.clamp(camera.zoom, CAMERA_MIN_ZOOM, 1f);
-                camera.update();
+                stopFling();
+
+                float newZoom = camera.zoom + amount / 10f;
+                newZoom = MathUtils.clamp(newZoom, CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM);
+                if (newZoom == camera.zoom)
+                    return true;
+
+                camera.zoom = newZoom;
+                handleOffCenteredZooming(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+
+                ensureCameraIsWithinMap();
+
                 PhasePresenter.INSTANCE.onMapRenderingChanged();
                 return true;
             }
         });
     }
 
-    private Vector2 worldPosToMapTexturePos(Vector2 worldPos) {
-        Vector2 mapPos = worldPos.cpy().sub(mapSprite.getX(), mapSprite.getY());
-        // Invert y coord, because the texture's origin is in the upper left corner
-        mapPos.y = mapSprite.getHeight() - mapPos.y;
-
-        Texture mapTexture = mapSprite.getTexture();
-        Vector2 texturePos = new Vector2(mapPos.x / mapSprite.getWidth() * mapTexture.getWidth(),
-                                         mapPos.y / mapSprite.getHeight() * mapTexture.getHeight());
-
-        // Round the coords, because it's needed for getting texture pixels
-        texturePos.x = MathUtils.roundPositive(texturePos.x);
-        texturePos.y = MathUtils.roundPositive(texturePos.y);
-        return texturePos;
+    private void stopFling() {
+        if (flingVelocity != null)
+            flingVelocity = null;
     }
 
-    private void ensureCameraIsWithinMap() {
+    private OffsetDirection ensureCameraIsWithinMap() {
         camera.update();
 
-        Vector3 frustumCorner_distToOrigin = new Vector3().sub(camera.frustum.planePoints[0]);
+        Vector3 frustumCorner_distToOrigin = new Vector3().sub(Utils.getBottomLeftFrustumCorner(camera));
         Vector3 frustumCorner_distFromMapEdge = new Vector3(mapSprite.getWidth(), mapSprite.getHeight(), 0)
-                .sub(camera.frustum.planePoints[2]);
+                .sub(Utils.getTopRightFrustumCorner(camera));
 
-        if (frustumCorner_distToOrigin.x > 0)
+        OffsetDirection offsetDirection = null;
+
+        if (frustumCorner_distToOrigin.x > 0) {
             camera.translate(frustumCorner_distToOrigin.x, 0);
-        if (frustumCorner_distToOrigin.y > 0)
-            camera.translate(0, frustumCorner_distToOrigin.y);
-
-        if (frustumCorner_distFromMapEdge.x < 0)
+            offsetDirection = OffsetDirection.HORIZONTAL;
+        } else if (frustumCorner_distFromMapEdge.x < 0) {
             camera.translate(frustumCorner_distFromMapEdge.x, 0);
-        if (frustumCorner_distFromMapEdge.y < 0)
-            camera.translate(0, frustumCorner_distFromMapEdge.y);
+            offsetDirection = OffsetDirection.HORIZONTAL;
+        }
 
+        if (frustumCorner_distToOrigin.y > 0) {
+            camera.translate(0, frustumCorner_distToOrigin.y);
+            offsetDirection = OffsetDirection.VERTICAL;
+        } else if (frustumCorner_distFromMapEdge.y < 0) {
+            camera.translate(0, frustumCorner_distFromMapEdge.y);
+            offsetDirection = OffsetDirection.VERTICAL;
+        }
+
+        if (offsetDirection != null)
+            camera.update();
+
+        return offsetDirection;
+    }
+
+    private void handleOffCenteredZooming(Vector2 zoomPoint) {
+        // Note: camera always zooms in/out from the camera's center
+        Vector3 prevBottomLeftFrustumCorner = Utils.getBottomLeftFrustumCorner(camera);
+        Vector2 zoomPoint_world = Utils.touchToWorldPos(zoomPoint, camera);
         camera.update();
+        Vector3 frustumEdgeDelta = Utils.getBottomLeftFrustumCorner(camera).sub(prevBottomLeftFrustumCorner);
+
+        Vector3 cameraPos = camera.position;
+        // Has a value in the range [-1, 1];
+        // -1 is on the left frustum edge, 0 is in the camera center, and +1 is on the right frustum edge
+        Vector2 zoomPointOffCenterPercentage = new Vector2((zoomPoint_world.x - prevBottomLeftFrustumCorner.x)
+                                                           / (cameraPos.x - prevBottomLeftFrustumCorner.x) - 1,
+                                                           (zoomPoint_world.y - prevBottomLeftFrustumCorner.y)
+                                                           / (cameraPos.y - prevBottomLeftFrustumCorner.y) - 1);
+
+        camera.translate(zoomPointOffCenterPercentage.x * frustumEdgeDelta.x,
+                         zoomPointOffCenterPercentage.y * frustumEdgeDelta.y);
     }
 
     private void initShader() {
@@ -227,12 +316,46 @@ public class BoardView extends ApplicationAdapter implements BoardObserver {
 
     @Override
     public void render() {
+        if (flingVelocity != null)
+            handleCameraFling();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         float[] playerColorLookup = PLAYER_COLOR_LOOKUP.getFloatArray();
         mapShader.setUniform3fv("playerColorLookup", playerColorLookup, 0, playerColorLookup.length);
         mapSprite.draw(batch);
         batch.end();
+    }
+
+    private void handleCameraFling() {
+        final float deltaTime = Gdx.graphics.getDeltaTime();
+        camera.translate(new Vector2(-flingVelocity.x * deltaTime,
+                                     -flingVelocity.y * deltaTime));
+
+        OffsetDirection offsetDirection = ensureCameraIsWithinMap();
+        PhasePresenter.INSTANCE.onMapRenderingChanged();
+        if (offsetDirection != null) {
+            switch (offsetDirection) {
+                case HORIZONTAL:
+                    flingVelocity.x = 0;
+                    break;
+
+                case VERTICAL:
+                    flingVelocity.y = 0;
+                    break;
+            }
+            if (flingVelocity.isZero()) {
+                flingVelocity = null;
+                return;
+            }
+        }
+
+        float timeSinceFlingStart = TimeUtils.timeSinceMillis(flingStartTime) / 1000f;
+        float flingDurationPercentage = timeSinceFlingStart / flingDuration;
+        flingVelocity.interpolate(Vector2.Zero, flingDurationPercentage, Interpolation.smooth);
+
+        if (flingDurationPercentage >= 1f)
+            flingVelocity = null;
     }
 
     @Override

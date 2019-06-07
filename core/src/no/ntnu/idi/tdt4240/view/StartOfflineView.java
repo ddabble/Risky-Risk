@@ -59,19 +59,19 @@ public class StartOfflineView extends ScreenAdapter {
         final Label numPlayersLabel = UIStyle.INSTANCE.createTutorialSlideHeaderLabel("0", FONT_COLOR); // temporary text value
         numPlayersLabel.setPosition(screenCenter.x, middleButtonsHeight, Align.center);
 
-        final float buttonSize = numPlayersLabel.getHeight();
+        final float buttonSize = numPlayersLabel.getHeight() * 2f;
 
         final Button startButton = UIStyle.INSTANCE.createTextButton("Start!");
         startButton.setSize(screenWidth / 5.5f, buttonSize);
-        startButton.setPosition(screenCenter.x, screenHeight * 2 / 5f, Align.center);
+        startButton.setPosition(screenCenter.x, screenHeight * 2f / 5f, Align.top);
 
         decreaseButton = UIStyle.INSTANCE.createTextButton("-");
         decreaseButton.setSize(buttonSize, buttonSize);
-        decreaseButton.setPosition(startButton.getX(), middleButtonsHeight, Align.left);
+        decreaseButton.setPosition(startButton.getX(), middleButtonsHeight, Align.center);
 
         increaseButton = UIStyle.INSTANCE.createTextButton("+");
         increaseButton.setSize(buttonSize, buttonSize);
-        increaseButton.setPosition(startButton.getRight(), middleButtonsHeight, Align.right);
+        increaseButton.setPosition(startButton.getRight(), middleButtonsHeight, Align.center);
 
         updateButtonState();
         setButtonListeners(startButton, numPlayersLabel);

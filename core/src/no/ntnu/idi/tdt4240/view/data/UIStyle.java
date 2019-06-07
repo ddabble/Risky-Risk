@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 public class UIStyle {
@@ -23,6 +25,7 @@ public class UIStyle {
     private SelectBox.SelectBoxStyle selectStyle;
     private Label.LabelStyle labelStyle;
     private TextField.TextFieldStyle textFieldStyle;
+    private ImageButton.ImageButtonStyle imageButtonStyle;
 
     private BitmapFont standardButtonFont;
     private BitmapFont tutorialHeaderFont;
@@ -58,6 +61,8 @@ public class UIStyle {
         textButtonStyle.font = skin.getFont("default-font");
 
         selectStyle.font = skin.getFont("default-font");
+
+        imageButtonStyle = new ImageButton.ImageButtonStyle(textButtonStyle);
     }
 
     private void createBitmapFonts() {
@@ -171,9 +176,18 @@ public class UIStyle {
         if (fontColor != null)
             textButtonStyle.fontColor = fontColor;
 
-        TextButton textButton = new TextButton(text, textButtonStyle);
-        textButton.setLabel(createLabel(text, font, null));
-        return textButton;
+        TextButton button = new TextButton(text, textButtonStyle);
+        button.setLabel(createLabel(text, font, null));
+        return button;
+    }
+
+    public ImageButton createImageButton(TextureRegionDrawable image, float pad) {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle(imageButtonStyle);
+        style.imageUp = image;
+
+        ImageButton button = new ImageButton(style);
+        button.getImageCell().pad(pad);
+        return button;
     }
 
     public static void dispose() {
