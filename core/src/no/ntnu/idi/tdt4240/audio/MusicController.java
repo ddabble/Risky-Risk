@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.sound;
+package no.ntnu.idi.tdt4240.audio;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;

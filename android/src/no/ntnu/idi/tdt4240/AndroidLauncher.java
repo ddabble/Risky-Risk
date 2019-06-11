@@ -7,6 +7,8 @@ import android.view.View;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import no.ntnu.idi.tdt4240.client.GPGSClient;
+
 public class AndroidLauncher extends AndroidApplication {
     private static final String TAG = "OnActivity";
 

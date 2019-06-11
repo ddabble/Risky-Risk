@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.client;
 
 public interface IGPGSClient {
     // Check if a match is active so we can enter game view

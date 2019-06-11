@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240;
+package no.ntnu.idi.tdt4240.client;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,8 +38,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
-import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
 import no.ntnu.idi.tdt4240.model.SettingsModel;
 
 public class GPGSClient implements IGPGSClient {
@@ -506,7 +504,7 @@ public class GPGSClient implements IGPGSClient {
     // This function is what gets called when you return from either the Play
     // Games built-in inbox, or else the create game built-in interface.
     //@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task =

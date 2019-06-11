@@ -1,4 +1,4 @@
-package no.ntnu.idi.tdt4240.controller;
+package no.ntnu.idi.tdt4240.client;
 
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 

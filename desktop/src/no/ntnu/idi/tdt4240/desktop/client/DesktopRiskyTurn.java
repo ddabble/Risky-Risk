@@ -1,6 +1,6 @@
-package no.ntnu.idi.tdt4240.desktop.controller;
+package no.ntnu.idi.tdt4240.desktop.client;
 
-import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.client.IRiskyTurn;
 import no.ntnu.idi.tdt4240.util.TerritoryMap;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
