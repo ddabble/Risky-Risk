@@ -1,7 +1,7 @@
-package no.ntnu.idi.tdt4240.desktop.controller;
+package no.ntnu.idi.tdt4240.desktop.client;
 
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
-import no.ntnu.idi.tdt4240.controller.IRiskyTurn;
+import no.ntnu.idi.tdt4240.client.IGPGSClient;
+import no.ntnu.idi.tdt4240.client.IRiskyTurn;
 
 // TODO: make this work properly
 public class DesktopMockGPGSClient implements IGPGSClient {

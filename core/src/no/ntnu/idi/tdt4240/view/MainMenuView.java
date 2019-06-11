@@ -21,10 +21,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.audio.MusicController;
+import no.ntnu.idi.tdt4240.client.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.MenuObserver;
 import no.ntnu.idi.tdt4240.presenter.MenuPresenter;
-import no.ntnu.idi.tdt4240.sound.MusicController;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
 public class MainMenuView extends ScreenAdapter implements MenuObserver {

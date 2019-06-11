@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.audio.MusicController;
+import no.ntnu.idi.tdt4240.client.IGPGSClient;
 import no.ntnu.idi.tdt4240.observer.GameObserver;
 import no.ntnu.idi.tdt4240.presenter.GamePresenter;
-import no.ntnu.idi.tdt4240.sound.MusicController;
 
 public class GameView extends ScreenAdapter implements GameObserver {
     private static final float WORLD_WIDTH = 100;

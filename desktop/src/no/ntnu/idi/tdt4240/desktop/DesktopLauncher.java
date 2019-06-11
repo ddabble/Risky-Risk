@@ -4,7 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.desktop.controller.DesktopMockGPGSClient;
+import no.ntnu.idi.tdt4240.desktop.client.DesktopMockGPGSClient;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

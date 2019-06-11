@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import no.ntnu.idi.tdt4240.RiskyRisk;
-import no.ntnu.idi.tdt4240.controller.IGPGSClient;
+import no.ntnu.idi.tdt4240.client.IGPGSClient;
 import no.ntnu.idi.tdt4240.model.SettingsModel;
 import no.ntnu.idi.tdt4240.view.data.UIStyle;
 
